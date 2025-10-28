@@ -1,0 +1,6 @@
+@MarathonManager.API_HostAddress = http://localhost:5262
+
+GET {{MarathonManager.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "MarathonManager.API\\MarathonManager.API.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "MarathonManager.Web\\MarathonManager.Web.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

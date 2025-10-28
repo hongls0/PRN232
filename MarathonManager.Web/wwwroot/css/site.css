@@ -1,0 +1,302 @@
+﻿/* ============================================= */
+/* TÙY CHỈNH CHO TRANG CHỦ                     */
+/* ============================================= */
+
+/* 1. Tùy chỉnh Hero Section */
+.hero-section {
+    height: 60vh; /* Chiều cao 60% màn hình */
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1950');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -16px; /* Bù trừ cho navbar */
+}
+
+/* 2. Tùy chỉnh Card giải chạy */
+.race-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 15px; /* Bo góc */
+    overflow: hidden; /* Đảm bảo ảnh bo góc theo */
+}
+
+    .race-card:hover {
+        transform: translateY(-10px); /* Hiệu ứng nhấc lên */
+        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+    }
+
+    .race-card .card-img-top {
+        height: 220px;
+        object-fit: cover; /* Đảm bảo ảnh luôn vừa vặn */
+    }
+
+    .race-card .card-title {
+        min-height: 48px; /* Giữ cho tiêu đề 2 dòng có chiều cao bằng nhau */
+    }
+
+/* 3. Tùy chỉnh icon */
+.feature-icon i {
+    color: #0d6efd; /* Màu xanh primary */
+}
+
+/* Bỏ gạch chân cho link */
+a {
+    text-decoration: none;
+}
+/* ============================================= */
+/* TÙY CHỈNH CHUNG & NAVBAR
+/* ============================================= */
+/* Sử dụng font chữ đẹp hơn */
+body {
+    font-family: 'Roboto', sans-serif;
+    /* Thêm padding-top vì navbar là fixed-top */
+    padding-top: 70px;
+    background-color: #f8f9fa; /* Màu nền xám rất nhạt */
+}
+
+/* Hiệu ứng cuộn mượt */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Tùy chỉnh thanh cuộn (cho đẹp hơn) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0d6efd;
+    border-radius: 4px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #0b5ed7;
+    }
+
+/* Tiêu đề chung cho các Section */
+.section-header {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 40px;
+    position: relative;
+    padding-bottom: 15px;
+}
+    /* Đường gạch chân trang trí cho tiêu đề */
+    .section-header::after {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 80px;
+        height: 4px;
+        background: #0d6efd; /* Màu primary */
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 2px;
+    }
+
+
+/* ============================================= */
+/* 1. HIỆU ỨNG HERO SECTION
+/* ============================================= */
+.hero-section {
+    height: 70vh;
+    background: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1950');
+    background-size: cover;
+    background-position: center 30%;
+    /* Hiệu ứng Parallax */
+    background-attachment: fixed;
+    position: relative;
+}
+
+/* Lớp phủ mờ */
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* Hiệu ứng Animation cho chữ */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-down {
+    animation: fadeInDown 1s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 1s ease-out 0.5s; /* Chạy sau 0.5s */
+    animation-fill-mode: both; /* Giữ trạng thái cuối */
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-zoom-in {
+    animation: zoomIn 0.5s ease-out 1s; /* Chạy sau 1s */
+    animation-fill-mode: both;
+}
+
+
+/* ============================================= */
+/* 2. HIỆU ỨNG RACE CARD
+/* ============================================= */
+.race-card {
+    border: none; /* Bỏ viền mặc định */
+    border-radius: 15px; /* Bo góc hiện đại */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* Bóng mờ */
+    transition: all 0.3s ease-in-out;
+    overflow: hidden; /* Quan trọng cho ribbon */
+}
+    /* Hiệu ứng "nâng" card khi hover */
+    .race-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .race-card .card-img-top {
+        height: 220px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    /* Hiệu ứng "zoom" ảnh khi hover card */
+    .race-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    .race-card .card-title {
+        min-height: 48px;
+        color: #333;
+    }
+    /* Thêm stretched-link để click cả card (Bootstrap 5) */
+    .race-card .stretched-link::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        content: "";
+    }
+
+
+/* Ribbon (dải ruy băng) trạng thái */
+.ribbon {
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+}
+
+    .ribbon span {
+        position: absolute;
+        display: block;
+        width: 225px;
+        padding: 10px 0;
+        background-color: #0d6efd; /* Màu primary */
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        color: #fff;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-align: center;
+        left: -35px;
+        top: 30px;
+        transform: rotate(-45deg);
+    }
+
+/* ============================================= */
+/* 3. CTA SECTION
+/* ============================================= */
+.cta-section {
+    background: linear-gradient(90deg, #0d6efd, #0a58ca);
+}
+
+
+/* ============================================= */
+/* 4. HIỆU ỨNG BLOG CARD
+/* ============================================= */
+.blog-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease-in-out;
+    background-color: #fff;
+}
+
+    .blog-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .blog-card .card-img-top {
+        height: 200px;
+        object-fit: cover;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    .blog-card .card-title {
+        min-height: 48px;
+        color: #333;
+    }
+
+    .blog-card .stretched-link::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        content: "";
+    }
+
+/* ============================================= */
+/* 5. HIỆU ỨNG TESTIMONIAL CARD
+/* ============================================= */
+.testimonial-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    border-left: 5px solid #0d6efd; /* Đường viền nhấn */
+    box-shadow:
