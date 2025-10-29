@@ -1,0 +1,31 @@
+﻿@model MarathonManager.Web.DTOs.RaceDistanceCreateDto
+@{
+    ViewData["Title"] = "Thêm Cự ly Mới";
+}
+
+<div class="container" style="padding-top: 80px; padding-bottom: 80px;">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Thêm Cự ly Mới</h4>
+                    @* <small>Cho giải: @ViewBag.RaceName</small> *@
+                </div>
+                <div class="card-body">
+                    <form asp-action="AddDistance" method="post">
+                        <input type="hidden" asp-for="RaceId" />
+
+                        <partial name="_DistanceFormFields" model="Model" />
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a asp-action="ManageDistances" asp-route-raceId="@Model.RaceId" class="btn btn-secondary">Hủy</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Lưu Cự ly
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "MarathonManager.API",
-    "version": "1.0"
+    "title": "MarathonManager API",
+    "version": "v1"
   },
   "paths": {
     "/api/admin/users": {
@@ -18,7 +18,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/UserDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.UserDto"
                   }
                 }
               },
@@ -26,7 +26,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/UserDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.UserDto"
                   }
                 }
               },
@@ -34,11 +34,154 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/UserDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.UserDto"
                   }
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/admin/users/{id}/toggle-lock": {
+      "patch": {
+        "tags": [
+          "AdminApi"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/admin/users/{id}": {
+      "get": {
+        "tags": [
+          "AdminApi"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarathonManager.API.DTOs.UserDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarathonManager.API.DTOs.UserDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarathonManager.API.DTOs.UserDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/roles": {
+      "get": {
+        "tags": [
+          "AdminApi"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Admin.RoleDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Admin.RoleDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Admin.RoleDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/users/{id}/roles": {
+      "put": {
+        "tags": [
+          "AdminApi"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.Admin.UpdateUserRolesDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.Admin.UpdateUserRolesDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.Admin.UpdateUserRolesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -56,7 +199,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/BlogAdminDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Admin.BlogAdminDto"
                   }
                 }
               },
@@ -64,7 +207,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/BlogAdminDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Admin.BlogAdminDto"
                   }
                 }
               },
@@ -72,7 +215,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/BlogAdminDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Admin.BlogAdminDto"
                   }
                 }
               }
@@ -127,29 +270,6 @@
         }
       }
     },
-    "/api/admin/users/{id}/toggle-lock": {
-      "patch": {
-        "tags": [
-          "AdminApi"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Auth/login": {
       "post": {
         "tags": [
@@ -159,17 +279,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginDto"
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.Auth.LoginDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginDto"
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.Auth.LoginDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginDto"
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.Auth.LoginDto"
               }
             }
           }
@@ -190,17 +310,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterDto"
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.Auth.RegisterDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterDto"
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.Auth.RegisterDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterDto"
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.Auth.RegisterDto"
               }
             }
           }
@@ -237,7 +357,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/BlogSummaryDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Blog.BlogSummaryDto"
                   }
                 }
               },
@@ -245,7 +365,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/BlogSummaryDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Blog.BlogSummaryDto"
                   }
                 }
               },
@@ -253,7 +373,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/BlogSummaryDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Blog.BlogSummaryDto"
                   }
                 }
               }
@@ -275,7 +395,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RaceSummaryDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceSummaryDto"
                   }
                 }
               },
@@ -283,7 +403,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RaceSummaryDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceSummaryDto"
                   }
                 }
               },
@@ -291,7 +411,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RaceSummaryDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceSummaryDto"
                   }
                 }
               }
@@ -305,19 +425,68 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/RaceCreateDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RaceCreateDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RaceCreateDto"
+                "required": [
+                  "Distances",
+                  "Location",
+                  "Name",
+                  "RaceDate"
+                ],
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "type": "string"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "Location": {
+                    "type": "string"
+                  },
+                  "RaceDate": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "Distances": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  },
+                  "ImageFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "imageFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Name": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "Location": {
+                  "style": "form"
+                },
+                "RaceDate": {
+                  "style": "form"
+                },
+                "Distances": {
+                  "style": "form"
+                },
+                "ImageFile": {
+                  "style": "form"
+                },
+                "imageFile": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -328,17 +497,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/RaceDetailDto"
+                  "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceDetailDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RaceDetailDto"
+                  "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceDetailDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RaceDetailDto"
+                  "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceDetailDto"
                 }
               }
             }
@@ -368,17 +537,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/RaceDetailDto"
+                  "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceDetailDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RaceDetailDto"
+                  "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceDetailDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RaceDetailDto"
+                  "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceDetailDto"
                 }
               }
             }
@@ -404,17 +573,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RaceUpdateDto"
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceUpdateDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/RaceUpdateDto"
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceUpdateDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/RaceUpdateDto"
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceUpdateDto"
               }
             }
           }
@@ -460,7 +629,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RaceSummaryDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceSummaryDto"
                   }
                 }
               },
@@ -468,7 +637,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RaceSummaryDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceSummaryDto"
                   }
                 }
               },
@@ -476,11 +645,198 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RaceSummaryDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceSummaryDto"
                   }
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/Races/{raceId}/distances": {
+      "get": {
+        "tags": [
+          "Races"
+        ],
+        "parameters": [
+          {
+            "name": "raceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceDistanceDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceDistanceDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceDistanceDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Races"
+        ],
+        "parameters": [
+          {
+            "name": "raceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.RaceDistances.RaceDistanceCreateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.RaceDistances.RaceDistanceCreateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.RaceDistances.RaceDistanceCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceDistanceDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceDistanceDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceDistanceDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Races/{raceId}/distances/{distanceId}": {
+      "put": {
+        "tags": [
+          "Races"
+        ],
+        "parameters": [
+          {
+            "name": "raceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "distanceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.RaceDistances.RaceDistanceUpdateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.RaceDistances.RaceDistanceUpdateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.RaceDistances.RaceDistanceUpdateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Races"
+        ],
+        "parameters": [
+          {
+            "name": "raceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "distanceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -498,7 +854,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RaceSummaryDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceSummaryDto"
                   }
                 }
               },
@@ -506,7 +862,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RaceSummaryDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceSummaryDto"
                   }
                 }
               },
@@ -514,7 +870,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RaceSummaryDto"
+                    "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceSummaryDto"
                   }
                 }
               }
@@ -578,17 +934,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegistrationCreateDto"
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.Registration.RunnerRegistrationRequestDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegistrationCreateDto"
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.Registration.RunnerRegistrationRequestDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/RegistrationCreateDto"
+                "$ref": "#/components/schemas/MarathonManager.API.DTOs.Registration.RunnerRegistrationRequestDto"
               }
             }
           }
@@ -614,7 +970,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
+                    "$ref": "#/components/schemas/MarathonManager.API.WeatherForecast"
                   }
                 }
               },
@@ -622,7 +978,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
+                    "$ref": "#/components/schemas/MarathonManager.API.WeatherForecast"
                   }
                 }
               },
@@ -630,7 +986,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
+                    "$ref": "#/components/schemas/MarathonManager.API.WeatherForecast"
                   }
                 }
               }
@@ -642,7 +998,7 @@
   },
   "components": {
     "schemas": {
-      "BlogAdminDto": {
+      "MarathonManager.API.DTOs.Admin.BlogAdminDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -673,7 +1029,77 @@
         },
         "additionalProperties": false
       },
-      "BlogSummaryDto": {
+      "MarathonManager.API.DTOs.Admin.RoleDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarathonManager.API.DTOs.Admin.UpdateUserRolesDto": {
+        "type": "object",
+        "properties": {
+          "roleNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarathonManager.API.DTOs.Auth.LoginDto": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarathonManager.API.DTOs.Auth.RegisterDto": {
+        "required": [
+          "email",
+          "fullName",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarathonManager.API.DTOs.Blog.BlogSummaryDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -699,66 +1125,7 @@
         },
         "additionalProperties": false
       },
-      "LoginDto": {
-        "required": [
-          "email",
-          "password"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email"
-          },
-          "password": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "RaceCreateDto": {
-        "required": [
-          "distances",
-          "location",
-          "name",
-          "raceDate"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "maxLength": 200,
-            "minLength": 0,
-            "type": "string"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "location": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "raceDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "imageUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "distances": {
-            "minItems": 1,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RaceDistanceCreateDto"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "RaceDetailDto": {
+      "MarathonManager.API.DTOs.Race.RaceDetailDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -796,48 +1163,14 @@
           "distances": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/RaceDistanceDto"
+              "$ref": "#/components/schemas/MarathonManager.API.DTOs.Race.RaceDistanceDto"
             },
             "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "RaceDistanceCreateDto": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "distanceInKm": {
-            "maximum": 100,
-            "minimum": 1,
-            "type": "number",
-            "format": "double"
-          },
-          "registrationFee": {
-            "minimum": 0,
-            "type": "number",
-            "format": "double"
-          },
-          "maxParticipants": {
-            "maximum": 100000,
-            "minimum": 1,
-            "type": "integer",
-            "format": "int32"
-          },
-          "startTime": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
-      "RaceDistanceDto": {
+      "MarathonManager.API.DTOs.Race.RaceDistanceDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -867,7 +1200,7 @@
         },
         "additionalProperties": false
       },
-      "RaceSummaryDto": {
+      "MarathonManager.API.DTOs.Race.RaceSummaryDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -897,7 +1230,7 @@
         },
         "additionalProperties": false
       },
-      "RaceUpdateDto": {
+      "MarathonManager.API.DTOs.Race.RaceUpdateDto": {
         "required": [
           "id",
           "location",
@@ -934,55 +1267,111 @@
         },
         "additionalProperties": false
       },
-      "RegisterDto": {
+      "MarathonManager.API.DTOs.RaceDistances.RaceDistanceCreateDto": {
         "required": [
-          "email",
-          "fullName",
-          "password"
+          "distanceInKm",
+          "maxParticipants",
+          "name",
+          "registrationFee",
+          "startTime"
         ],
         "type": "object",
         "properties": {
-          "fullName": {
+          "name": {
+            "maxLength": 100,
             "minLength": 1,
             "type": "string"
           },
-          "email": {
-            "minLength": 1,
+          "distanceInKm": {
+            "maximum": 1000,
+            "minimum": 0,1,
+            "type": "number",
+            "format": "double"
+          },
+          "registrationFee": {
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "maxParticipants": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "startTime": {
             "type": "string",
-            "format": "email"
-          },
-          "password": {
-            "minLength": 1,
-            "type": "string"
+            "format": "date-time"
           }
         },
         "additionalProperties": false
       },
-      "RegistrationCreateDto": {
+      "MarathonManager.API.DTOs.RaceDistances.RaceDistanceUpdateDto": {
+        "required": [
+          "distanceInKm",
+          "maxParticipants",
+          "name",
+          "registrationFee",
+          "startTime"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "distanceInKm": {
+            "maximum": 1000,
+            "minimum": 0,1,
+            "type": "number",
+            "format": "double"
+          },
+          "registrationFee": {
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "maxParticipants": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarathonManager.API.DTOs.Registration.RunnerRegistrationRequestDto": {
         "required": [
           "raceDistanceId"
         ],
         "type": "object",
         "properties": {
           "raceDistanceId": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           }
         },
         "additionalProperties": false
       },
-      "UserDto": {
+      "MarathonManager.API.DTOs.UserDto": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int32"
           },
-          "fullName": {
+          "email": {
             "type": "string",
             "nullable": true
           },
-          "email": {
+          "fullName": {
             "type": "string",
             "nullable": true
           },
@@ -992,6 +1381,22 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailConfirmed": {
+            "type": "boolean"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
           },
           "roles": {
             "type": "array",
@@ -1003,7 +1408,7 @@
         },
         "additionalProperties": false
       },
-      "WeatherForecast": {
+      "MarathonManager.API.WeatherForecast": {
         "type": "object",
         "properties": {
           "date": {
@@ -1026,6 +1431,19 @@
         },
         "additionalProperties": false
       }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Nhập token theo định dạng: Bearer {your token}",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      }
     }
-  }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
 }

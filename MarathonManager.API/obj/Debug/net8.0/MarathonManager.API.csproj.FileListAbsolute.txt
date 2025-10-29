@@ -1,5 +1,6 @@
 D:\PRN232\MarathonManager\MarathonManager.API\bin\Debug\net8.0\appsettings.Development.json
 D:\PRN232\MarathonManager\MarathonManager.API\bin\Debug\net8.0\appsettings.json
+D:\PRN232\MarathonManager\MarathonManager.API\bin\Debug\net8.0\MarathonManager.API.staticwebassets.runtime.json
 D:\PRN232\MarathonManager\MarathonManager.API\bin\Debug\net8.0\MarathonManager.API.staticwebassets.endpoints.json
 D:\PRN232\MarathonManager\MarathonManager.API\bin\Debug\net8.0\MarathonManager.API.exe
 D:\PRN232\MarathonManager\MarathonManager.API\bin\Debug\net8.0\MarathonManager.API.deps.json

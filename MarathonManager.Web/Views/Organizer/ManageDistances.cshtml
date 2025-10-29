@@ -1,0 +1,78 @@
+﻿@model List<MarathonManager.Web.DTOs.RaceDistanceDto>
+@{
+    ViewData["Title"] = "Quản lý Cự ly";
+    var raceId = ViewBag.RaceId;
+    // var raceName = ViewBag.RaceName ?? "Giải chạy"; // Lấy tên giải sau
+}
+
+<div class="container" style="padding-top: 80px; padding-bottom: 80px;">
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-5 fw-bold">
+            <i class="fas fa-road me-2 text-primary"></i> Quản lý Cự ly
+            @* <small class="text-muted fs-4"> - @raceName</small> *@
+        </h1>
+        <a asp-action="AddDistance" asp-route-raceId="@raceId" class="btn btn-success btn-lg">
+            <i class="fas fa-plus me-1"></i> Thêm cự ly mới
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Chưa có cự ly nào được thêm cho giải chạy này.</div>
+    }
+    else
+    {
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Tên Cự ly</th>
+                    <th>Khoảng cách</th>
+                    <th>Phí (VNĐ)</th>
+                    <th>Giờ xuất phát</th>
+                    <th>Số VĐV Tối đa</th>
+                    <th class="text-end">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var distance in Model)
+                {
+                    <tr>
+                        <td>@distance.Name</td>
+                        <td>@distance.DistanceInKm km</td>
+                        <td>@distance.RegistrationFee.ToString("N0")</td>
+                        <td>@distance.StartTime.ToString("HH:mm dd/MM/yy")</td>
+                        <td>@distance.MaxParticipants</td>
+                        <td class="text-end">
+                            <a asp-action="EditDistance" asp-route-distanceId="@distance.Id" asp-route-raceId="@raceId" class="btn btn-sm btn-info" title="Sửa">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form asp-action="DeleteDistance" method="post" class="d-inline" onsubmit="return confirm('Bạn chắc chắn muốn xóa cự ly @distance.Name?');">
+                                <input type="hidden" name="distanceId" value="@distance.Id" />
+                                <input type="hidden" name="raceId" value="@raceId" />
+                                <button type="submit" class="btn btn-sm btn-danger" title="Xóa">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại Danh sách Giải chạy
+        </a>
+    </div>
+</div>

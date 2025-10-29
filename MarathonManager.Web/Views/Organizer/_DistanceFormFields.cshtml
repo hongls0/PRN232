@@ -1,0 +1,49 @@
+﻿@* CHANGE model type from 'object' to 'IDistanceFormModel' *@
+@using MarathonManager.Web.Interfaces @* <-- Add this using *@
+@model IDistanceFormModel
+
+@* Hiển thị lỗi validation chung (nếu có) *@
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+@* Trường Tên Cự ly *@
+<div class="mb-3">
+    @* Tag helpers now work because IDistanceFormModel has these properties *@
+    <label asp-for="Name" class="form-label fw-bold"></label>
+    <input asp-for="Name" class="form-control" placeholder="Ví dụ: Half Marathon, 10K Fun Run" />
+    <span asp-validation-for="Name" class="text-danger small"></span>
+</div>
+
+@* Hàng chứa Cự ly (km) và Phí đăng ký *@
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label asp-for="DistanceInKm" class="form-label fw-bold"></label>
+        <div class="input-group">
+            <input asp-for="DistanceInKm" type="number" step="0.1" min="0.1" class="form-control" placeholder="Ví dụ: 21.1" />
+            <span class="input-group-text">km</span>
+        </div>
+        <span asp-validation-for="DistanceInKm" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label asp-for="RegistrationFee" class="form-label fw-bold"></label>
+        <div class="input-group">
+            <input asp-for="RegistrationFee" type="number" step="1000" min="0" class="form-control" placeholder="Ví dụ: 500000" />
+            <span class="input-group-text">VNĐ</span>
+        </div>
+        <span asp-validation-for="RegistrationFee" class="text-danger small"></span>
+    </div>
+</div>
+
+@* Hàng chứa Số VĐV tối đa và Giờ xuất phát *@
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label asp-for="MaxParticipants" class="form-label fw-bold"></label>
+        <input asp-for="MaxParticipants" type="number" min="1" class="form-control" placeholder="Ví dụ: 1000" />
+        <span asp-validation-for="MaxParticipants" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label asp-for="StartTime" class="form-label fw-bold"></label>
+        @* We can simplify the value setting now *@
+        <input asp-for="StartTime" type="datetime-local" class="form-control" value="@Model.StartTime.ToString("yyyy-MM-ddTHH:mm")" />
+        <span asp-validation-for="StartTime" class="text-danger small"></span>
+    </div>
+</div>

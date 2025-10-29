@@ -1,12 +1,31 @@
-﻿namespace MarathonManager.Web.DTOs
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
+
+namespace MarathonManager.Web.DTOs
 {
-    // DTO này dùng để gửi dữ liệu TẠO MỚI giải chạy
     public class RaceCreateDto
     {
+        [Required(ErrorMessage = "Tên giải chạy là bắt buộc")]
+        [Display(Name = "Tên giải chạy")]
         public string Name { get; set; }
-        public string Description { get; set; }
+
+        [Display(Name = "Mô tả chi tiết")]
+        public string? Description { get; set; }
+
+        [Required(ErrorMessage = "Địa điểm là bắt buộc")]
+        [Display(Name = "Địa điểm (VD: Sa Pa, Lào Cai)")]
         public string Location { get; set; }
+
+        [Required(ErrorMessage = "Ngày giờ chạy là bắt buộc")]
+        [Display(Name = "Ngày giờ chạy")]
+        [DataType(DataType.DateTime)]
         public DateTime RaceDate { get; set; }
-        public string ImageUrl { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập khoảng cách chạy.")]
+        [Display(Name = "Khoảng cách (nhập nhiều cách nhau bằng dấu phẩy, ví dụ: 5,10,21)")]
+        public string DistancesInput { get; set; } = string.Empty;
+
+        public IFormFile? ImageFile { get; set; }
     }
 }

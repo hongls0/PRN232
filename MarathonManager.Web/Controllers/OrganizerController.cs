@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http; // <-- THÊM: Cần cho IFormFile
+using System.Net.Http;          // <-- THÊM: Cần cho MultipartFormDataContent, StringContent, StreamContent
 
 namespace MarathonManager.Web.Controllers
 {
@@ -20,73 +24,424 @@ namespace MarathonManager.Web.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
+        // ===================================
+        // QUẢN LÝ GIẢI CHẠY (RACES)
+        // ===================================
+
         // GET: /Organizer/Index
-        // Hiển thị các giải chạy "của tôi"
         public async Task<IActionResult> Index()
         {
             var client = CreateAuthenticatedHttpClient();
-            var response = await client.GetAsync("/api/Races/my-races");
+            if (client == null) return RedirectToAction("Login", "Account"); // Xử lý token null
 
             List<RaceSummaryDto> myRaces = new List<RaceSummaryDto>();
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var json = await response.Content.ReadAsStringAsync();
-                myRaces = JsonConvert.DeserializeObject<List<RaceSummaryDto>>(json);
+                var response = await client.GetAsync("/api/Races/my-races");
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    myRaces = JsonConvert.DeserializeObject<List<RaceSummaryDto>>(json) ?? new List<RaceSummaryDto>();
+                }
+                else
+                {
+                    // Log lỗi chi tiết hơn nếu cần
+                    var errorBody = await response.Content.ReadAsStringAsync();
+                    TempData["ErrorMessage"] = $"Không thể tải danh sách giải chạy ({(int)response.StatusCode}): {errorBody}";
+                }
             }
-
+            catch (Exception ex)
+            {
+                 TempData["ErrorMessage"] = "Lỗi kết nối hoặc xử lý: " + ex.Message;
+            }
             return View(myRaces);
         }
 
         // GET: /Organizer/Create
-        // Hiển thị form để tạo giải chạy mới
         public IActionResult Create()
         {
-            return View();
+            var model = new RaceCreateDto
+            {
+                RaceDate = DateTime.Now.AddMonths(1) // Gợi ý ngày chạy
+            };
+            return View(model);
         }
 
+        // ==========================================================
+        // SỬA HÀM POST CREATE ĐỂ GỬI FILE ẢNH
+        // ==========================================================
         // POST: /Organizer/Create
-        // Nhận dữ liệu từ form và gọi API
         [HttpPost]
-        public async Task<IActionResult> Create(RaceCreateDto dto)
+        [ValidateAntiForgeryToken] // Thêm để bảo mật
+        public async Task<IActionResult> Create(RaceCreateDto dto, IFormFile? imageFile) // Thêm IFormFile? imageFile
         {
+            // Kiểm tra validation phía client trước
             if (!ModelState.IsValid)
             {
                 return View(dto);
             }
 
+            // Kiểm tra file ảnh (có thể thêm validation ở DTO sau)
+            if (imageFile != null)
+            {
+                 // Kiểm tra kiểu file (ví dụ chỉ cho phép ảnh)
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                var extension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
+                if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
+                {
+                    ModelState.AddModelError("imageFile", "Chỉ chấp nhận file ảnh (.jpg, .jpeg, .png, .gif).");
+                }
+                 // Kiểm tra kích thước file (ví dụ: tối đa 5MB)
+                if (imageFile.Length > 5 * 1024 * 1024) // 5 MB
+                {
+                     ModelState.AddModelError("imageFile", "Kích thước file ảnh không được vượt quá 5MB.");
+                }
+                if (!ModelState.IsValid) // Nếu có lỗi ảnh thì trả về ngay
+                {
+                     return View(dto);
+                }
+            }
+
+
             var client = CreateAuthenticatedHttpClient();
-            var jsonContent = new StringContent(
-                JsonConvert.SerializeObject(dto),
-                Encoding.UTF8, "application/json");
+            if (client == null) return RedirectToAction("Login", "Account");
 
-            // Gọi API POST /api/Races (đã có sẵn [Authorize(Roles="Organizer")])
-            var response = await client.PostAsync("/api/Races", jsonContent);
+            // Tạo nội dung multipart form data để gửi lên API
+            using var content = new MultipartFormDataContent();
 
+            // Thêm các trường dữ liệu của DTO vào form data
+            content.Add(new StringContent(dto.Name ?? ""), nameof(RaceCreateDto.Name)); // Dùng nameof để khớp tên
+            content.Add(new StringContent(dto.Description ?? ""), nameof(RaceCreateDto.Description));
+            content.Add(new StringContent(dto.Location ?? ""), nameof(RaceCreateDto.Location));
+            // Gửi DateTime theo định dạng ISO 8601 (chuẩn quốc tế, API dễ parse)
+            content.Add(new StringContent(dto.RaceDate.ToString("o")), nameof(RaceCreateDto.RaceDate));
+
+            // Thêm file ảnh vào form data (nếu người dùng đã chọn)
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                try
+                {
+                    var stream = imageFile.OpenReadStream();
+                    var fileContent = new StreamContent(stream);
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue(imageFile.ContentType);
+                    content.Add(fileContent, "imageFile", imageFile.FileName);
+
+                }
+                catch (Exception ex)
+                {
+                     // Xử lý lỗi nếu không đọc được file
+                     ModelState.AddModelError("imageFile", $"Lỗi khi đọc file ảnh: {ex.Message}");
+                     return View(dto);
+                }
+            }
+
+            // Gọi API POST /api/Races với nội dung multipart
+            HttpResponseMessage response = null;
+            try
+            {
+                 response = await client.PostAsync("/api/Races", content);
+            }
+            catch (HttpRequestException ex)
+            {
+                 ModelState.AddModelError(string.Empty, "Lỗi kết nối đến API: " + ex.Message);
+                 return View(dto);
+            }
+
+
+            // Xử lý kết quả từ API
             if (response.IsSuccessStatusCode)
             {
-                // Tạo thành công, quay về trang Dashboard của Organizer
+                TempData["SuccessMessage"] = "Tạo giải chạy thành công! Giải đang chờ Admin duyệt.";
                 return RedirectToAction("Index");
             }
-            else
+            else // Xử lý lỗi trả về từ API
             {
-                // Thêm lỗi nếu API báo thất bại
-                ModelState.AddModelError(string.Empty, "Tạo giải chạy thất bại. Vui lòng thử lại.");
-                return View(dto);
+                string errorMsg = "Tạo giải chạy thất bại.";
+                try
+                {
+                    var errorJson = await response.Content.ReadAsStringAsync();
+                    // Thử parse lỗi validation từ API (ASP.NET Core thường trả về ProblemDetails hoặc ValidationProblemDetails)
+                    var validationErrors = JsonConvert.DeserializeObject<ValidationProblemDetails>(errorJson);
+                    if (validationErrors != null && validationErrors.Errors.Any())
+                    {
+                        errorMsg = "Vui lòng kiểm tra lại thông tin nhập."; // Thông báo chung
+                        foreach (var error in validationErrors.Errors)
+                        {
+                            // Key có thể là "imageFile", "Name", "RaceDate", etc. từ API
+                            string fieldName = error.Key;
+                            // Cố gắng khớp key trả về từ API với tên thuộc tính trong DTO Web
+                            // (Ví dụ: API trả "name", DTO Web là "Name") -> Chuyển thành "Name"
+                            string dtoFieldName = char.ToUpperInvariant(fieldName[0]) + fieldName.Substring(1);
+
+                            foreach (var message in error.Value)
+                            {
+                                // Thêm lỗi vào ModelState để hiển thị trên form
+                                // Ưu tiên thêm vào field cụ thể, nếu không khớp thì thêm lỗi chung
+                                if (ModelState.ContainsKey(dtoFieldName))
+                                {
+                                     ModelState.AddModelError(dtoFieldName, message);
+                                } else {
+                                     ModelState.AddModelError(string.Empty, $"{fieldName}: {message}");
+                                }
+                            }
+                        }
+                    } else {
+                        // Nếu không phải lỗi validation, hiển thị lỗi chung từ API
+                        // Kiểm tra xem có message trong JSON không
+                        try {
+                             var errorObj = JsonConvert.DeserializeObject<dynamic>(errorJson);
+                             errorMsg += $" Lý do: {errorObj?.message ?? errorObj?.title ?? errorJson}";
+                        } catch {
+                             errorMsg += $" Lý do: {errorJson}"; // Nếu không parse được JSON
+                        }
+                    }
+                } catch (Exception parseEx) {
+                    // Lỗi khi parse JSON lỗi
+                     errorMsg += $" (Không thể đọc chi tiết lỗi: {parseEx.Message})";
+                }
+
+                ModelState.AddModelError(string.Empty, errorMsg);
+                return View(dto); // Hiển thị lại form với lỗi
             }
         }
+        // ==========================================================
+        // KẾT THÚC SỬA HÀM POST CREATE
+        // ==========================================================
 
-        // Hàm phụ trợ (Copy từ AdminController)
+
+        // ===================================
+        // QUẢN LÝ CỰ LY (DISTANCES) - Giữ nguyên các hàm cũ
+        // ===================================
+
+        // GET: /Organizer/ManageDistances/5
+        public async Task<IActionResult> ManageDistances(int raceId)
+        {
+            var client = CreateAuthenticatedHttpClient();
+             if (client == null) return RedirectToAction("Login", "Account");
+
+            List<RaceDistanceDto> distances = new List<RaceDistanceDto>();
+             try
+            {
+                var response = await client.GetAsync($"/api/Races/{raceId}/distances");
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    distances = JsonConvert.DeserializeObject<List<RaceDistanceDto>>(json) ?? new List<RaceDistanceDto>();
+                }
+                else
+                {
+                    var errorBody = await response.Content.ReadAsStringAsync();
+                    TempData["ErrorMessage"] = $"Không thể tải danh sách cự ly ({(int)response.StatusCode}): {errorBody}";
+                    return RedirectToAction("Index");
+                }
+            } catch (Exception ex) {
+                 TempData["ErrorMessage"] = "Lỗi kết nối hoặc xử lý: " + ex.Message;
+                 return RedirectToAction("Index");
+            }
+
+            ViewBag.RaceId = raceId;
+            // TODO: Lấy tên giải chạy từ API để hiển thị
+            // ViewBag.RaceName = ...
+            return View(distances);
+        }
+
+        // GET: /Organizer/AddDistance/5
+        public IActionResult AddDistance(int raceId)
+        {
+             if (raceId <= 0) return BadRequest("Race ID không hợp lệ.");
+            var model = new RaceDistanceCreateDto
+            {
+                RaceId = raceId,
+                StartTime = DateTime.Now.Date.AddHours(6) // Gợi ý giờ
+            };
+            ViewBag.RaceId = raceId;
+            return View(model);
+        }
+
+        // POST: /Organizer/AddDistance
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddDistance(RaceDistanceCreateDto dto)
+        {
+            if (dto.RaceId <= 0) ModelState.AddModelError(nameof(dto.RaceId), "Race ID không hợp lệ.");
+            if (!ModelState.IsValid)
+            {
+                ViewBag.RaceId = dto.RaceId;
+                return View(dto);
+            }
+
+            var client = CreateAuthenticatedHttpClient();
+            if (client == null) return RedirectToAction("Login", "Account");
+
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(dto), Encoding.UTF8, "application/json");
+            HttpResponseMessage response = null;
+            try
+            {
+                response = await client.PostAsync($"/api/Races/{dto.RaceId}/distances", jsonContent);
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["SuccessMessage"] = "Thêm cự ly thành công!";
+                    return RedirectToAction("ManageDistances", new { raceId = dto.RaceId });
+                }
+                else
+                {
+                    var errorBody = await response.Content.ReadAsStringAsync();
+                    ModelState.AddModelError(string.Empty, $"Thêm cự ly thất bại ({(int)response.StatusCode}): {errorBody}");
+                }
+            } catch (Exception ex) {
+                 ModelState.AddModelError(string.Empty, "Lỗi kết nối hoặc xử lý: " + ex.Message);
+            }
+
+            ViewBag.RaceId = dto.RaceId; // Cần truyền lại RaceId khi lỗi
+            return View(dto);
+        }
+
+        // GET: /Organizer/EditDistance?distanceId=10&raceId=5
+        public async Task<IActionResult> EditDistance(int distanceId, int raceId)
+        {
+            if (distanceId <= 0 || raceId <= 0) return BadRequest("ID không hợp lệ.");
+            var client = CreateAuthenticatedHttpClient();
+             if (client == null) return RedirectToAction("Login", "Account");
+
+            RaceDistanceDto distanceDto = null;
+            try {
+                // !! API GET /api/distances/{distanceId} cần được tạo !!
+                var response = await client.GetAsync($"/api/distances/{distanceId}");
+                if (response.IsSuccessStatusCode)
+                {
+                     var json = await response.Content.ReadAsStringAsync();
+                     distanceDto = JsonConvert.DeserializeObject<RaceDistanceDto>(json);
+                     if (distanceDto == null) throw new Exception("Không thể đọc dữ liệu cự ly.");
+                }
+                 else if (response.StatusCode == System.Net.HttpStatusCode.NotFound || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                 {
+                      TempData["ErrorMessage"] = "Không tìm thấy cự ly hoặc bạn không có quyền sửa.";
+                      return RedirectToAction("ManageDistances", new { raceId = raceId });
+                 }
+                else
+                {
+                    var errorBody = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Lỗi API ({(int)response.StatusCode}): {errorBody}");
+                }
+            } catch (Exception ex) {
+                 TempData["ErrorMessage"] = "Lỗi khi tải cự ly để sửa: " + ex.Message;
+                 return RedirectToAction("ManageDistances", new { raceId = raceId });
+            }
+
+            var model = new RaceDistanceUpdateDto
+            {
+                Id = distanceDto.Id,
+                RaceId = raceId,
+                Name = distanceDto.Name,
+                DistanceInKm = distanceDto.DistanceInKm,
+                RegistrationFee = distanceDto.RegistrationFee,
+                MaxParticipants = distanceDto.MaxParticipants,
+                StartTime = distanceDto.StartTime
+            };
+            ViewBag.RaceId = raceId;
+            return View(model);
+        }
+
+        // POST: /Organizer/EditDistance
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditDistance(RaceDistanceUpdateDto dto)
+        {
+            if (dto.Id <= 0 || dto.RaceId <= 0) ModelState.AddModelError(string.Empty, "ID không hợp lệ.");
+             if (!ModelState.IsValid)
+            {
+                 ViewBag.RaceId = dto.RaceId;
+                return View(dto);
+            }
+
+            var client = CreateAuthenticatedHttpClient();
+             if (client == null) return RedirectToAction("Login", "Account");
+
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(dto), Encoding.UTF8, "application/json");
+            HttpResponseMessage response = null;
+             try {
+                response = await client.PutAsync($"/api/Races/{dto.RaceId}/distances/{dto.Id}", jsonContent);
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["SuccessMessage"] = "Cập nhật cự ly thành công!";
+                    return RedirectToAction("ManageDistances", new { raceId = dto.RaceId });
+                }
+                else
+                {
+                    var errorBody = await response.Content.ReadAsStringAsync();
+                    ModelState.AddModelError(string.Empty, $"Cập nhật thất bại ({(int)response.StatusCode}): {errorBody}");
+                }
+            } catch (Exception ex) {
+                 ModelState.AddModelError(string.Empty, "Lỗi kết nối hoặc xử lý: " + ex.Message);
+            }
+
+            ViewBag.RaceId = dto.RaceId; // Cần truyền lại RaceId khi lỗi
+            return View(dto);
+        }
+
+        // POST: /Organizer/DeleteDistance
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteDistance(int distanceId, int raceId)
+        {
+             if (distanceId <= 0 || raceId <= 0)
+             {
+                 TempData["ErrorMessage"] = "ID không hợp lệ.";
+                 return RedirectToAction("Index");
+             }
+
+            var client = CreateAuthenticatedHttpClient();
+             if (client == null) return RedirectToAction("Login", "Account");
+
+            HttpResponseMessage response = null;
+             try {
+                 response = await client.DeleteAsync($"/api/Races/{raceId}/distances/{distanceId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["SuccessMessage"] = "Xóa cự ly thành công!";
+                }
+                else
+                {
+                     var errorBody = await response.Content.ReadAsStringAsync();
+                     TempData["ErrorMessage"] = $"Xóa thất bại ({(int)response.StatusCode}): {errorBody}";
+                }
+            } catch (Exception ex) {
+                 TempData["ErrorMessage"] = "Lỗi kết nối hoặc xử lý: " + ex.Message;
+            }
+
+            return RedirectToAction("ManageDistances", new { raceId = raceId });
+        }
+
+
+        // ===================================
+        // HÀM PHỤ TRỢ (Private)
+        // ===================================
         private HttpClient CreateAuthenticatedHttpClient()
         {
-            var client = _httpClientFactory.CreateClient("MarathonApi");
-            var token = _httpContextAccessor.HttpContext.Request.Cookies["AuthToken"];
-            if (string.IsNullOrEmpty(token))
-            {
-                throw new Exception("Không tìm thấy Token.");
+            var client = _httpClientFactory.CreateClient("MarathonApi"); // Tên client đã đăng ký trong Program.cs
+            try {
+                 var token = _httpContextAccessor.HttpContext?.Request.Cookies["AuthToken"];
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    // Log hoặc thông báo lỗi nhẹ nhàng hơn là throw exception
+                    // Có thể trả về null và kiểm tra ở nơi gọi
+                    // TempData["ErrorMessage"] = "Phiên đăng nhập hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.";
+                    return null;
+                }
+
+                // Xóa header cũ trước khi thêm mới
+                client.DefaultRequestHeaders.Authorization = null;
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
+
+                return client;
+            } catch (Exception ex) {
+                 // Lỗi khi truy cập HttpContext hoặc Cookies (ít xảy ra nhưng nên có)
+                 Console.WriteLine($"Error creating authenticated HttpClient: {ex.Message}"); // Dùng ILogger nếu có
+                 // TempData["ErrorMessage"] = "Lỗi hệ thống khi xác thực. Vui lòng thử lại.";
+                 return null;
             }
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-            return client;
         }
     }
 }

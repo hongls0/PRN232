@@ -8,16 +8,54 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// ✅ Thêm cấu hình Swagger với hỗ trợ JWT
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "MarathonManager API",
+        Version = "v1"
+    });
+
+    // 👇 Dòng này giúp Swagger phân biệt các class trùng tên theo namespace
+    c.CustomSchemaIds(type => type.FullName);
+
+    // 🔒 Thêm cấu hình để Swagger hiển thị nút Authorize
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Nhập token theo định dạng: Bearer {your token}"
+    });
+
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
 var connectionString = builder.Configuration.GetConnectionString("MyCnn");
 
 // Đăng ký DbContext với SQL Server
 builder.Services.AddDbContext<MarathonManagerContext>(options =>
     options.UseSqlServer(connectionString));
+
 // 1. Cấu hình Identity
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 {
@@ -25,7 +63,7 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 6; // Đặt pass cho dễ test
+    options.Password.RequiredLength = 6;
     options.User.RequireUniqueEmail = true;
 })
 .AddEntityFrameworkStores<MarathonManagerContext>()
@@ -46,13 +84,16 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"], // Thêm vào appsettings.json
-        ValidAudience = builder.Configuration["Jwt:Audience"], // Thêm vào appsettings.json
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])) // Thêm vào appsettings.json
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
+
 var app = builder.Build();
+
+app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -62,7 +103,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -1,231 +1,220 @@
-﻿@model MarathonManager.Web.ViewModels.AdminDashboardViewModel
-@using X.PagedList
-@* Chúng ta không cần using 'Web.Common' hay 'Extensions' nữa *@
+﻿    @model MarathonManager.Web.ViewModels.AdminDashboardViewModel
+    @using X.PagedList
+    @* Chúng ta không cần using 'Web.Common' hay 'Extensions' nữa *@
 
-@{
-    ViewData["Title"] = "Admin Dashboard";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    @{
+        ViewData["Title"] = "Admin Dashboard";
+        Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var racesTabActive = (ViewBag.CurrentTab == "races" || string.IsNullOrEmpty(ViewBag.CurrentTab)) ? "active" : "";
-    var usersTabActive = ViewBag.CurrentTab == "users" ? "active" : "";
-    var blogsTabActive = ViewBag.CurrentTab == "blogs" ? "active" : "";
-}
-
-<div class="container" style="padding-top: 80px; padding-bottom: 80px;">
-
-    <h1 class="display-4 fw-bold mb-4">
-        <i class="fas fa-user-shield me-2"></i> Admin Dashboard
-    </h1>
-
-    @if (ViewBag.Error != null)
-    {
-        <div class="alert alert-danger">@ViewBag.Error</div>
+        var racesTabActive = (ViewBag.CurrentTab == "races" || string.IsNullOrEmpty(ViewBag.CurrentTab)) ? "active" : "";
+        var usersTabActive = ViewBag.CurrentTab == "users" ? "active" : "";
+        var blogsTabActive = ViewBag.CurrentTab == "blogs" ? "active" : "";
     }
 
-    <ul class="nav nav-tabs nav-fill mb-3" id="adminTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link @racesTabActive" id="races-tab" data-bs-toggle="tab" data-bs-target="#tab-races" type="button" role="tab" aria-controls="tab-races" aria-selected="@(racesTabActive == "active")">
-                <i class="fas fa-flag-checkered me-1"></i> Quản lý Giải Chạy
-                <span class="badge bg-danger ms-1">@Model.PendingRaces?.TotalItemCount</span>
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link @usersTabActive" id="users-tab" data-bs-toggle="tab" data-bs-target="#tab-users" type="button" role="tab" aria-controls="tab-users" aria-selected="@(usersTabActive == "active")">
-                <i class="fas fa-users-cog me-1"></i> Quản lý Người Dùng
-                <span class="badge bg-info ms-1">@Model.AllUsers?.TotalItemCount</span>
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link @blogsTabActive" id="blogs-tab" data-bs-toggle="tab" data-bs-target="#tab-blogs" type="button" role="tab" aria-controls="tab-blogs" aria-selected="@(blogsTabActive == "active")">
-                <i class="fas fa-newspaper me-1"></i> Quản lý Blog
-                <span class="badge bg-secondary ms-1">@Model.AllBlogPosts?.TotalItemCount</span>
-            </button>
-        </li>
-    </ul>
+    <div class="container" style="padding-top: 80px; padding-bottom: 80px;">
 
-    <div class="tab-content" id="adminTabContent">
+        <h1 class="display-4 fw-bold mb-4">
+            <i class="fas fa-user-shield me-2"></i> Admin Dashboard
+        </h1>
 
-        <div class="tab-pane fade show @racesTabActive" id="tab-races" role="tabpanel" aria-labelledby="races-tab">
-            <h4 class="mt-4">Các giải chạy chờ duyệt</h4>
-            @if (Model.PendingRaces == null || !Model.PendingRaces.Any())
-            {
-                <div class="alert alert-info mt-4">Không có giải chạy nào đang chờ duyệt.</div>
-            }
-            else
-            {
-                <table class="table table-hover align-middle mt-4">
-                    <thead class="table-light">
-                        <tr><th>STT</th><th>Tên Giải Chạy</th><th>Địa điểm</th><th>Trạng thái</th><th class="text-end">Hành động</th></tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 0; i < Model.PendingRaces.Count; i++)
-                        {
-                            var race = Model.PendingRaces[i];
-                            var stt = (Model.PendingRaces.PageNumber - 1) * Model.PendingRaces.PageSize + (i + 1);
-                            <tr>
-                                <td>@stt</td>
-                                <td>@race.Name</td>
-                                <td>@race.Location</td>
-                                <td><span class="badge bg-warning text-dark">@race.Status</span></td>
-                                <td class="text-end">
-                                    <form asp-action="Approve" method="post" class="d-inline"><input type="hidden" name="raceId" value="@race.Id" /><button type="submit" class="btn btn-success btn-sm"><i class="fas fa-check me-1"></i> Duyệt</button></form>
-                                    <form asp-action="Cancel" method="post" class="d-inline"><input type="hidden" name="raceId" value="@race.Id" /><button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-times me-1"></i> Hủy</button></form>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">@ViewBag.Error</div>
+        }
 
-                <nav>
-                    <pager class="pagination"
-                           list="@Model.PendingRaces"
-                           asp-controller="Admin"
-                           asp-action="Index"
-                           asp-route-tab="races"
-                           param-page-number="pageRaces"
-                           li-Element-Classes="page-item"
-                           a-Element-Classes="page-link" />
-                </nav>
-            }
-        </div>
+        <ul class="nav nav-tabs nav-fill mb-3" id="adminTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @racesTabActive" id="races-tab" data-bs-toggle="tab" data-bs-target="#tab-races" type="button" role="tab" aria-controls="tab-races" aria-selected="@(racesTabActive == "active")">
+                    <i class="fas fa-flag-checkered me-1"></i> Quản lý Giải Chạy
+                    <span class="badge bg-danger ms-1">@Model.PendingRaces?.TotalItemCount</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @usersTabActive" id="users-tab" data-bs-toggle="tab" data-bs-target="#tab-users" type="button" role="tab" aria-controls="tab-users" aria-selected="@(usersTabActive == "active")">
+                    <i class="fas fa-users-cog me-1"></i> Quản lý Người Dùng
+                    <span class="badge bg-info ms-1">@Model.AllUsers?.TotalItemCount</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @blogsTabActive" id="blogs-tab" data-bs-toggle="tab" data-bs-target="#tab-blogs" type="button" role="tab" aria-controls="tab-blogs" aria-selected="@(blogsTabActive == "active")">
+                    <i class="fas fa-newspaper me-1"></i> Quản lý Blog
+                    <span class="badge bg-secondary ms-1">@Model.AllBlogPosts?.TotalItemCount</span>
+                </button>
+            </li>
+        </ul>
 
-        <div class="tab-pane fade show @usersTabActive" id="tab-users" role="tabpanel" aria-labelledby="users-tab">
-            <h4 class="mt-4">Tất cả Người dùng (Runners & Organizers)</h4>
-            @if (Model.AllUsers == null || !Model.AllUsers.Any())
-            {
-                <div class="alert alert-info mt-4">Không tìm thấy người dùng nào.</div>
-            }
-            else
-            {
-                <table class="table table-hover align-middle mt-4">
-                    <thead class="table-light">
-                        <tr><th>STT</th><th>Họ Tên</th><th>Email</th><th>Vai trò</th><th>Trạng thái</th><th class="text-end">Hành động</th></tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 0; i < Model.AllUsers.Count; i++)
-                        {
-                            var user = Model.AllUsers[i];
-                            var stt = (Model.AllUsers.PageNumber - 1) * Model.AllUsers.PageSize + (i + 1);
-                            <tr>
-                                <td>@stt</td>
-                                <td>@user.FullName</td>
-                                <td>@user.Email</td>
-                                <td>
-                                    @foreach (var role in user.Roles)
-                                    {
-                                        <span class="badge bg-secondary">@role</span>
-                                    }
-                                </td>
-                                <td>
-                                    @if (user.IsActive)
-                                    {
-                                        <span class="badge bg-success">Active</span>
-                                    }
-                                    else
-                                    {
+        <div class="tab-content" id="adminTabContent">
 
-                                        <span class="badge bg-danger">Locked</span>
-                                    }
-                                </td>
-                                <td class="text-end">
-                                    <form asp-action="ToggleUserLock" method="post" class="d-inline">
-                                        <input type="hidden" name="userId" value="@user.Id" />
+            <div class="tab-pane fade show @racesTabActive" id="tab-races" role="tabpanel" aria-labelledby="races-tab">
+                <h4 class="mt-4">Các giải chạy chờ duyệt</h4>
+                @if (Model.PendingRaces == null || !Model.PendingRaces.Any())
+                {
+                    <div class="alert alert-info mt-4">Không có giải chạy nào đang chờ duyệt.</div>
+                }
+                else
+                {
+                    <table class="table table-hover align-middle mt-4">
+                        <thead class="table-light">
+                            <tr><th>STT</th><th>Tên Giải Chạy</th><th>Địa điểm</th><th>Trạng thái</th><th class="text-end">Hành động</th></tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.PendingRaces.Count; i++)
+                            {
+                                var race = Model.PendingRaces[i];
+                                var stt = (Model.PendingRaces.PageNumber - 1) * Model.PendingRaces.PageSize + (i + 1);
+                                <tr>
+                                    <td>@stt</td>
+                                    <td>@race.Name</td>
+                                    <td>@race.Location</td>
+                                    <td><span class="badge bg-warning text-dark">@race.Status</span></td>
+                                    <td class="text-end">
+                                        <form asp-action="Approve" method="post" class="d-inline"><input type="hidden" name="raceId" value="@race.Id" /><button type="submit" class="btn btn-success btn-sm"><i class="fas fa-check me-1"></i> Duyệt</button></form>
+                                        <form asp-action="Cancel" method="post" class="d-inline"><input type="hidden" name="raceId" value="@race.Id" /><button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-times me-1"></i> Hủy</button></form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <nav>
+                        <pager class="pagination" list="@Model.PendingRaces" asp-controller="Admin" asp-action="Index" asp-route-tab="races" param-page-number="pageRaces" li-Element-Classes="page-item" a-Element-Classes="page-link" />
+                    </nav>
+                }
+            </div>
+
+            <div class="tab-pane fade show @usersTabActive" id="tab-users" role="tabpanel" aria-labelledby="users-tab">
+                <h4 class="mt-4">Tất cả Người dùng</h4>
+                @if (Model.AllUsers == null || !Model.AllUsers.Any())
+                {
+                    <div class="alert alert-info mt-4">Không tìm thấy người dùng nào.</div>
+                }
+                else
+                {
+                    <table class="table table-hover align-middle mt-4">
+                        <thead class="table-light">
+                            <tr><th>STT</th><th>Họ Tên</th><th>Email</th><th>Vai trò</th><th>Trạng thái</th><th class="text-end">Hành động</th></tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.AllUsers.Count; i++)
+                            {
+                                var user = Model.AllUsers[i];
+                                var stt = (Model.AllUsers.PageNumber - 1) * Model.AllUsers.PageSize + (i + 1);
+                                <tr>
+                                    <td>@stt</td>
+                                    <td>@user.FullName</td>
+                                    <td>@user.Email</td>
+                                    <td>
+                                        @if (user.Roles != null && user.Roles.Any())
+                                        {
+                                            foreach (var roleName in user.Roles)
+                                            {
+                                                <span class="badge bg-secondary me-1">@roleName</span>
+                                            }
+                                        }
+                                        else
+                                        {
+
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                    </td>
+                                    <td>
                                         @if (user.IsActive)
                                         {
-                                            <button type="submit" class="btn btn-warning btn-sm"><i class="fas fa-lock me-1"></i> Khóa</button>
+                                            <span class="badge bg-success">Active</span>
                                         }
                                         else
                                         {
 
-                                            <button type="submit" class="btn btn-info btn-sm"><i class="fas fa-lock-open me-1"></i> Mở khóa</button>
+                                            <span class="badge bg-danger">Locked</span>
                                         }
-                                    </form>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                                    </td>
+                                    <td class="text-end">
+                                        <form asp-action="ToggleUserLock" method="post" class="d-inline">
+                                            <input type="hidden" name="userId" value="@user.Id" />
+                                            @if (user.IsActive)
+                                            {
+                                                <button type="submit" class="btn btn-warning btn-sm" title="Khóa tài khoản"><i class="fas fa-lock me-1"></i> Khóa</button>
+                                            }
+                                            else
+                                            {
 
-                <nav>
-                    <pager class="pagination"
-                           list="@Model.AllUsers"
-                           asp-controller="Admin"
-                           asp-action="Index"
-                           asp-route-tab="users"
-                           param-page-number="pageUsers"
-                           li-Element-Classes="page-item"
-                           a-Element-Classes="page-link" />
-                </nav>
-            }
-        </div>
+                                                <button type="submit" class="btn btn-info btn-sm" title="Mở khóa tài khoản"><i class="fas fa-lock-open me-1"></i> Mở</button>
+                                            }
+                                        </form>
 
-        <div class="tab-pane fade show @blogsTabActive" id="tab-blogs" role="tabpanel" aria-labelledby="blogs-tab">
-            <h4 class="mt-4">Tất cả Bài viết Blog</h4>
-            @if (Model.AllBlogPosts == null || !Model.AllBlogPosts.Any())
-            {
-                <div class="alert alert-info mt-4">Chưa có bài viết nào.</div>
-            }
-            else
-            {
-                <table class="table table-hover align-middle mt-4">
-                    <thead class="table-light">
-                        <tr><th>STT</th><th>Tiêu đề</th><th>Tác giả</th><th>Trạng thái</th><th class="text-end">Hành động</th></tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 0; i < Model.AllBlogPosts.Count; i++)
-                        {
-                            var blog = Model.AllBlogPosts[i];
-                            var stt = (Model.AllBlogPosts.PageNumber - 1) * Model.AllBlogPosts.PageSize + (i + 1);
-                            <tr>
-                                <td>@stt</td>
-                                <td>@blog.Title</td>
-                                <td>@blog.AuthorName</td>
-                                <td>
-                                    @if (blog.Status == "Published")
-                                    {
-                                        <span class="badge bg-primary">Published</span>
-                                    }
-                                    else
-                                    {
+                                        <a asp-controller="Admin" asp-action="UserDetails" asp-route-userId="@user.Id"
+                                           class="btn btn-sm btn-primary" title="Xem Chi tiết & Sửa Role">
+                                            <i class="fas fa-user-edit"></i> Chi tiết
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <nav>
+                        <pager class="pagination" list="@Model.AllUsers" asp-controller="Admin" asp-action="Index" asp-route-tab="users" param-page-number="pageUsers" li-Element-Classes="page-item" a-Element-Classes="page-link" />
+                    </nav>
+                }
+            </div>
 
-                                        <span class="badge bg-secondary">Draft</span>
-                                    }
-                                </td>
-                                <td class="text-end">
-                                    <form asp-action="ToggleBlogPostPublish" method="post" class="d-inline">
-                                        <input type="hidden" name="blogId" value="@blog.Id" />
+            <div class="tab-pane fade show @blogsTabActive" id="tab-blogs" role="tabpanel" aria-labelledby="blogs-tab">
+                <h4 class="mt-4">Tất cả Bài viết Blog</h4>
+                @if (Model.AllBlogPosts == null || !Model.AllBlogPosts.Any())
+                {
+                    <div class="alert alert-info mt-4">Chưa có bài viết nào.</div>
+                }
+                else
+                {
+                    <table class="table table-hover align-middle mt-4">
+                        <thead class="table-light">
+                            <tr><th>STT</th><th>Tiêu đề</th><th>Tác giả</th><th>Trạng thái</th><th class="text-end">Hành động</th></tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.AllBlogPosts.Count; i++)
+                            {
+                                var blog = Model.AllBlogPosts[i];
+                                var stt = (Model.AllBlogPosts.PageNumber - 1) * Model.AllBlogPosts.PageSize + (i + 1);
+                                <tr>
+                                    <td>@stt</td>
+                                    <td>@blog.Title</td>
+                                    <td>@blog.AuthorName</td>
+                                    <td>
                                         @if (blog.Status == "Published")
                                         {
-                                            <button type="submit" class="btn btn-secondary btn-sm" title="Gỡ bài"><i class="fas fa-eye-slash"></i></button>
+                                            <span class="badge bg-primary">Published</span>
                                         }
                                         else
                                         {
 
-                                            <button type="submit" class="btn btn-success btn-sm" title="Đăng bài"><i class="fas fa-check"></i></button>
+                                            <span class="badge bg-secondary">Draft</span>
                                         }
-                                    </form>
-                                    <a href="#" class="btn btn-info btn-sm" title="Sửa bài viết"><i class="fas fa-edit"></i></a>
-                                    <form asp-action="DeleteBlogPost" method="post" class="d-inline" onsubmit="return confirm('Bạn chắc chắn muốn xóa bài viết này?');">
-                                        <input type="hidden" name="blogId" value="@blog.Id" />
-                                        <button type="submit" class="btn btn-danger btn-sm" title="Xóa bài viết"><i class="fas fa-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                                    </td>
+                                    <td class="text-end">
+                                        <form asp-action="ToggleBlogPostPublish" method="post" class="d-inline">
+                                            <input type="hidden" name="blogId" value="@blog.Id" />
+                                            @if (blog.Status == "Published")
+                                            {
+                                                <button type="submit" class="btn btn-secondary btn-sm" title="Gỡ bài"><i class="fas fa-eye-slash"></i></button>
+                                            }
+                                            else
+                                            {
 
-                <nav>
-                    <pager class="pagination"
-                           list="@Model.AllBlogPosts"
-                           asp-controller="Admin"
-                           asp-action="Index"
-                           asp-route-tab="blogs"
-                           param-page-number="pageBlogs"
-                           li-Element-Classes="page-item"
-                           a-Element-Classes="page-link" />
-                </nav>
-            }
+                                                <button type="submit" class="btn btn-success btn-sm" title="Đăng bài"><i class="fas fa-check"></i></button>
+                                            }
+                                        </form>
+                                        <a href="#" class="btn btn-info btn-sm" title="Sửa bài viết"><i class="fas fa-edit"></i></a>
+                                        <form asp-action="DeleteBlogPost" method="post" class="d-inline" onsubmit="return confirm('Bạn chắc chắn muốn xóa bài viết này?');">
+                                            <input type="hidden" name="blogId" value="@blog.Id" />
+                                            <button type="submit" class="btn btn-danger btn-sm" title="Xóa bài viết"><i class="fas fa-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <nav>
+                        <pager class="pagination" list="@Model.AllBlogPosts" asp-controller="Admin" asp-action="Index" asp-route-tab="blogs" param-page-number="pageBlogs" li-Element-Classes="page-item" a-Element-Classes="page-link" />
+                    </nav>
+                }
+            </div>
         </div>
     </div>
-</div>

@@ -12,39 +12,52 @@
                 </div>
                 <div class="card-body p-4 p-sm-5">
 
-                    <form asp-action="Create" method="post">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
+                        <!-- Tên giải chạy -->
                         <div class="form-floating mb-3">
                             <input asp-for="Name" class="form-control" placeholder="Tên giải chạy" />
-                            <label asp-for="Name">Tên giải chạy</label>
+                            <label asp-for="Name"></label>
                             <span asp-validation-for="Name" class="text-danger small"></span>
                         </div>
 
+                        <!-- Địa điểm -->
                         <div class="form-floating mb-3">
                             <input asp-for="Location" class="form-control" placeholder="Địa điểm" />
-                            <label asp-for="Location">Địa điểm (VD: Sa Pa, Lào Cai)</label>
+                            <label asp-for="Location"></label>
                             <span asp-validation-for="Location" class="text-danger small"></span>
                         </div>
 
-                        <div class="form-floating mb-3">
+                        <!-- Ngày diễn ra -->
+                        <div class="mb-3">
+                            <label asp-for="RaceDate" class="form-label"></label>
                             <input asp-for="RaceDate" type="datetime-local" class="form-control" />
-                            <label asp-for="RaceDate">Ngày giờ chạy</label>
                             <span asp-validation-for="RaceDate" class="text-danger small"></span>
                         </div>
 
-                        <div class="form-floating mb-3">
-                            <input asp-for="ImageUrl" class="form-control" placeholder="URL Ảnh bìa" />
-                            <label asp-for="ImageUrl">URL Ảnh bìa</label>
-                            <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                        <!-- Ảnh bìa -->
+                        <div class="mb-3">
+                            <label for="imageFile" class="form-label">Ảnh bìa (Tùy chọn)</label>
+                            <input type="file" name="imageFile" id="imageFile" class="form-control" accept="image/png, image/jpeg, image/gif" />
+                            <span class="text-danger small" data-valmsg-for="imageFile"></span>
                         </div>
 
+                        <!-- Mô tả -->
                         <div class="form-floating mb-3">
                             <textarea asp-for="Description" class="form-control" placeholder="Mô tả chi tiết" style="height: 150px;"></textarea>
-                            <label asp-for="Description">Mô tả chi tiết</label>
+                            <label asp-for="Description"></label>
                             <span asp-validation-for="Description" class="text-danger small"></span>
                         </div>
 
+                        <!-- Khoảng cách chạy -->
+                        <div class="form-floating mb-3">
+                            <input asp-for="DistancesInput" class="form-control" placeholder="Ví dụ: 5, 10, 21, 42" />
+                            <label asp-for="DistancesInput">Khoảng cách chạy (nhập nhiều cách nhau bằng dấu phẩy)</label>
+                            <span asp-validation-for="DistancesInput" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Nút gửi -->
                         <div class="d-grid mt-4">
                             <button type="submit" class="btn btn-primary btn-lg">
                                 <i class="fas fa-save me-1"></i> Gửi duyệt
@@ -52,6 +65,7 @@
                         </div>
                     </form>
                 </div>
+
                 <div class="card-footer text-center py-3">
                     <div class="small">
                         <a asp-action="Index">Quay lại Dashboard</a>
@@ -61,3 +75,9 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
