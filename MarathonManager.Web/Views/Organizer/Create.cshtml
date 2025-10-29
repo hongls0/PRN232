@@ -1,0 +1,63 @@
+﻿@model MarathonManager.Web.DTOs.RaceCreateDto
+@{
+    ViewData["Title"] = "Tạo giải chạy mới";
+}
+
+<div class="container" style="padding-top: 80px; padding-bottom: 80px;">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-success text-white text-center">
+                    <h3 class="fw-bold my-4">Thông tin Giải chạy mới</h3>
+                </div>
+                <div class="card-body p-4 p-sm-5">
+
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Name" class="form-control" placeholder="Tên giải chạy" />
+                            <label asp-for="Name">Tên giải chạy</label>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Location" class="form-control" placeholder="Địa điểm" />
+                            <label asp-for="Location">Địa điểm (VD: Sa Pa, Lào Cai)</label>
+                            <span asp-validation-for="Location" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="RaceDate" type="datetime-local" class="form-control" />
+                            <label asp-for="RaceDate">Ngày giờ chạy</label>
+                            <span asp-validation-for="RaceDate" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="ImageUrl" class="form-control" placeholder="URL Ảnh bìa" />
+                            <label asp-for="ImageUrl">URL Ảnh bìa</label>
+                            <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <textarea asp-for="Description" class="form-control" placeholder="Mô tả chi tiết" style="height: 150px;"></textarea>
+                            <label asp-for="Description">Mô tả chi tiết</label>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-1"></i> Gửi duyệt
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small">
+                        <a asp-action="Index">Quay lại Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

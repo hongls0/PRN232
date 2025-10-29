@@ -48,6 +48,27 @@
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <li><a class="dropdown-item" href="#">Hồ sơ của tôi</a></li>
                                     <li><a class="dropdown-item" href="#">Giải chạy đã đăng ký</a></li>
+
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item fw-bold text-danger"
+                                               asp-controller="Admin" asp-action="Index">
+                                                <i class="fas fa-user-shield me-1"></i> Admin Dashboard
+                                            </a>
+                                        </li>
+                                    }
+                                    else if (User.IsInRole("Organizer"))
+                                    {
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item fw-bold text-success"
+                                               asp-controller="Organizer" asp-action="Index">
+                                                <i class="fas fa-plus-circle me-1"></i> Quản lý Giải chạy
+                                            </a>
+                                        </li>
+                                    }
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form asp-controller="Account" asp-action="Logout" method="post">

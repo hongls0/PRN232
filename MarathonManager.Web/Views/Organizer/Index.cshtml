@@ -1,0 +1,69 @@
+﻿@model List<MarathonManager.Web.DTOs.RaceSummaryDto>
+@{
+    ViewData["Title"] = "Quản lý Giải chạy";
+}
+
+<div class="container" style="padding-top: 80px; padding-bottom: 80px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-4 fw-bold">
+            <i class="fas fa-plus-circle me-2 text-success"></i> Giải chạy của tôi
+        </h1>
+        <a asp-action="Create" class="btn btn-primary btn-lg">
+            <i class="fas fa-plus me-1"></i> Tạo giải chạy mới
+        </a>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">
+            Bạn chưa tạo giải chạy nào. Hãy nhấn "Tạo giải chạy mới".
+        </div>
+    }
+    else
+    {
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Tên Giải</th>
+                    <th>Địa điểm</th>
+                    <th>Ngày chạy</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var race in Model)
+                {
+                    <tr>
+                        <td>@race.Name</td>
+                        <td>@race.Location</td>
+                        <td>@race.RaceDate.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @if (race.Status == "Pending")
+                            {
+                                <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                            }
+                            else if (race.Status == "Approved")
+                            {
+                                <span class="badge bg-success">Đã duyệt</span>
+                            }
+                            else if (race.Status == "Cancelled")
+                            {
+                                <span class="badge bg-danger">Đã hủy</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">@race.Status</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-info">
+                                <i class="fas fa-edit me-1"></i> Sửa
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

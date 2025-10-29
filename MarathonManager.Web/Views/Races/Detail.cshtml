@@ -1,0 +1,109 @@
+﻿@model MarathonManager.Web.DTOs.RaceDetailDto
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="container-fluid p-0">
+    <div class="race-detail-header" style="background-image: url('@Model.ImageUrl');">
+        <div class="hero-overlay"></div> <div class="container text-white position-relative">
+            <h1 class="display-3 fw-bold">@Model.Name</h1>
+            <p class="lead fs-4">
+                <i class="fas fa-map-marker-alt me-2"></i> @Model.Location
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <h2 class="fw-bold">Thông tin giải chạy</h2>
+            <hr />
+            <div class.fs-5>
+                @Html.Raw(Model.Description.Replace("\n", "<br/>"))
+            </div>
+
+            <h2 class="fw-bold mt-5">Các cự ly thi đấu</h2>
+            <hr />
+
+            @foreach (var distance in Model.Distances)
+            {
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <h4 class="fw-bold text-primary">@distance.DistanceInKm km</h4>
+                                <span class="text-muted">@distance.Name</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Phí đăng ký:</strong>
+                                <br />
+                                <span class="fs-5 fw-bold text-success">@distance.RegistrationFee.ToString("N0") VNĐ</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Giờ xuất phát:</strong>
+                                <br />
+                                <span>@distance.StartTime.ToString("HH:mm, dd/MM/yyyy")</span>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <form asp-controller="Registrations" asp-action="Register" method="post">
+                                    <input type="hidden" name="RaceDistanceId" value="@distance.Id" />
+
+                                    <input type="hidden" name="RaceId" value="@Model.Id" />
+
+                                    <button type.submit" class="btn btn-danger btn-lg">
+                                        <i class="fas fa-pen-to-square me-1"></i> Đăng ký ngay
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card sticky-top" style="top: 100px;">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">Thông tin tóm tắt</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <i class="fas fa-calendar-alt me-2 text-primary"></i>
+                        <strong>Ngày:</strong> @Model.RaceDate.ToString("dd/MM/yyyy")
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fas fa-user-cog me-2 text-primary"></i>
+                        <strong>Người tổ chức:</strong> @Model.OrganizerName
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fas fa-info-circle me-2 text-primary"></i>
+                        <strong>Trạng thái:</strong> <span class="badge bg-success">@Model.Status</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .race-detail-header {
+            height: 40vh;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+}

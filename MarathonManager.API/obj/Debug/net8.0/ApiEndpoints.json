@@ -1,5 +1,93 @@
 [
   {
+    "ContainingType": "MarathonManager.API.Controllers.AdminApiController",
+    "Method": "GetBlogPosts",
+    "RelativePath": "api/admin/blogs",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[MarathonManager.API.DTOs.Admin.BlogAdminDto, MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MarathonManager.API.Controllers.AdminApiController",
+    "Method": "DeleteBlogPost",
+    "RelativePath": "api/admin/blogs/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MarathonManager.API.Controllers.AdminApiController",
+    "Method": "ToggleBlogPostPublish",
+    "RelativePath": "api/admin/blogs/{id}/toggle-publish",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MarathonManager.API.Controllers.AdminApiController",
+    "Method": "GetUsers",
+    "RelativePath": "api/admin/users",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[MarathonManager.API.DTOs.Admin.UserDto, MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MarathonManager.API.Controllers.AdminApiController",
+    "Method": "ToggleUserLock",
+    "RelativePath": "api/admin/users/{id}/toggle-lock",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MarathonManager.API.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/login",
