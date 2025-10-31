@@ -9,5 +9,6 @@
         public DateTime RaceDate { get; set; }
         public string ImageUrl { get; set; }
         public string Status { get; set; }
+        public string OrganizerName { get; set; }
     }
 }

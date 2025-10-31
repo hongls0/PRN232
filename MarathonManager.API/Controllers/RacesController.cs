@@ -13,7 +13,7 @@ using MarathonManager.API.DTOs.RaceDistances; // Using for distance DTOs
 using Microsoft.AspNetCore.Hosting; // <-- REQUIRED: For IWebHostEnvironment
 using System.IO;                  // <-- REQUIRED: For Path, FileStream
 using Microsoft.AspNetCore.Http; // <-- REQUIRED: For IFormFile, StatusCodes
-
+using System.Text.RegularExpressions;
 namespace MarathonManager.API.Controllers
 {
     [Route("api/[controller]")]
@@ -146,94 +146,140 @@ namespace MarathonManager.API.Controllers
         }
 
 
-        // POST: api/Races (Create a new race with image upload)
+        // POST: api/Races
         [HttpPost]
         [Authorize(Roles = "Organizer")]
-        [Consumes("multipart/form-data")] // Specify that this action consumes form-data
-        // Updated signature: Use [FromForm] for DTO and add IFormFile for the image
+        [Consumes("multipart/form-data")]
         public async Task<ActionResult<RaceDetailDto>> PostRace([FromForm] RaceCreateDto raceDto, IFormFile? imageFile)
         {
-            // Validate DTO
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
             var organizerId = GetCurrentUserId();
-            string? uniqueFileName = null; // Filename to save in DB
-            string? imageUrlPath = null;   // Relative URL path
+            string? imageUrlPath = null;
 
-            // 1. Process uploaded image file (if provided)
+            // ==============================================================
+            // PHẦN 1: LƯU ẢNH (Giữ nguyên code cũ)
+            // ==============================================================
             if (imageFile != null && imageFile.Length > 0)
             {
-                // Validate file type
+                // (Kiểm tra extension, size, v.v...)
                 var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
                 var extension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
                 if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
                 {
-                    ModelState.AddModelError(nameof(imageFile), "Chỉ chấp nhận file ảnh (.jpg, .jpeg, .png, .gif).");
+                    ModelState.AddModelError("imageFile", "Chỉ chấp nhận file ảnh (.jpg, .jpeg, .png, .gif).");
                     return BadRequest(ModelState);
                 }
-
-                // Validate file size (e.g., max 5MB)
                 if (imageFile.Length > 5 * 1024 * 1024) // 5 MB
                 {
-                    ModelState.AddModelError(nameof(imageFile), "Kích thước file ảnh không được vượt quá 5MB.");
+                    ModelState.AddModelError("imageFile", "Kích thước file ảnh không được vượt quá 5MB.");
                     return BadRequest(ModelState);
                 }
-
+                // (Lưu file vào wwwroot/images/races...)
                 try
                 {
-                    // Define the path to save the image (wwwroot/images/races)
-                    // _environment.WebRootPath points to wwwroot
-                    string uploadsFolder = Path.Combine(_environment.WebRootPath ?? "wwwroot", "images", "races");
-                    // Ensure the directory exists
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-
-                    // Create a unique filename to prevent overwrites
-                    uniqueFileName = Guid.NewGuid().ToString() + extension; // Use extension from original file
+                    string uploadsFolder = Path.Combine(_environment.WebRootPath, "images", "races");
+                    if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+                    string uniqueFileName = Guid.NewGuid().ToString() + extension;
                     string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                    // Save the file to the server
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await imageFile.CopyToAsync(fileStream);
                     }
-
-                    // Set the relative URL path to be saved in the database
                     imageUrlPath = $"/images/races/{uniqueFileName}";
                 }
                 catch (Exception ex)
                 {
-                    // Log the error (consider using ILogger here)
-                    Console.WriteLine($"Error saving image file: {ex.Message}");
-                    // Return a server error response
-                    ModelState.AddModelError(nameof(imageFile), "Lỗi server khi lưu file ảnh.");
+                    System.Diagnostics.Debug.WriteLine($"Error saving image: {ex.Message}");
+                    ModelState.AddModelError("imageFile", $"Lỗi server khi lưu file ảnh.");
                     return StatusCode(StatusCodes.Status500InternalServerError, ModelState);
                 }
             }
 
-            // 2. Create the Race entity
+            // ==============================================================
+            // PHẦN 2: LƯU THÔNG TIN GIẢI CHẠY (RACE) (Giữ nguyên)
+            // ==============================================================
             var newRace = new Race
             {
                 Name = raceDto.Name,
                 Description = raceDto.Description,
                 Location = raceDto.Location,
-                RaceDate = raceDto.RaceDate, // DateTime from DTO
-                ImageUrl = imageUrlPath,     // Save the relative path (or null if no image)
+                RaceDate = raceDto.RaceDate,
+                ImageUrl = imageUrlPath,
                 OrganizerId = organizerId,
-                Status = "Pending"           // Default status
+                Status = "Pending"
             };
-
-            // 3. Save the Race entity to the database
             _context.Races.Add(newRace);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // <-- LƯU GIẢI CHẠY ĐỂ LẤY ID
 
-            // 4. Prepare the detailed DTO to return
-            var organizer = await _context.Users.FindAsync(organizerId); // Fetch organizer details for name
+            // ==============================================================
+            // PHẦN 3: (NÂNG CẤP) TẠO CỰ LY TỪ CHUỖI CSV
+            // ==============================================================
+            List<RaceDistanceDto> createdDistancesDto = new List<RaceDistanceDto>();
+            if (!string.IsNullOrWhiteSpace(raceDto.DistancesCsv))
+            {
+                try
+                {
+                    // Tách chuỗi bằng dấu phẩy
+                    var distances = raceDto.DistancesCsv.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    var newDistancesList = new List<RaceDistance>();
+
+                    // Dùng Regex để lọc ra chỉ số (kể cả số thập phân)
+                    // (VD: "21.1km" -> "21.1")
+                    var regex = new Regex(@"[0-9]+(\.[0-9]+)?");
+
+                    foreach (var distString in distances)
+                    {
+                        var match = regex.Match(distString);
+
+                        // Nếu tìm thấy số và parse thành công
+                        if (match.Success && decimal.TryParse(match.Value, out decimal km) && km > 0)
+                        {
+                            var newDistance = new RaceDistance
+                            {
+                                RaceId = newRace.Id,
+                                Name = $"{km}km", // Tên mặc định (VD: "5km", "21.1km")
+                                DistanceInKm = km,
+                                RegistrationFee = 0, // Phí mặc định
+                                MaxParticipants = 100, // Giới hạn mặc định
+                                StartTime = newRace.RaceDate.Date.AddHours(6) // Giờ mặc định
+                            };
+                            newDistancesList.Add(newDistance);
+                        }
+                    }
+
+                    if (newDistancesList.Any())
+                    {
+                        _context.RaceDistances.AddRange(newDistancesList);
+                        await _context.SaveChangesAsync(); // Lưu các cự ly
+
+                        // Map sang DTO để trả về
+                        createdDistancesDto = newDistancesList.Select(d => new RaceDistanceDto
+                        {
+                            Id = d.Id,
+                            Name = d.Name,
+                            DistanceInKm = d.DistanceInKm,
+                            RegistrationFee = d.RegistrationFee,
+                            MaxParticipants = d.MaxParticipants,
+                            StartTime = d.StartTime
+                        }).ToList();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log lỗi nhưng không làm crash request
+                    System.Diagnostics.Debug.WriteLine($"Error parsing/saving CSV distances: {ex.Message}");
+                }
+            }
+
+            // ==============================================================
+            // PHẦN 4: CHUẨN BỊ DTO TRẢ VỀ (Giữ nguyên)
+            // ==============================================================
+            var organizer = await _context.Users.FindAsync(organizerId);
             var resultDto = new RaceDetailDto
             {
                 Id = newRace.Id,
@@ -241,13 +287,12 @@ namespace MarathonManager.API.Controllers
                 Description = newRace.Description,
                 Location = newRace.Location,
                 RaceDate = newRace.RaceDate,
-                ImageUrl = newRace.ImageUrl, // Return the relative path
+                ImageUrl = newRace.ImageUrl,
                 Status = newRace.Status,
-                OrganizerName = organizer?.FullName ?? "N/A", // Use organizer's name
-                Distances = new List<RaceDistanceDto>()       // Initially empty list
+                OrganizerName = organizer?.FullName ?? "N/A",
+                Distances = createdDistancesDto // <-- Trả về danh sách cự ly (có thể rỗng)
             };
 
-            // Return 201 Created status with the location header and the created race details
             return CreatedAtAction(nameof(GetRace), new { id = newRace.Id }, resultDto);
         }
 

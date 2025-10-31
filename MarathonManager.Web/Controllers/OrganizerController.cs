@@ -72,83 +72,67 @@ namespace MarathonManager.Web.Controllers
         // ==========================================================
         // POST: /Organizer/Create
         [HttpPost]
-        [ValidateAntiForgeryToken] // Thêm để bảo mật
-        public async Task<IActionResult> Create(RaceCreateDto dto, IFormFile? imageFile) // Thêm IFormFile? imageFile
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(RaceCreateDto dto, IFormFile? imageFile)
         {
-            // Kiểm tra validation phía client trước
             if (!ModelState.IsValid)
             {
                 return View(dto);
             }
 
-            // Kiểm tra file ảnh (có thể thêm validation ở DTO sau)
+            // Kiểm tra file ở Web trước khi gửi đi (tùy chọn nhưng nên làm)
             if (imageFile != null)
             {
-                 // Kiểm tra kiểu file (ví dụ chỉ cho phép ảnh)
+                if (imageFile.Length > 5 * 1024 * 1024) // 5 MB
+                {
+                    ModelState.AddModelError("imageFile", "Kích thước file ảnh không được vượt quá 5MB.");
+                    return View(dto);
+                }
                 var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
                 var extension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
                 if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
                 {
                     ModelState.AddModelError("imageFile", "Chỉ chấp nhận file ảnh (.jpg, .jpeg, .png, .gif).");
-                }
-                 // Kiểm tra kích thước file (ví dụ: tối đa 5MB)
-                if (imageFile.Length > 5 * 1024 * 1024) // 5 MB
-                {
-                     ModelState.AddModelError("imageFile", "Kích thước file ảnh không được vượt quá 5MB.");
-                }
-                if (!ModelState.IsValid) // Nếu có lỗi ảnh thì trả về ngay
-                {
-                     return View(dto);
+                    return View(dto);
                 }
             }
-
 
             var client = CreateAuthenticatedHttpClient();
             if (client == null) return RedirectToAction("Login", "Account");
 
-            // Tạo nội dung multipart form data để gửi lên API
+            // Dùng using cho content, không dùng cho stream của file
             using var content = new MultipartFormDataContent();
 
-            // Thêm các trường dữ liệu của DTO vào form data
-            content.Add(new StringContent(dto.Name ?? ""), nameof(RaceCreateDto.Name)); // Dùng nameof để khớp tên
+            // Thêm các trường dữ liệu DTO
+            content.Add(new StringContent(dto.Name ?? ""), nameof(RaceCreateDto.Name));
             content.Add(new StringContent(dto.Description ?? ""), nameof(RaceCreateDto.Description));
             content.Add(new StringContent(dto.Location ?? ""), nameof(RaceCreateDto.Location));
-            // Gửi DateTime theo định dạng ISO 8601 (chuẩn quốc tế, API dễ parse)
-            content.Add(new StringContent(dto.RaceDate.ToString("o")), nameof(RaceCreateDto.RaceDate));
+            content.Add(new StringContent(dto.RaceDate.ToString("o")), nameof(RaceCreateDto.RaceDate)); // ISO 8601
 
-            // Thêm file ảnh vào form data (nếu người dùng đã chọn)
+            // Thêm file ảnh (Sửa lỗi Stream)
             if (imageFile != null && imageFile.Length > 0)
             {
-                try
-                {
-                    var stream = imageFile.OpenReadStream();
-                    var fileContent = new StreamContent(stream);
-                    fileContent.Headers.ContentType = new MediaTypeHeaderValue(imageFile.ContentType);
-                    content.Add(fileContent, "imageFile", imageFile.FileName);
+                // *** KHÔNG DÙNG USING Ở ĐÂY ***
+                var stream = imageFile.OpenReadStream();
+                var fileContent = new StreamContent(stream);
 
-                }
-                catch (Exception ex)
-                {
-                     // Xử lý lỗi nếu không đọc được file
-                     ModelState.AddModelError("imageFile", $"Lỗi khi đọc file ảnh: {ex.Message}");
-                     return View(dto);
-                }
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(imageFile.ContentType);
+                content.Add(fileContent, "imageFile", imageFile.FileName);
             }
 
-            // Gọi API POST /api/Races với nội dung multipart
             HttpResponseMessage response = null;
             try
             {
-                 response = await client.PostAsync("/api/Races", content);
+                // HttpClient sẽ đọc và giải phóng stream khi gửi
+                response = await client.PostAsync("/api/Races", content);
             }
             catch (HttpRequestException ex)
             {
-                 ModelState.AddModelError(string.Empty, "Lỗi kết nối đến API: " + ex.Message);
-                 return View(dto);
+                ModelState.AddModelError(string.Empty, "Lỗi kết nối đến API: " + ex.Message);
+                return View(dto);
             }
 
-
-            // Xử lý kết quả từ API
+            // Xử lý kết quả (Giống code cũ)
             if (response.IsSuccessStatusCode)
             {
                 TempData["SuccessMessage"] = "Tạo giải chạy thành công! Giải đang chờ Admin duyệt.";
@@ -160,48 +144,26 @@ namespace MarathonManager.Web.Controllers
                 try
                 {
                     var errorJson = await response.Content.ReadAsStringAsync();
-                    // Thử parse lỗi validation từ API (ASP.NET Core thường trả về ProblemDetails hoặc ValidationProblemDetails)
                     var validationErrors = JsonConvert.DeserializeObject<ValidationProblemDetails>(errorJson);
                     if (validationErrors != null && validationErrors.Errors.Any())
                     {
-                        errorMsg = "Vui lòng kiểm tra lại thông tin nhập."; // Thông báo chung
+                        errorMsg = "Vui lòng kiểm tra lại thông tin nhập.";
                         foreach (var error in validationErrors.Errors)
                         {
-                            // Key có thể là "imageFile", "Name", "RaceDate", etc. từ API
-                            string fieldName = error.Key;
-                            // Cố gắng khớp key trả về từ API với tên thuộc tính trong DTO Web
-                            // (Ví dụ: API trả "name", DTO Web là "Name") -> Chuyển thành "Name"
-                            string dtoFieldName = char.ToUpperInvariant(fieldName[0]) + fieldName.Substring(1);
-
-                            foreach (var message in error.Value)
-                            {
-                                // Thêm lỗi vào ModelState để hiển thị trên form
-                                // Ưu tiên thêm vào field cụ thể, nếu không khớp thì thêm lỗi chung
-                                if (ModelState.ContainsKey(dtoFieldName))
-                                {
-                                     ModelState.AddModelError(dtoFieldName, message);
-                                } else {
-                                     ModelState.AddModelError(string.Empty, $"{fieldName}: {message}");
-                                }
-                            }
-                        }
-                    } else {
-                        // Nếu không phải lỗi validation, hiển thị lỗi chung từ API
-                        // Kiểm tra xem có message trong JSON không
-                        try {
-                             var errorObj = JsonConvert.DeserializeObject<dynamic>(errorJson);
-                             errorMsg += $" Lý do: {errorObj?.message ?? errorObj?.title ?? errorJson}";
-                        } catch {
-                             errorMsg += $" Lý do: {errorJson}"; // Nếu không parse được JSON
+                            // Gán lỗi vào đúng trường (ví dụ "imageFile")
+                            ModelState.AddModelError(error.Key, string.Join("; ", error.Value));
                         }
                     }
-                } catch (Exception parseEx) {
-                    // Lỗi khi parse JSON lỗi
-                     errorMsg += $" (Không thể đọc chi tiết lỗi: {parseEx.Message})";
+                    else
+                    {
+                        var errorObj = JsonConvert.DeserializeObject<dynamic>(errorJson);
+                        errorMsg += $" Lý do: {errorObj?.message ?? errorJson}";
+                    }
                 }
+                catch { /* Bỏ qua nếu không parse được lỗi */ }
 
                 ModelState.AddModelError(string.Empty, errorMsg);
-                return View(dto); // Hiển thị lại form với lỗi
+                return View(dto);
             }
         }
         // ==========================================================

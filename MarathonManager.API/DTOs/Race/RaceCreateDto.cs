@@ -18,7 +18,7 @@ namespace MarathonManager.API.DTOs.Race
 
         [Required(ErrorMessage = "Phải có ít nhất một cự ly.")]
         public List<int> Distances { get; set; } = new();
-
+        public string? DistancesCsv { get; set; }
         public IFormFile? ImageFile { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using MarathonManager.API.DTOs; // Giả sử UserDto nằm ở đây
 using MarathonManager.API.DTOs.Admin; // Namespace cho các DTO mới (RoleDto, UpdateUserRolesDto, BlogAdminDto)
+using MarathonManager.API.DTOs.Race; // Cần cho RaceSummaryDto
+using MarathonManager.API.DTOs.RaceDistances; // Cần cho RaceDistanceDto
 using MarathonManager.API.Models; // Namespace cho User, BlogPost, MarathonManagerContext...
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity; // Cần cho UserManager, RoleManager
@@ -39,12 +41,11 @@ namespace MarathonManager.API.Controllers
         // ===================================
 
         // GET: api/admin/users
+        // Lấy tất cả user với đầy đủ thông tin
         [HttpGet("users")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
-            // Sử dụng _userManager.Users thường an toàn hơn để truy cập dữ liệu Identity
-            // Hoặc đảm bảo _context.Users được cấu hình đúng để trỏ đến AspNetUsers
-            var usersDto = await _userManager.Users // Hoặc _context.Users nếu bạn chắc chắn
+            var usersDto = await _userManager.Users
                 .Select(u => new UserDto
                 {
                     Id = u.Id,
@@ -52,12 +53,11 @@ namespace MarathonManager.API.Controllers
                     FullName = u.FullName,
                     IsActive = !u.LockoutEnd.HasValue || u.LockoutEnd.Value <= DateTimeOffset.UtcNow,
                     CreatedAt = u.CreatedAt,
-                    // Lấy các trường mới (Đảm bảo model 'User' có các thuộc tính này)
+                    // Lấy các trường mở rộng
                     PhoneNumber = u.PhoneNumber,
                     EmailConfirmed = u.EmailConfirmed,
                     DateOfBirth = u.DateOfBirth, // Kiểu DateOnly?
                     Gender = u.Gender,           // Kiểu string?
-                    // Lấy tên Role (Cách này ổn)
                     Roles = (from ur in _context.UserRoles
                              join r in _context.Roles on ur.RoleId equals r.Id
                              where ur.UserId == u.Id
@@ -70,6 +70,7 @@ namespace MarathonManager.API.Controllers
         }
 
         // PATCH: api/admin/users/{id}/toggle-lock
+        // Khóa hoặc Mở khóa tài khoản
         [HttpPatch("users/{id}/toggle-lock")]
         public async Task<IActionResult> ToggleUserLock(int id)
         {
@@ -78,8 +79,10 @@ namespace MarathonManager.API.Controllers
 
             bool currentlyLocked = user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTimeOffset.UtcNow;
             IdentityResult result;
-            if (currentlyLocked) result = await _userManager.SetLockoutEndDateAsync(user, null); // Mở khóa
-            else result = await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue); // Khóa
+            if (currentlyLocked)
+                result = await _userManager.SetLockoutEndDateAsync(user, null); // Mở khóa
+            else
+                result = await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue); // Khóa
 
             if (result.Succeeded)
             {
@@ -104,19 +107,22 @@ namespace MarathonManager.API.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 FullName = user.FullName,
-                IsActive = !user.LockoutEnd.HasValue || user.LockoutEnd.Value <= DateTimeOffset.UtcNow,
+
+                // SỬA LỖI Ở DÒNG NÀY:
+                IsActive = !user.LockoutEnd.HasValue || user.LockoutEnd.Value <= DateTimeOffset.UtcNow, // Phải là "user", không phải "u"
+
                 CreatedAt = user.CreatedAt,
-                // Lấy các trường mới (Đảm bảo model 'User' có các thuộc tính này)
                 PhoneNumber = user.PhoneNumber,
                 EmailConfirmed = user.EmailConfirmed,
-                DateOfBirth = user.DateOfBirth, // Kiểu DateOnly?
-                Gender = user.Gender,           // Kiểu string?
+                DateOfBirth = user.DateOfBirth,
+                Gender = user.Gender,
                 Roles = roles.ToList()
             };
             return Ok(userDto);
         }
 
         // GET: api/admin/roles
+        // Lấy tất cả các role
         [HttpGet("roles")]
         public async Task<ActionResult<IEnumerable<RoleDto>>> GetAllRoles()
         {
@@ -128,13 +134,14 @@ namespace MarathonManager.API.Controllers
         }
 
         // PUT: api/admin/users/5/roles
+        // Cập nhật (thay đổi) role cho user
         [HttpPut("users/{id}/roles")]
         public async Task<IActionResult> UpdateUserRoles(int id, [FromBody] UpdateUserRolesDto dto)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null) return NotFound(new { message = "Không tìm thấy người dùng." });
 
-            dto.RoleNames ??= new List<string>();
+            dto.RoleNames ??= new List<string>(); // Đảm bảo không null
 
             var currentRoles = await _userManager.GetRolesAsync(user);
             var rolesToRemove = currentRoles.Except(dto.RoleNames).ToList();
@@ -154,7 +161,6 @@ namespace MarathonManager.API.Controllers
             // Xử lý thêm role
             if (rolesToAdd.Any())
             {
-                // Kiểm tra role tồn tại
                 foreach (var roleName in rolesToAdd)
                 {
                     if (!await _roleManager.RoleExistsAsync(roleName))
@@ -162,7 +168,6 @@ namespace MarathonManager.API.Controllers
                         return BadRequest(new { message = $"Role '{roleName}' không tồn tại." });
                     }
                 }
-                // Thêm role
                 var addResult = await _userManager.AddToRolesAsync(user, rolesToAdd);
                 if (!addResult.Succeeded)
                 {
@@ -179,6 +184,7 @@ namespace MarathonManager.API.Controllers
         // ===================================
 
         // GET: api/admin/blogs
+        // (ĐÃ SỬA MAPPING)
         [HttpGet("blogs")]
         public async Task<ActionResult<IEnumerable<BlogAdminDto>>> GetBlogPosts()
         {
@@ -188,47 +194,115 @@ namespace MarathonManager.API.Controllers
                 .Select(b => new BlogAdminDto
                 {
                     Id = b.Id,
-                    Title = b.Title, // **Đã kiểm tra**
+                    Title = b.Title, // **Sửa lỗi hiển thị Title**
                     Status = b.Status,
-                    AuthorName = b.Author != null ? b.Author.FullName : "N/A", // **Đã kiểm tra**
+                    AuthorName = b.Author != null ? b.Author.FullName : "N/A", // **Sửa lỗi hiển thị Author**
                     CreatedAt = b.CreatedAt,
                     UpdatedAt = b.UpdatedAt
                 })
                 .ToListAsync();
-            return Ok(blogs); // **Đã kiểm tra return**
+            return Ok(blogs);
         }
 
         // PATCH: api/admin/blogs/{id}/toggle-publish
+        // Đăng/Gỡ bài
         [HttpPatch("blogs/{id}/toggle-publish")]
         public async Task<IActionResult> ToggleBlogPostPublish(int id)
         {
             var blogPost = await _context.BlogPosts.FindAsync(id);
             if (blogPost == null)
             {
-                return NotFound("Không tìm thấy bài viết."); // **Đã kiểm tra return**
+                return NotFound("Không tìm thấy bài viết.");
             }
 
             blogPost.Status = (blogPost.Status == "Published") ? "Draft" : "Published";
             blogPost.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = $"Bài viết đã chuyển sang trạng thái {blogPost.Status}.", newStatus = blogPost.Status }); // **Đã kiểm tra return**
+            return Ok(new { message = $"Bài viết đã chuyển sang trạng thái {blogPost.Status}.", newStatus = blogPost.Status });
         }
 
         // DELETE: api/admin/blogs/{id}
+        // Xóa bài
         [HttpDelete("blogs/{id}")]
         public async Task<IActionResult> DeleteBlogPost(int id)
         {
             var blogPost = await _context.BlogPosts.FindAsync(id);
             if (blogPost == null)
             {
-                return NotFound("Không tìm thấy bài viết."); // **Đã kiểm tra return**
+                return NotFound("Không tìm thấy bài viết.");
             }
 
             _context.BlogPosts.Remove(blogPost);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Xóa bài viết thành công." }); // **Đã kiểm tra return**
+            return Ok(new { message = "Xóa bài viết thành công." });
+        }
+
+        // ===================================
+        // QUẢN LÝ GIẢI CHẠY (RACES)
+        // (CHỨC NĂNG MỚI)
+        // ===================================
+
+        // GET: api/admin/races/all
+        // Lấy TẤT CẢ giải chạy (Pending, Approved, Cancelled)
+        [HttpGet("races/all")]
+        public async Task<ActionResult<IEnumerable<RaceSummaryDto>>> GetAllRacesForAdmin()
+        {
+            var races = await _context.Races
+                .Include(r => r.Organizer) // Include Organizer để lấy tên
+                .OrderByDescending(r => r.RaceDate) // Sắp xếp theo ngày (mới nhất trước)
+                .Select(r => new RaceSummaryDto
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    Location = r.Location,
+                    RaceDate = r.RaceDate,
+                    ImageUrl = r.ImageUrl,
+                    Status = r.Status,
+                    OrganizerName = r.Organizer.FullName // Thêm tên người tổ chức
+                })
+                .ToListAsync();
+
+            return Ok(races);
+        }
+
+        // GET: api/admin/races/detail/5
+        // Admin xem chi tiết BẤT KỲ giải chạy nào
+        [HttpGet("races/detail/{id}")]
+        public async Task<ActionResult<RaceDetailDto>> GetRaceDetailsForAdmin(int id)
+        {
+            var race = await _context.Races
+                .Include(r => r.Organizer)
+                .Include(r => r.RaceDistances) // Lấy cả cự ly
+                .Where(r => r.Id == id) // Không cần check Status
+                .Select(r => new RaceDetailDto
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    Description = r.Description,
+                    Location = r.Location,
+                    RaceDate = r.RaceDate,
+                    ImageUrl = r.ImageUrl,
+                    Status = r.Status,
+                    OrganizerName = r.Organizer.FullName,
+                    Distances = r.RaceDistances.Select(d => new RaceDistanceDto
+                    {
+                        Id = d.Id,
+                        Name = d.Name,
+                        DistanceInKm = d.DistanceInKm,
+                        RegistrationFee = d.RegistrationFee,
+                        MaxParticipants = d.MaxParticipants,
+                        StartTime = d.StartTime
+                    }).ToList()
+                })
+                .FirstOrDefaultAsync();
+
+            if (race == null)
+            {
+                return NotFound(new { message = "Không tìm thấy giải chạy." });
+            }
+            return Ok(race);
         }
 
         // ===================================
@@ -240,9 +314,8 @@ namespace MarathonManager.API.Controllers
             {
                 return userId;
             }
-            // Cân nhắc throw exception nếu ID không hợp lệ là nghiêm trọng
-            // throw new InvalidOperationException("Không thể xác định ID người dùng.");
-            return 0; // Hoặc trả về 0 nếu có thể chấp nhận
+            // An toàn hơn là throw exception nếu không lấy được ID
+            throw new InvalidOperationException("Không thể xác định ID người dùng từ token.");
         }
     }
 }

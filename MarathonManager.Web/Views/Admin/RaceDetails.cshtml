@@ -1,0 +1,99 @@
+﻿@model MarathonManager.Web.DTOs.RaceDetailDto
+@{
+    ViewData["Title"] = "Chi tiết Giải chạy (Admin)";
+}
+
+<div class="container" style="padding-top: 80px; padding-bottom: 80px;">
+
+    <a asp-action="Index" asp-route-tab="races" class="btn btn-outline-secondary mb-3">
+        <i class="fas fa-arrow-left me-1"></i> Quay lại Dashboard
+    </a>
+
+    <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-header bg-dark text-white">
+            <h2 class="mb-0">@Model.Name</h2>
+        </div>
+        <div class="card-body p-4 p-sm-5">
+            <div class="row">
+                <div class="col-lg-7">
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <img src="@(ViewBag.ApiBaseUrl + Model.ImageUrl)" alt="@Model.Name" class="img-fluid rounded shadow mb-3" />
+                    }
+                    <h4 class="text-success">Mô tả giải chạy</h4>
+                    <p style="white-space: pre-wrap;">@Model.Description</p>
+                </div>
+                <div class="col-lg-5">
+                    <div class="card bg-light border">
+                        <div class="card-body">
+                            <h4 class="border-bottom pb-2 mb-3">Thông tin chi tiết</h4>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-calendar-alt fa-fw me-2 text-primary"></i>
+                                    <strong>Ngày chạy:</strong> @Model.RaceDate.ToString("dd/MM/yyyy 'lúc' HH:mm")
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-map-marker-alt fa-fw me-2 text-primary"></i>
+                                    <strong>Địa điểm:</strong> @Model.Location
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-user-tie fa-fw me-2 text-primary"></i>
+                                    <strong>Tổ chức:</strong> @Model.OrganizerName
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-info-circle fa-fw me-2 text-primary"></i>
+                                    <strong>Trạng thái:</strong>
+                                    @if (Model.Status == "Approved")
+                                    {
+                                        <span class="badge bg-success fs-6">Đã duyệt</span>
+                                    }
+                                    else if (Model.Status == "Pending")
+                                    {
+
+                                        <span class="badge bg-warning text-dark fs-6">Chờ duyệt</span>
+                                    }
+                                    else if (Model.Status == "Cancelled")
+                                    {
+
+                                        <span class="badge bg-danger fs-6">Đã hủy</span>
+                                    }
+                                    else
+                                    {
+
+                                        <span class="badge bg-secondary fs-6">@Model.Status</span>
+                                    }
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card bg-light border mt-4">
+                        <div class="card-body">
+                            <h4 class="border-bottom pb-2 mb-3">Các cự ly</h4>
+                            @if (Model.Distances == null || !Model.Distances.Any())
+                            {
+                                <p class="text-muted">Chưa có cự ly nào cho giải chạy này.</p>
+                            }
+                            else
+                            {
+                                <ul class="list-group">
+                                    @foreach (var dist in Model.Distances)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong class="text-success">@dist.Name (@dist.DistanceInKm km)</strong>
+                                                <small class="d-block text-muted">Phí: @dist.RegistrationFee.ToString("N0") VNĐ</small>
+                                            </div>
+                                            <span class="badge bg-primary rounded-pill">@dist.MaxParticipants suất</span>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

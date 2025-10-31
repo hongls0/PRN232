@@ -25,7 +25,7 @@ namespace MarathonManager.Web.DTOs
         [Required(ErrorMessage = "Vui lòng nhập khoảng cách chạy.")]
         [Display(Name = "Khoảng cách (nhập nhiều cách nhau bằng dấu phẩy, ví dụ: 5,10,21)")]
         public string DistancesInput { get; set; } = string.Empty;
-
+        public string? DistancesCsv { get; set; }
         public IFormFile? ImageFile { get; set; }
     }
 }
