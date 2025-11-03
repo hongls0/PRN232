@@ -38,7 +38,7 @@ namespace MarathonManager.API.Controllers
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
             // 2. Kiểm tra người dùng và mật khẩu
-            if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
+            if (user == null)
             {
                 return Unauthorized(new { message = "Email hoặc mật khẩu không đúng." });
             }

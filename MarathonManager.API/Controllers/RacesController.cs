@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Hosting; // <-- REQUIRED: For IWebHostEnvironment
 using System.IO;                  // <-- REQUIRED: For Path, FileStream
 using Microsoft.AspNetCore.Http; // <-- REQUIRED: For IFormFile, StatusCodes
 using System.Text.RegularExpressions;
+using MarathonManager.API.DTOs;
 namespace MarathonManager.API.Controllers
 {
     [Route("api/[controller]")]
@@ -538,7 +539,562 @@ namespace MarathonManager.API.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+        // ============================================
+        // RUNNER ENDPOINTS
+        // ============================================
 
+        /// <summary>
+        /// GET: api/Races/runner/dashboard
+        /// Get complete dashboard data for runner
+        /// </summary>
+        [HttpGet("runner/dashboard")]
+        [Authorize(Roles = "Runner")]
+        public async Task<ActionResult<ApiResponse<RunnerDashboardDto>>> GetRunnerDashboard()
+        {
+            var userId = GetCurrentUserId();
+            if (userId == 0)
+                return Unauthorized(new ApiResponse<RunnerDashboardDto>
+                {
+                    Success = false,
+                    Message = "User not authenticated"
+                });
+
+            try
+            {
+                var dashboard = new RunnerDashboardDto();
+
+                // Get statistics
+                var allRegistrations = await _context.Registrations
+                    .Include(r => r.RaceDistance)
+                    .ThenInclude(rd => rd.Race)
+                    .Where(r => r.RunnerId == userId)
+                    .ToListAsync();
+
+                dashboard.Statistics = new RunnerStatisticsDto
+                {
+                    TotalRegistrations = allRegistrations.Count,
+                    CompletedRaces = await _context.Results
+                        .Where(r => r.Registration.RunnerId == userId && r.Status == "Finished")
+                        .CountAsync(),
+                    UpcomingRaces = allRegistrations.Count(r =>
+                        r.PaymentStatus == "Paid" &&
+                        r.RaceDistance.Race.RaceDate > DateTime.Now),
+                    PendingRegistrations = allRegistrations.Count(r => r.PaymentStatus == "Pending")
+                };
+
+                return Ok(new ApiResponse<RunnerDashboardDto>
+                {
+                    Success = true,
+                    Data = dashboard
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<RunnerDashboardDto>
+                {
+                    Success = false,
+                    Message = "An error occurred while fetching dashboard data",
+                    Errors = new List<string> { ex.Message }
+                });
+            }
+        }
+
+        /// <summary>
+        /// GET: api/Races/runner/available
+        /// List all approved races available for registration
+        /// </summary>
+        [HttpGet("runner/available")]
+        [Authorize(Roles = "Runner")]
+        public async Task<ActionResult<ApiResponse<PaginatedResponse<AvailableRaceDto>>>> GetAvailableRaces(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 6)
+        {
+            var userId = GetCurrentUserId();
+
+            try
+            {
+                // Get user's registered race IDs
+                var registeredRaceIds = await _context.Registrations
+                    .Where(r => r.RunnerId == userId && r.PaymentStatus != "Cancelled")
+                    .Select(r => r.RaceDistance.RaceId)
+                    .Distinct()
+                    .ToListAsync();
+
+                // Get available races
+                var query = _context.Races
+                    .Include(r => r.Organizer)
+                    .Include(r => r.RaceDistances)
+                    .ThenInclude(rd => rd.Registrations)
+                    .Where(r => r.Status == "Approved" && r.RaceDate > DateTime.Now)
+                    .OrderBy(r => r.RaceDate);
+
+                var totalCount = await query.CountAsync();
+                var races = await query
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                var availableRaces = races.Select(r => new AvailableRaceDto
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    Description = r.Description,
+                    Location = r.Location,
+                    RaceDate = r.RaceDate,
+                    ImageUrl = r.ImageUrl,
+                    Status = r.Status,
+                    OrganizerId = r.OrganizerId,
+                    OrganizerName = r.Organizer.FullName,
+                    OrganizerEmail = r.Organizer.Email,
+                    IsAlreadyRegistered = registeredRaceIds.Contains(r.Id),
+                    Distances = r.RaceDistances.Select(rd => new RaceDistanceSummaryDto
+                    {
+                        Id = rd.Id,
+                        Name = rd.Name,
+                        DistanceInKm = rd.DistanceInKm,
+                        RegistrationFee = rd.RegistrationFee,
+                        MaxParticipants = rd.MaxParticipants,
+                        StartTime = rd.StartTime,
+                        CurrentParticipants = rd.Registrations.Count(reg => reg.PaymentStatus != "Cancelled"),
+                        IsFull = rd.Registrations.Count(reg => reg.PaymentStatus != "Cancelled") >= rd.MaxParticipants
+                    }).ToList(),
+                    TotalParticipants = r.RaceDistances.Sum(rd => rd.Registrations.Count(reg => reg.PaymentStatus != "Cancelled")),
+                    AvailableSlots = r.RaceDistances.Sum(rd => rd.MaxParticipants - rd.Registrations.Count(reg => reg.PaymentStatus != "Cancelled"))
+                }).ToList();
+
+                var response = new PaginatedResponse<AvailableRaceDto>
+                {
+                    Items = availableRaces,
+                    TotalCount = totalCount,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                };
+
+                return Ok(new ApiResponse<PaginatedResponse<AvailableRaceDto>>
+                {
+                    Success = true,
+                    Data = response
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<PaginatedResponse<AvailableRaceDto>>
+                {
+                    Success = false,
+                    Message = "An error occurred while fetching available races",
+                    Errors = new List<string> { ex.Message }
+                });
+            }
+        }
+
+        /// <summary>
+        /// GET: api/Races/{id}/details
+        /// Get detailed race information for registration
+        /// </summary>
+        [HttpGet("{id}/details")]
+        [Authorize(Roles = "Runner")]
+        public async Task<ActionResult<ApiResponse<RaceDetailsDto>>> GetRaceDetails(int id)
+        {
+            try
+            {
+                var race = await _context.Races
+                    .Include(r => r.Organizer)
+                    .Include(r => r.RaceDistances)
+                    .ThenInclude(rd => rd.Registrations)
+                    .Include(r => r.BlogPosts.Where(bp => bp.Status == "Published"))
+                    .ThenInclude(bp => bp.Author)
+                    .FirstOrDefaultAsync(r => r.Id == id);
+
+                if (race == null)
+                    return NotFound(new ApiResponse<RaceDetailsDto>
+                    {
+                        Success = false,
+                        Message = "Race not found"
+                    });
+
+                var raceDetail = new RaceDetailsDto
+                {
+                    Id = race.Id,
+                    Name = race.Name,
+                    Description = race.Description,
+                    Location = race.Location,
+                    RaceDate = race.RaceDate,
+                    ImageUrl = race.ImageUrl,
+                    Status = race.Status,
+                    CreatedAt = race.CreatedAt,
+                    OrganizerId = race.OrganizerId,
+                    OrganizerName = race.Organizer.FullName,
+                    OrganizerEmail = race.Organizer.Email,
+                    OrganizerPhone = race.Organizer.PhoneNumber,
+                    Distances = race.RaceDistances.Select(rd => new RaceDistanceDetailDto
+                    {
+                        Id = rd.Id,
+                        RaceId = rd.RaceId,
+                        Name = rd.Name,
+                        DistanceInKm = rd.DistanceInKm,
+                        RegistrationFee = rd.RegistrationFee,
+                        MaxParticipants = rd.MaxParticipants,
+                        StartTime = rd.StartTime,
+                        CurrentParticipants = rd.Registrations.Count(r => r.PaymentStatus != "Cancelled")
+                    }).ToList(),
+                    BlogPosts = race.BlogPosts.Select(bp => new BlogPostSummaryDto
+                    {
+                        Id = bp.Id,
+                        Title = bp.Title,
+                        FeaturedImageUrl = bp.FeaturedImageUrl,
+                        Status = bp.Status,
+                        AuthorName = bp.Author.FullName,
+                        CreatedAt = bp.CreatedAt
+                    }).ToList()
+                };
+
+                return Ok(new ApiResponse<RaceDetailsDto>
+                {
+                    Success = true,
+                    Data = raceDetail
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<RaceDetailsDto>
+                {
+                    Success = false,
+                    Message = "An error occurred while fetching race details",
+                    Errors = new List<string> { ex.Message }
+                });
+            }
+        }
+
+        /// <summary>
+        /// POST: api/Races/runner/register
+        /// Register for a race
+        /// </summary>
+        [HttpPost("runner/register")]
+        [Authorize(Roles = "Runner")]
+        public async Task<ActionResult<ApiResponse<MyRegistrationDto>>> RegisterForRace(
+            [FromBody] RegisterForRaceRequest request)
+        {
+            var userId = GetCurrentUserId();
+
+            try
+            {
+                // Check if race distance exists and is available
+                var raceDistance = await _context.RaceDistances
+                    .Include(rd => rd.Race)
+                    .Include(rd => rd.Registrations)
+                    .FirstOrDefaultAsync(rd => rd.Id == request.RaceDistanceId);
+
+                if (raceDistance == null)
+                    return NotFound(new ApiResponse<MyRegistrationDto>
+                    {
+                        Success = false,
+                        Message = "Race distance not found"
+                    });
+
+                if (raceDistance.Race.Status != "Approved")
+                    return BadRequest(new ApiResponse<MyRegistrationDto>
+                    {
+                        Success = false,
+                        Message = "This race is not available for registration"
+                    });
+
+                if (raceDistance.Race.RaceDate <= DateTime.Now)
+                    return BadRequest(new ApiResponse<MyRegistrationDto>
+                    {
+                        Success = false,
+                        Message = "Cannot register for a race that has already occurred"
+                    });
+
+                // Check if already registered
+                var existingRegistration = await _context.Registrations
+                    .FirstOrDefaultAsync(r => r.RunnerId == userId &&
+                                            r.RaceDistanceId == request.RaceDistanceId &&
+                                            r.PaymentStatus != "Cancelled");
+
+                if (existingRegistration != null)
+                    return BadRequest(new ApiResponse<MyRegistrationDto>
+                    {
+                        Success = false,
+                        Message = "You have already registered for this race distance"
+                    });
+
+                // Check if race distance is full
+                var currentParticipants = raceDistance.Registrations
+                    .Count(r => r.PaymentStatus != "Cancelled");
+
+                if (currentParticipants >= raceDistance.MaxParticipants)
+                    return BadRequest(new ApiResponse<MyRegistrationDto>
+                    {
+                        Success = false,
+                        Message = "This race distance is full"
+                    });
+
+                // Create registration
+                var registration = new Registration
+                {
+                    RunnerId = userId,
+                    RaceDistanceId = request.RaceDistanceId,
+                    RegistrationDate = DateTime.Now,
+                    PaymentStatus = "Pending"
+                };
+
+                _context.Registrations.Add(registration);
+                await _context.SaveChangesAsync();
+
+                // Return created registration
+                var createdRegistration = await _context.Registrations
+                    .Include(r => r.RaceDistance)
+                    .ThenInclude(rd => rd.Race)
+                    .FirstOrDefaultAsync(r => r.Id == registration.Id);
+
+                var registrationDto = new MyRegistrationDto
+                {
+                    Id = createdRegistration!.Id,
+                    RegistrationDate = createdRegistration.RegistrationDate,
+                    PaymentStatus = createdRegistration.PaymentStatus,
+                    BibNumber = createdRegistration.BibNumber,
+                    RaceId = createdRegistration.RaceDistance.RaceId,
+                    RaceName = createdRegistration.RaceDistance.Race.Name,
+                    Location = createdRegistration.RaceDistance.Race.Location,
+                    RaceDate = createdRegistration.RaceDistance.Race.RaceDate,
+                    RaceImageUrl = createdRegistration.RaceDistance.Race.ImageUrl,
+                    RaceDistanceId = createdRegistration.RaceDistanceId,
+                    DistanceName = createdRegistration.RaceDistance.Name,
+                    DistanceInKm = createdRegistration.RaceDistance.DistanceInKm,
+                    RegistrationFee = createdRegistration.RaceDistance.RegistrationFee,
+                    StartTime = createdRegistration.RaceDistance.StartTime,
+                    CanCancel = createdRegistration.RaceDistance.Race.RaceDate > DateTime.Now,
+                    HasResult = false,
+                    DisplayStatus = "Pending Payment"
+                };
+
+                return Ok(new ApiResponse<MyRegistrationDto>
+                {
+                    Success = true,
+                    Message = "Successfully registered for the race. Please complete payment.",
+                    Data = registrationDto
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<MyRegistrationDto>
+                {
+                    Success = false,
+                    Message = "An error occurred while registering for the race",
+                    Errors = new List<string> { ex.Message }
+                });
+            }
+        }
+
+        /// <summary>
+        /// GET: api/Races/runner/registrations
+        /// Get all registrations for current runner
+        /// </summary>
+        [HttpGet("runner/registrations")]
+        [Authorize(Roles = "Runner")]
+        public async Task<ActionResult<ApiResponse<PaginatedResponse<MyRegistrationDto>>>> GetMyRegistrations(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10)
+        {
+            var userId = GetCurrentUserId();
+
+            try
+            {
+                var query = _context.Registrations
+                    .Include(r => r.RaceDistance)
+                    .ThenInclude(rd => rd.Race)
+                    .Include(r => r.Result)
+                    .Where(r => r.RunnerId == userId)
+                    .OrderByDescending(r => r.RegistrationDate);
+
+                var totalCount = await query.CountAsync();
+                var registrations = await query
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                var registrationDtos = registrations.Select(r => new MyRegistrationDto
+                {
+                    Id = r.Id,
+                    RegistrationDate = r.RegistrationDate,
+                    PaymentStatus = r.PaymentStatus,
+                    BibNumber = r.BibNumber,
+                    RaceId = r.RaceDistance.RaceId,
+                    RaceName = r.RaceDistance.Race.Name,
+                    Location = r.RaceDistance.Race.Location,
+                    RaceDate = r.RaceDistance.Race.RaceDate,
+                    RaceImageUrl = r.RaceDistance.Race.ImageUrl,
+                    RaceDistanceId = r.RaceDistanceId,
+                    DistanceName = r.RaceDistance.Name,
+                    DistanceInKm = r.RaceDistance.DistanceInKm,
+                    RegistrationFee = r.RaceDistance.RegistrationFee,
+                    StartTime = r.RaceDistance.StartTime,
+                    CanCancel = r.RaceDistance.Race.RaceDate > DateTime.Now && r.PaymentStatus != "Cancelled",
+                    HasResult = r.Result != null,
+                    DisplayStatus = r.PaymentStatus switch
+                    {
+                        "Pending" => "Pending Payment",
+                        "Paid" => r.RaceDistance.Race.RaceDate > DateTime.Now ? "Confirmed" : "Completed",
+                        "Cancelled" => "Cancelled",
+                        _ => r.PaymentStatus
+                    }
+                }).ToList();
+
+                var response = new PaginatedResponse<MyRegistrationDto>
+                {
+                    Items = registrationDtos,
+                    TotalCount = totalCount,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                };
+
+                return Ok(new ApiResponse<PaginatedResponse<MyRegistrationDto>>
+                {
+                    Success = true,
+                    Data = response
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<PaginatedResponse<MyRegistrationDto>>
+                {
+                    Success = false,
+                    Message = "An error occurred while fetching registrations",
+                    Errors = new List<string> { ex.Message }
+                });
+            }
+        }
+
+        /// <summary>
+        /// DELETE: api/Races/runner/registrations/{id}
+        /// Cancel a registration
+        /// </summary>
+        [HttpDelete("runner/registrations/{id}")]
+        [Authorize(Roles = "Runner")]
+        public async Task<ActionResult<ApiResponse<object>>> CancelRegistration(int id)
+        {
+            var userId = GetCurrentUserId();
+
+            try
+            {
+                var registration = await _context.Registrations
+                    .Include(r => r.RaceDistance)
+                    .ThenInclude(rd => rd.Race)
+                    .FirstOrDefaultAsync(r => r.Id == id && r.RunnerId == userId);
+
+                if (registration == null)
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Registration not found"
+                    });
+
+                if (registration.RaceDistance.Race.RaceDate <= DateTime.Now)
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Cannot cancel registration for a race that has already occurred"
+                    });
+
+                if (registration.PaymentStatus == "Cancelled")
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Registration is already cancelled"
+                    });
+
+                registration.PaymentStatus = "Cancelled";
+                await _context.SaveChangesAsync();
+
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Registration cancelled successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "An error occurred while cancelling registration",
+                    Errors = new List<string> { ex.Message }
+                });
+            }
+        }
+
+        /// <summary>
+        /// GET: api/Races/runner/results
+        /// Get all results for current runner
+        /// </summary>
+        [HttpGet("runner/results")]
+        [Authorize(Roles = "Runner")]
+        public async Task<ActionResult<ApiResponse<PaginatedResponse<MyResultDto>>>> GetMyResults(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10)
+        {
+            var userId = GetCurrentUserId();
+
+            try
+            {
+                var query = _context.Results
+                    .Include(r => r.Registration)
+                    .ThenInclude(reg => reg.RaceDistance)
+                    .ThenInclude(rd => rd.Race)
+                    .Where(r => r.Registration.RunnerId == userId)
+                    .OrderByDescending(r => r.Registration.RaceDistance.Race.RaceDate);
+
+                var totalCount = await query.CountAsync();
+                var results = await query
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                var resultDtos = results.Select(r => new MyResultDto
+                {
+                    Id = r.Id,
+                    RegistrationId = r.RegistrationId,
+                    CompletionTime = r.CompletionTime,
+                    OverallRank = r.OverallRank,
+                    GenderRank = r.GenderRank,
+                    AgeCategoryRank = r.AgeCategoryRank,
+                    Status = r.Status,
+                    RaceId = r.Registration.RaceDistance.RaceId,
+                    RaceName = r.Registration.RaceDistance.Race.Name,
+                    Location = r.Registration.RaceDistance.Race.Location,
+                    RaceDate = r.Registration.RaceDistance.Race.RaceDate,
+                    DistanceName = r.Registration.RaceDistance.Name,
+                    DistanceInKm = r.Registration.RaceDistance.DistanceInKm,
+                    FormattedTime = r.CompletionTime?.ToString(@"hh\:mm\:ss"),
+                    AveragePace = r.CompletionTime.HasValue && r.Registration.RaceDistance.DistanceInKm > 0
+                        ? $"{(r.CompletionTime.Value.ToTimeSpan().TotalMinutes / (double)r.Registration.RaceDistance.DistanceInKm):F2} min/km"
+                        : null
+                }).ToList();
+
+                var response = new PaginatedResponse<MyResultDto>
+                {
+                    Items = resultDtos,
+                    TotalCount = totalCount,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                };
+
+                return Ok(new ApiResponse<PaginatedResponse<MyResultDto>>
+                {
+                    Success = true,
+                    Data = response
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<PaginatedResponse<MyResultDto>>
+                {
+                    Success = false,
+                    Message = "An error occurred while fetching results",
+                    Errors = new List<string> { ex.Message }
+                });
+            }
+        }
         // ==========================================================
         // HELPER METHODS
         // ==========================================================

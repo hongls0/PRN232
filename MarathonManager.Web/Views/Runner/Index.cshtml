@@ -1,0 +1,395 @@
+﻿@model MarathonManager.Web.Controllers.RunnerDashboardViewModel
+
+@{
+    ViewData["Title"] = "Runner Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var availableRacesTabActive = (ViewBag.CurrentTab == "available-races" || string.IsNullOrEmpty(ViewBag.CurrentTab)) ? "active" : "";
+    var myRegistrationsTabActive = ViewBag.CurrentTab == "my-registrations" ? "active" : "";
+    var myResultsTabActive = ViewBag.CurrentTab == "my-results" ? "active" : "";
+}
+
+<div class="container" style="padding-top: 80px; padding-bottom: 80px;">
+
+    <h1 class="display-4 fw-bold mb-4">
+        <i class="fas fa-running me-2"></i> Runner Dashboard
+    </h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-calendar-check me-2"></i>Đã đăng ký</h5>
+                    <h2 class="mb-0">@Model.Statistics.TotalRegistrations</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-trophy me-2"></i>Đã hoàn thành</h5>
+                    <h2 class="mb-0">@Model.Statistics.CompletedRaces</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-flag-checkered me-2"></i>Sắp diễn ra</h5>
+                    <h2 class="mb-0">@Model.Statistics.UpcomingRaces</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-clock me-2"></i>Chờ thanh toán</h5>
+                    <h2 class="mb-0">@Model.Statistics.PendingRegistrations</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs nav-fill mb-3" id="runnerTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @availableRacesTabActive" id="available-races-tab" data-bs-toggle="tab"
+                    data-bs-target="#tab-available-races" type="button" role="tab"
+                    aria-controls="tab-available-races" aria-selected="@(availableRacesTabActive == "active")">
+                <i class="fas fa-search me-1"></i> Giải Chạy Khả Dụng
+                <span class="badge bg-danger ms-1">@Model.AvailableRacesTotalCount</span>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @myRegistrationsTabActive" id="my-registrations-tab" data-bs-toggle="tab"
+                    data-bs-target="#tab-my-registrations" type="button" role="tab"
+                    aria-controls="tab-my-registrations" aria-selected="@(myRegistrationsTabActive == "active")">
+                <i class="fas fa-clipboard-list me-1"></i> Đăng Ký Của Tôi
+                <span class="badge bg-primary ms-1">@Model.MyRegistrationsTotalCount</span>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @myResultsTabActive" id="my-results-tab" data-bs-toggle="tab"
+                    data-bs-target="#tab-my-results" type="button" role="tab"
+                    aria-controls="tab-my-results" aria-selected="@(myResultsTabActive == "active")">
+                <i class="fas fa-medal me-1"></i> Kết Quả Của Tôi
+                <span class="badge bg-success ms-1">@Model.MyResultsTotalCount</span>
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="runnerTabContent">
+
+        <!-- Tab 1: Available Races -->
+        <div class="tab-pane fade show @availableRacesTabActive" id="tab-available-races" role="tabpanel" aria-labelledby="available-races-tab">
+            <h4 class="mt-4">Các Giải Chạy Đang Mở Đăng Ký</h4>
+
+            @if (!Model.AvailableRaces.Any())
+            {
+                <div class="alert alert-info mt-4">Hiện tại không có giải chạy nào đang mở đăng ký.</div>
+            }
+            else
+            {
+                <div class="row mt-4">
+                    @foreach (var race in Model.AvailableRaces)
+                    {
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                @if (!string.IsNullOrEmpty(race.ImageUrl))
+                                {
+                                    <img src="@race.ImageUrl" class="card-img-top" alt="@race.Name" style="height: 200px; object-fit: cover;">
+                                }
+                                else
+                                {
+                                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                                        <i class="fas fa-running fa-3x"></i>
+                                    </div>
+                                }
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">@race.Name</h5>
+                                    <p class="card-text">
+                                        <i class="fas fa-map-marker-alt text-danger me-1"></i> @race.Location<br>
+                                        <i class="fas fa-calendar text-primary me-1"></i> @race.RaceDate.ToString("dd/MM/yyyy")<br>
+                                        <i class="fas fa-user text-success me-1"></i> @race.OrganizerName<br>
+                                        <small class="text-muted">
+                                            <i class="fas fa-users me-1"></i> @race.TotalParticipants participants
+                                            (@race.AvailableSlots slots left)
+                                        </small>
+                                    </p>
+                                    @if (race.Distances.Any())
+                                    {
+                                        <div class="mb-2">
+                                            <strong>Distances:</strong><br>
+                                            @foreach (var distance in race.Distances)
+                                            {
+                                                <span class="badge @(distance.IsFull ? "bg-secondary" : "bg-info") me-1">
+                                                    @distance.Name (@distance.DistanceInKm km) - @distance.RegistrationFee.ToString("N0") VNĐ
+                                                    @if (distance.IsFull)
+                                                    {
+                                                        <text>(FULL)</text>
+                                                    }
+                                                </span>
+                                            }
+                                        </div>
+                                    }
+                                    <div class="mt-auto">
+                                        <a asp-controller="Runner" asp-action="RaceDetails" asp-route-id="@race.Id"
+                                           class="btn btn-primary btn-sm w-100 mb-2">
+                                            <i class="fas fa-info-circle me-1"></i> Xem Chi Tiết
+                                        </a>
+                                        @if (race.IsAlreadyRegistered)
+                                        {
+                                            <button class="btn btn-secondary btn-sm w-100" disabled>
+                                                <i class="fas fa-check me-1"></i> Đã đăng ký
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                @* Pagination for Available Races *@
+                @if (Model.AvailableRacesTotalPages > 1)
+                {
+                    <nav aria-label="Available races pagination">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @(Model.AvailableRacesHasPreviousPage ? "" : "disabled")">
+                                <a class="page-link" href="@Url.Action("Index", new { tab = "available-races", pageAvailableRaces = Model.AvailableRacesPageNumber - 1 })">Previous</a>
+                            </li>
+                            @for (int i = 1; i <= Model.AvailableRacesTotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.AvailableRacesPageNumber ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Index", new { tab = "available-races", pageAvailableRaces = i })">@i</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.AvailableRacesHasNextPage ? "" : "disabled")">
+                                <a class="page-link" href="@Url.Action("Index", new { tab = "available-races", pageAvailableRaces = Model.AvailableRacesPageNumber + 1 })">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
+            }
+        </div>
+
+        <!-- Tab 2: My Registrations -->
+        <div class="tab-pane fade show @myRegistrationsTabActive" id="tab-my-registrations" role="tabpanel" aria-labelledby="my-registrations-tab">
+            <h4 class="mt-4">Danh Sách Đăng Ký Của Tôi</h4>
+
+            @if (!Model.MyRegistrations.Any())
+            {
+                <div class="alert alert-info mt-4">Bạn chưa đăng ký giải chạy nào.</div>
+            }
+            else
+            {
+                <table class="table table-hover align-middle mt-4">
+                    <thead class="table-light">
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên Giải Chạy</th>
+                            <th>Cự ly</th>
+                            <th>Địa Điểm</th>
+                            <th>Ngày Chạy</th>
+                            <th>Trạng Thái</th>
+                            <th class="text-end">Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.MyRegistrations.Count; i++)
+                        {
+                            var registration = Model.MyRegistrations[i];
+                            var stt = (Model.MyRegistrationsPageNumber - 1) * Model.MyRegistrationsPageSize + (i + 1);
+
+                            string rowClass = registration.PaymentStatus switch
+                            {
+                                "Paid" => "table-success",
+                                "Cancelled" => "table-danger opacity-75",
+                                "Pending" => "table-warning",
+                                _ => ""
+                            };
+
+                            <tr class="@rowClass">
+                                <td>@stt</td>
+                                <td>@registration.RaceName</td>
+                                <td>@registration.DistanceName (@registration.DistanceInKm km)</td>
+                                <td>@registration.Location</td>
+                                <td>@registration.RaceDate.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <span class="badge @(registration.PaymentStatus == "Paid" ? "bg-success" : registration.PaymentStatus == "Pending" ? "bg-warning text-dark" : "bg-danger")">
+                                        @registration.DisplayStatus
+                                    </span>
+                                    @if (!string.IsNullOrEmpty(registration.BibNumber))
+                                    {
+                                        <br>
+
+                                        <small class="text-muted">Bib: @registration.BibNumber</small>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <a asp-controller="Runner" asp-action="RegistrationDetails" asp-route-id="@registration.Id"
+                                       class="btn btn-info btn-sm" title="Xem chi tiết">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+
+                                    @if (registration.CanCancel)
+                                    {
+                                        <form asp-controller="Runner" asp-action="CancelRegistration" method="post"
+                                              class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đăng ký này?');">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="registrationId" value="@registration.Id" />
+                                            <button type="submit" class="btn btn-danger btn-sm" title="Hủy đăng ký">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                @* Pagination for My Registrations *@
+                @if (Model.MyRegistrationsTotalPages > 1)
+                {
+                    <nav aria-label="My registrations pagination">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @(Model.MyRegistrationsHasPreviousPage ? "" : "disabled")">
+                                <a class="page-link" href="@Url.Action("Index", new { tab = "my-registrations", pageMyRegistrations = Model.MyRegistrationsPageNumber - 1 })">Previous</a>
+                            </li>
+                            @for (int i = 1; i <= Model.MyRegistrationsTotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.MyRegistrationsPageNumber ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Index", new { tab = "my-registrations", pageMyRegistrations = i })">@i</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.MyRegistrationsHasNextPage ? "" : "disabled")">
+                                <a class="page-link" href="@Url.Action("Index", new { tab = "my-registrations", pageMyRegistrations = Model.MyRegistrationsPageNumber + 1 })">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
+            }
+        </div>
+
+        <!-- Tab 3: My Results -->
+        <div class="tab-pane fade show @myResultsTabActive" id="tab-my-results" role="tabpanel" aria-labelledby="my-results-tab">
+            <h4 class="mt-4">Kết Quả Thi Đấu Của Tôi</h4>
+
+            @if (!Model.MyResults.Any())
+            {
+                <div class="alert alert-info mt-4">Bạn chưa có kết quả thi đấu nào.</div>
+            }
+            else
+            {
+                <table class="table table-hover align-middle mt-4">
+                    <thead class="table-light">
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên Giải Chạy</th>
+                            <th>Cự ly</th>
+                            <th>Ngày Chạy</th>
+                            <th>Thời Gian</th>
+                            <th>Hạng</th>
+                            <th class="text-end">Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.MyResults.Count; i++)
+                        {
+                            var result = Model.MyResults[i];
+                            var stt = (Model.MyResultsPageNumber - 1) * Model.MyResultsPageSize + (i + 1);
+
+                            string rowClass = result.IsTopThree ? result.OverallRank switch
+                            {
+                                1 => "table-warning",
+                                2 => "table-secondary",
+                                3 => "table-light",
+                                _ => ""
+                            } : "";
+
+                            <tr class="@rowClass">
+                                <td>@stt</td>
+                                <td>@result.RaceName</td>
+                                <td>@result.DistanceName (@result.DistanceInKm km)</td>
+                                <td>@result.RaceDate.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(result.FormattedTime))
+                                    {
+                                        <strong>@result.FormattedTime</strong>
+
+                                        <br>
+                                        <small class="text-muted">@result.AveragePace</small>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">N/A</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (result.OverallRank.HasValue)
+                                    {
+                                        <span class="badge bg-primary">
+                                            @result.MedalIcon Hạng @result.OverallRank
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Chưa xếp hạng</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <a asp-controller="Runner" asp-action="ResultDetails" asp-route-id="@result.Id"
+                                       class="btn btn-info btn-sm" title="Xem chi tiết">
+                                        <i class="fas fa-eye"></i> Chi tiết
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                @* Pagination for My Results *@
+                @if (Model.MyResultsTotalPages > 1)
+                {
+                    <nav aria-label="My results pagination">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @(Model.MyResultsHasPreviousPage ? "" : "disabled")">
+                                <a class="page-link" href="@Url.Action("Index", new { tab = "my-results", pageMyResults = Model.MyResultsPageNumber - 1 })">Previous</a>
+                            </li>
+                            @for (int i = 1; i <= Model.MyResultsTotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.MyResultsPageNumber ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Index", new { tab = "my-results", pageMyResults = i })">@i</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.MyResultsHasNextPage ? "" : "disabled")">
+                                <a class="page-link" href="@Url.Action("Index", new { tab = "my-results", pageMyResults = Model.MyResultsPageNumber + 1 })">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
+            }
+        </div>
+    </div>
+</div>

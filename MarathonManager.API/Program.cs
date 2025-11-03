@@ -11,6 +11,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowWeb", policy =>
+    {
+        policy.WithOrigins("https://localhost:7280") // Your Web project URL
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
+
+
 // ✅ Thêm cấu hình Swagger với hỗ trợ JWT
 builder.Services.AddSwaggerGen(c =>
 {
@@ -94,6 +108,8 @@ builder.Services.AddAuthentication(options =>
 var app = builder.Build();
 
 app.UseStaticFiles();
+// ... after app.UseRouting();
+app.UseCors("AllowWeb");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

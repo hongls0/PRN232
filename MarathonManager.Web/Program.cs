@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies; // <--- 1. THÊM USING NÀY
+﻿using MarathonManager.Web.Services;
+using Microsoft.AspNetCore.Authentication.Cookies; // <--- 1. THÊM USING NÀY
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,13 @@ builder.Services.AddHttpClient("MarathonApi", client =>
 {
     // Địa chỉ API của bạn (lấy từ launchSettings.json của API)
     client.BaseAddress = new Uri("https://localhost:7280");
+});
+
+builder.Services.AddHttpClient<IRunnerApiService, RunnerApiService>(client =>
+{
+    // Set the base address of your API project
+    client.BaseAddress = new Uri("https://localhost:7280");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
 // <--- 2. THÊM KHỐI CẤU HÌNH COOKIE VÀ HTTPCONTEXT ---
@@ -24,8 +32,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 // 2. Dịch vụ để đọc/ghi HttpContext (cần để truy cập Cookies)
 builder.Services.AddHttpContextAccessor();
-// --- KẾT THÚC KHỐI THÊM ---
 
+// Configure session (if needed for temporary data)
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+// --- KẾT THÚC KHỐI THÊM ---
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

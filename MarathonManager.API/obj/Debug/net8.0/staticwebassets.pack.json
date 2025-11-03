@@ -1,0 +1,49 @@
+{
+  "Files": [
+    {
+      "Id": "E:\\Repos\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\0a739d14-4b5e-4ebc-a34e-652625de3745.png",
+      "PackagePath": "staticwebassets\\images\\races\\0a739d14-4b5e-4ebc-a34e-652625de3745.png"
+    },
+    {
+      "Id": "E:\\Repos\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\0acb1339-0517-4193-b8a1-6a6fa927720b.png",
+      "PackagePath": "staticwebassets\\images\\races\\0acb1339-0517-4193-b8a1-6a6fa927720b.png"
+    },
+    {
+      "Id": "E:\\Repos\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\6be18962-1d54-43c6-b7c7-a222f2f6ed48.png",
+      "PackagePath": "staticwebassets\\images\\races\\6be18962-1d54-43c6-b7c7-a222f2f6ed48.png"
+    },
+    {
+      "Id": "E:\\Repos\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\84454b08-dc3d-44e9-b784-d50bff952ecf.png",
+      "PackagePath": "staticwebassets\\images\\races\\84454b08-dc3d-44e9-b784-d50bff952ecf.png"
+    },
+    {
+      "Id": "E:\\Repos\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\c1665cc7-ecd1-445a-bfce-14207a50194b.png",
+      "PackagePath": "staticwebassets\\images\\races\\c1665cc7-ecd1-445a-bfce-14207a50194b.png"
+    },
+    {
+      "Id": "E:\\Repos\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\df78eef8-8575-4d00-adea-8ddfbd305e24.png",
+      "PackagePath": "staticwebassets\\images\\races\\df78eef8-8575-4d00-adea-8ddfbd305e24.png"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.MarathonManager.API.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.MarathonManager.API.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.MarathonManager.API.props",
+      "PackagePath": "build\\MarathonManager.API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.MarathonManager.API.props",
+      "PackagePath": "buildMultiTargeting\\MarathonManager.API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.MarathonManager.API.props",
+      "PackagePath": "buildTransitive\\MarathonManager.API.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

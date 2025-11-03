@@ -1,0 +1,114 @@
+﻿@using MarathonManager.API.DTOs
+@model MyRegistrationDto
+@{
+    ViewData["Title"] = "Registration Details";
+    var race = ViewBag.RaceDetails as RaceDetailsDto; // set in controller, may be null
+}
+
+<div class="container py-4">
+    <div class="d-flex align-items-center mb-3">
+        <h2 class="mb-0">Registration Details</h2>
+        <a asp-controller="Runner" asp-action="Index" asp-route-tab="my-registrations" class="btn btn-link ms-auto">
+            ← Back to My Registrations
+        </a>
+    </div>
+
+    @if (TempData["ErrorMessage"] is string err && !string.IsNullOrWhiteSpace(err))
+    {
+        <div class="alert alert-danger">@err</div>
+    }
+    @if (TempData["SuccessMessage"] is string ok && !string.IsNullOrWhiteSpace(ok))
+    {
+        <div class="alert alert-success">@ok</div>
+    }
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <strong>@(race?.Name ?? Model.RaceName)</strong>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Registration ID</dt>
+                        <dd class="col-sm-8">@Model.Id</dd>
+
+                        <dt class="col-sm-4">Race</dt>
+                        <dd class="col-sm-8">
+                            <a asp-controller="Runner" asp-action="RaceDetails" asp-route-id="@(Model.RaceId)">
+                                @(race?.Name ?? Model.RaceName)
+                            </a>
+                        </dd>
+
+                        <dt class="col-sm-4">Distance</dt>
+                        <dd class="col-sm-8">@Model.DistanceName (@Model.DistanceInKm.ToString("0.##") km)</dd>
+
+                        <dt class="col-sm-4">Status</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-secondary">@Model.DisplayStatus</span>
+                        </dd>
+
+                        <dt class="col-sm-4">Bib Number</dt>
+                        <dd class="col-sm-8">@(!string.IsNullOrWhiteSpace(Model.BibNumber) ? Model.BibNumber : "(not assigned)")</dd>
+
+                        <dt class="col-sm-4">Registered At</dt>
+                        <dd class="col-sm-8">@Model.RegistrationDate.ToString("yyyy-MM-dd HH:mm")</dd>
+
+                        <dt class="col-sm-4">Fee</dt>
+                        <dd class="col-sm-8">@Model.RegistrationFee.ToString("C")</dd>
+
+                        <dt class="col-sm-4">Payment</dt>
+                        <dd class="col-sm-8">@Model.PaymentStatus</dd>
+
+                        <dt class="col-sm-4">Start Time</dt>
+                        <dd class="col-sm-8">@Model.StartTime.ToString("yyyy-MM-dd HH:mm")</dd>
+                    </dl>
+
+                    <div class="mt-3 d-flex gap-2">
+                        <a asp-controller="Runner" asp-action="RaceDetails" asp-route-id="@Model.RaceId" class="btn btn-outline-primary">
+                            View Race Details
+                        </a>
+
+                        @* Cancel Registration (POST) *@
+                        @if (Model.CanCancel)
+                        {
+                            <form asp-controller="Runner" asp-action="CancelRegistration" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="registrationId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-outline-danger"
+                                        onclick="return confirm('Cancel this registration?');">
+                                    Cancel Registration
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            @if (race != null)
+            {
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header">Race Schedule</div>
+                    <div class="card-body">
+                        <div><strong>Location:</strong> @race.Location</div>
+                        <div><strong>Date:</strong> @race.RaceDate.ToString("yyyy-MM-dd")</div>
+                        <div><strong>Organizer:</strong> @race.OrganizerName</div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header">Notes</div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>Bring a valid ID for bib pickup.</li>
+                        <li>Check your email for expo & kit details.</li>
+                        <li>Arrive 30–45 minutes before the start time.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

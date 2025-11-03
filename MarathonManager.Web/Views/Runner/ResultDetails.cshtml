@@ -1,0 +1,88 @@
+﻿@using MarathonManager.API.DTOs
+@model MyResultDto
+@{
+    ViewData["Title"] = "Result Details";
+}
+
+<div class="container py-4">
+    <div class="d-flex align-items-center mb-3">
+        <h2 class="mb-0">Result Details</h2>
+        <a asp-controller="Runner" asp-action="Index" asp-route-tab="my-results" class="btn btn-link ms-auto">
+            ← Back to My Results
+        </a>
+    </div>
+
+    @if (TempData["ErrorMessage"] is string err && !string.IsNullOrWhiteSpace(err))
+    {
+        <div class="alert alert-danger">@err</div>
+    }
+    @if (TempData["SuccessMessage"] is string ok && !string.IsNullOrWhiteSpace(ok))
+    {
+        <div class="alert alert-success">@ok</div>
+    }
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <strong>@Model.RaceName</strong>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Result ID</dt>
+                        <dd class="col-sm-8">@Model.Id</dd>
+
+                        <dt class="col-sm-4">Race</dt>
+                        <dd class="col-sm-8">
+                            <a asp-controller="Runner" asp-action="RaceDetails" asp-route-id="@Model.RaceId">
+                                @Model.RaceName
+                            </a>
+                        </dd>
+
+                        <dt class="col-sm-4">Distance</dt>
+                        <dd class="col-sm-8">@Model.DistanceName (@Model.DistanceInKm.ToString("0.##") km)</dd>
+
+                        <dt class="col-sm-4">Status</dt>
+                        <dd class="col-sm-8"><span class="badge bg-secondary">@Model.Status</span></dd>
+
+                        <dt class="col-sm-4">Completion Time</dt>
+                        <dd class="col-sm-8">@(!string.IsNullOrWhiteSpace(Model.FormattedTime) ? Model.FormattedTime : (Model.CompletionTime?.ToString() ?? "(n/a)"))</dd>
+
+                        <dt class="col-sm-4">Average Pace</dt>
+                        <dd class="col-sm-8">@(!string.IsNullOrWhiteSpace(Model.AveragePace) ? Model.AveragePace : "(n/a)")</dd>
+
+                        <dt class="col-sm-4">Overall Rank</dt>
+                        <dd class="col-sm-8">@((Model.OverallRank?.ToString()) ?? "(n/a)")</dd>
+
+                        <dt class="col-sm-4">Gender Rank</dt>
+                        <dd class="col-sm-8">@((Model.GenderRank?.ToString()) ?? "(n/a)")</dd>
+
+                        <dt class="col-sm-4">Age Category Rank</dt>
+                        <dd class="col-sm-8">@((Model.AgeCategoryRank?.ToString()) ?? "(n/a)")</dd>
+                    </dl>
+
+                    <div class="mt-3 d-flex gap-2">
+                        <a asp-controller="Runner" asp-action="RaceDetails" asp-route-id="@Model.RaceId" class="btn btn-outline-primary">
+                            View Race Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header">Summary</div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>Date: @Model.RaceDate.ToString("yyyy-MM-dd")</li>
+                        <li>Location: @Model.Location</li>
+                        <li>Distance: @Model.DistanceName (@Model.DistanceInKm.ToString("0.##") km)</li>
+                        <li>Time: @(!string.IsNullOrWhiteSpace(Model.FormattedTime) ? Model.FormattedTime : (Model.CompletionTime?.ToString() ?? "(n/a)"))</li>
+                        <li>Overall: @((Model.OverallRank?.ToString()) ?? "(n/a)")</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

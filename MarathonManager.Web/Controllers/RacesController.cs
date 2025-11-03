@@ -70,7 +70,7 @@ namespace MarathonManager.Web.Controllers
         // GET: /Races/Detail/5
         public async Task<IActionResult> Detail(int id)
         {
-            var client = _httpClientFactory.CreateClient("MarathonaApi");
+            var client = _httpClientFactory.CreateClient("MarathonApi");
             var response = await client.GetAsync($"/api/Races/{id}");
 
             if (response.IsSuccessStatusCode)
