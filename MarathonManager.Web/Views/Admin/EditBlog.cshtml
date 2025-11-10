@@ -1,0 +1,76 @@
+﻿@model MarathonManager.Web.DTOs.Admin.BlogUpdateDto
+@{
+    ViewData["Title"] = "Chỉnh sửa bài viết";
+    var apiBaseUrl = ViewBag.ApiBaseUrl as string;
+}
+
+<div class="container" style="padding-top: 80px; padding-bottom: 80px;">
+    <h2 class="mb-4">Chỉnh sửa: @Model.Title</h2>
+
+    <form asp-action="EditBlog" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-floating mb-3">
+                    <input asp-for="Title" class="form-control" placeholder="Tiêu đề" />
+                    <label asp-for="Title"></label>
+                    <span asp-validation-for="Title" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Content" class="form-label"></label>
+                    <textarea asp-for="Content" id="blog-content-editor" class="form-control" rows="15"></textarea>
+                    <span asp-validation-for="Content" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <div class_="mb-3">
+                            <label asp-for="Status" class="form-label"></label>
+                            <select asp-for="Status" class="form-select">
+                                <option value="Draft">Bản nháp (Draft)</option>
+                                <option value="Published">Công bố (Published)</option>
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="featuredImage" class="form-label">Thay ảnh bìa mới (Tùy chọn)</label>
+                            <input type="file" name="featuredImage" id="featuredImage" class="form-control" accept="image/*" />
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.CurrentImageUrl))
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">Ảnh hiện tại:</label>
+                                <img src="@(apiBaseUrl + Model.CurrentImageUrl)" class="img-fluid rounded" alt="Ảnh bìa" />
+                            </div>
+                        }
+
+                        <hr />
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i> Cập nhật bài viết</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Kích hoạt TinyMCE
+        tinymce.init({
+            selector: '#blog-content-editor',
+            plugins: 'autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
+            toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | removeformat | code'
+        });
+    </script>
+}

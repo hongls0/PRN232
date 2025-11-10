@@ -1,3 +1,6 @@
 E:\Repos\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
 E:\Repos\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
 E:\Repos\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\pv\Videos\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\pv\Videos\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\pv\Videos\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json

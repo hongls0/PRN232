@@ -7916,23 +7916,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\JackGarland\\.nuget\\packages\\": {},
+    "C:\\Users\\pv\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Repos\\PRN232\\MarathonManager.Web\\MarathonManager.Web.csproj",
+      "projectUniqueName": "C:\\Users\\pv\\Videos\\PRN232\\MarathonManager.Web\\MarathonManager.Web.csproj",
       "projectName": "MarathonManager.Web",
-      "projectPath": "E:\\Repos\\PRN232\\MarathonManager.Web\\MarathonManager.Web.csproj",
-      "packagesPath": "C:\\Users\\JackGarland\\.nuget\\packages\\",
-      "outputPath": "E:\\Repos\\PRN232\\MarathonManager.Web\\obj\\",
+      "projectPath": "C:\\Users\\pv\\Videos\\PRN232\\MarathonManager.Web\\MarathonManager.Web.csproj",
+      "packagesPath": "C:\\Users\\pv\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\pv\\Videos\\PRN232\\MarathonManager.Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\JackGarland\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\pv\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -7947,8 +7947,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "E:\\Repos\\PRN232\\MarathonManager.API\\MarathonManager.API.csproj": {
-              "projectPath": "E:\\Repos\\PRN232\\MarathonManager.API\\MarathonManager.API.csproj"
+            "C:\\Users\\pv\\Videos\\PRN232\\MarathonManager.API\\MarathonManager.API.csproj": {
+              "projectPath": "C:\\Users\\pv\\Videos\\PRN232\\MarathonManager.API\\MarathonManager.API.csproj"
             }
           }
         }
@@ -7963,7 +7963,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.200"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
@@ -8001,7 +8001,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

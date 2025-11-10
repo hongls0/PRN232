@@ -222,6 +222,60 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "AdminApi"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "Content",
+                  "Status",
+                  "Title"
+                ],
+                "type": "object",
+                "properties": {
+                  "Title": {
+                    "maxLength": 200,
+                    "type": "string"
+                  },
+                  "Content": {
+                    "type": "string"
+                  },
+                  "Status": {
+                    "type": "string"
+                  },
+                  "featuredImage": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Title": {
+                  "style": "form"
+                },
+                "Content": {
+                  "style": "form"
+                },
+                "Status": {
+                  "style": "form"
+                },
+                "featuredImage": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/api/admin/blogs/{id}/toggle-publish": {
@@ -266,6 +320,44 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "AdminApi"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarathonManager.API.Models.BlogPost"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarathonManager.API.Models.BlogPost"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarathonManager.API.Models.BlogPost"
+                }
+              }
+            }
           }
         }
       }
@@ -344,6 +436,70 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/admin/blogs/update": {
+      "post": {
+        "tags": [
+          "AdminApi"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "Content",
+                  "Id",
+                  "Status",
+                  "Title"
+                ],
+                "type": "object",
+                "properties": {
+                  "Id": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Title": {
+                    "maxLength": 200,
+                    "type": "string"
+                  },
+                  "Content": {
+                    "type": "string"
+                  },
+                  "Status": {
+                    "type": "string"
+                  },
+                  "featuredImage": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Id": {
+                  "style": "form"
+                },
+                "Title": {
+                  "style": "form"
+                },
+                "Content": {
+                  "style": "form"
+                },
+                "Status": {
+                  "style": "form"
+                },
+                "featuredImage": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -2353,7 +2509,7 @@
           },
           "distanceInKm": {
             "maximum": 1000,
-            "minimum": 0.1,
+            "minimum": 0,1,
             "type": "number",
             "format": "double"
           },
@@ -2392,7 +2548,7 @@
           },
           "distanceInKm": {
             "maximum": 1000,
-            "minimum": 0.1,
+            "minimum": 0,1,
             "type": "number",
             "format": "double"
           },
@@ -2537,6 +2693,427 @@
             "type": "array",
             "items": {
               "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarathonManager.API.Models.BlogPost": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "content": {
+            "type": "string",
+            "nullable": true
+          },
+          "featuredImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "authorId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "raceId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "author": {
+            "$ref": "#/components/schemas/MarathonManager.API.Models.User"
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarathonManager.API.Models.Comment"
+            },
+            "nullable": true
+          },
+          "likes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarathonManager.API.Models.Like"
+            },
+            "nullable": true
+          },
+          "race": {
+            "$ref": "#/components/schemas/MarathonManager.API.Models.Race"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarathonManager.API.Models.Comment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "blogPostId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "blogPost": {
+            "$ref": "#/components/schemas/MarathonManager.API.Models.BlogPost"
+          },
+          "user": {
+            "$ref": "#/components/schemas/MarathonManager.API.Models.User"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarathonManager.API.Models.Like": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "blogPostId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "blogPost": {
+            "$ref": "#/components/schemas/MarathonManager.API.Models.BlogPost"
+          },
+          "user": {
+            "$ref": "#/components/schemas/MarathonManager.API.Models.User"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarathonManager.API.Models.Race": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "raceDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "organizerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "blogPosts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarathonManager.API.Models.BlogPost"
+            },
+            "nullable": true
+          },
+          "organizer": {
+            "$ref": "#/components/schemas/MarathonManager.API.Models.User"
+          },
+          "raceDistances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarathonManager.API.Models.RaceDistance"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarathonManager.API.Models.RaceDistance": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "raceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "distanceInKm": {
+            "type": "number",
+            "format": "double"
+          },
+          "registrationFee": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxParticipants": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "race": {
+            "$ref": "#/components/schemas/MarathonManager.API.Models.Race"
+          },
+          "registrations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarathonManager.API.Models.Registration"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarathonManager.API.Models.Registration": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "runnerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "raceDistanceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "registrationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "paymentStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "bibNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "raceDistance": {
+            "$ref": "#/components/schemas/MarathonManager.API.Models.RaceDistance"
+          },
+          "result": {
+            "$ref": "#/components/schemas/MarathonManager.API.Models.Result"
+          },
+          "runner": {
+            "$ref": "#/components/schemas/MarathonManager.API.Models.User"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarathonManager.API.Models.Result": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "registrationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "completionTime": {
+            "type": "string",
+            "format": "time",
+            "nullable": true
+          },
+          "overallRank": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "genderRank": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "ageCategoryRank": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "registration": {
+            "$ref": "#/components/schemas/MarathonManager.API.Models.Registration"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarathonManager.API.Models.User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "normalizedUserName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "normalizedEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailConfirmed": {
+            "type": "boolean"
+          },
+          "passwordHash": {
+            "type": "string",
+            "nullable": true
+          },
+          "securityStamp": {
+            "type": "string",
+            "nullable": true
+          },
+          "concurrencyStamp": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumberConfirmed": {
+            "type": "boolean"
+          },
+          "twoFactorEnabled": {
+            "type": "boolean"
+          },
+          "lockoutEnd": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lockoutEnabled": {
+            "type": "boolean"
+          },
+          "accessFailedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fullName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "blogPosts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarathonManager.API.Models.BlogPost"
+            },
+            "nullable": true
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarathonManager.API.Models.Comment"
+            },
+            "nullable": true
+          },
+          "likes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarathonManager.API.Models.Like"
+            },
+            "nullable": true
+          },
+          "races": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarathonManager.API.Models.Race"
+            },
+            "nullable": true
+          },
+          "registrations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarathonManager.API.Models.Registration"
             },
             "nullable": true
           }
