@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MarathonManager.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b6c1a92c32215eef044ec7a46abe8ffa44f25f69")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0cd87a07e655f8688c4c7eaa8dbe8483b9a23af1")]
 [assembly: System.Reflection.AssemblyProductAttribute("MarathonManager.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MarathonManager.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

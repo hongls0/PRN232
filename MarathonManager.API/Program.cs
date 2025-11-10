@@ -8,24 +8,33 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// Add CORS
+// ==========================================================
+// 1. SỬA LỖI CORS (ĐỔI PORT)
+// ==========================================================
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowWeb", policy =>
     {
-        policy.WithOrigins("https://localhost:7280") // Your Web project URL
+        // Sửa 7280 thành port của dự án WEB (Frontend)
+        policy.WithOrigins("https://localhost:7281")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
+
+        // Hoặc nếu có nhiều địa chỉ Web (ví dụ port http):
+        // policy.WithOrigins("https://localhost:7281", "http://localhost:5001")
+        //       .AllowAnyHeader()
+        //       .AllowAnyMethod()
+        //       .AllowCredentials();
     });
 });
+// ==========================================================
 
-
-
-// ✅ Thêm cấu hình Swagger với hỗ trợ JWT
+// Cấu hình Swagger (code của bạn đã RẤT TỐT, giữ nguyên)
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
@@ -34,10 +43,10 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1"
     });
 
-    // 👇 Dòng này giúp Swagger phân biệt các class trùng tên theo namespace
+    // Dòng này sửa lỗi 500 (trùng DTO)
     c.CustomSchemaIds(type => type.FullName);
 
-    // 🔒 Thêm cấu hình để Swagger hiển thị nút Authorize
+    // Thêm cấu hình để Swagger hiển thị nút Authorize
     c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -83,7 +92,7 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 .AddEntityFrameworkStores<MarathonManagerContext>()
 .AddDefaultTokenProviders();
 
-// 2. Cấu hình JWT (JSON Web Token)
+// 2. Cấu hình JWT
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -105,11 +114,10 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// ==========================================================
+// BẮT ĐẦU CẤU HÌNH PIPELINE (MIDDLEWARE)
+// ==========================================================
 var app = builder.Build();
-
-app.UseStaticFiles();
-// ... after app.UseRouting();
-app.UseCors("AllowWeb");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -117,11 +125,28 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseStaticFiles();
+
+// 1. Dùng HTTPS Redirection
 app.UseHttpsRedirection();
+
+// 2. Dùng Static Files (cho ảnh upload)
+// (XÓA DÒNG app.UseStaticFiles(); ở trên cùng)
+app.UseStaticFiles();
+
+// 3. (Tùy chọn) Thêm UseRouting để đảm bảo thứ tự
+app.UseRouting();
+
+// 4. SỬA LỖI VỊ TRÍ: Đặt UseCors ở đây
+// (Sau UseRouting, trước UseAuthentication/UseAuthorization)
+app.UseCors("AllowWeb");
+
+// 5. Dùng Authentication
 app.UseAuthentication();
+
+// 6. Dùng Authorization
 app.UseAuthorization();
 
+// 7. Map Controllers
 app.MapControllers();
 
 app.Run();
