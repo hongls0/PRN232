@@ -69,6 +69,16 @@
                                             </a>
                                         </li>
                                     }
+                                    else if (User.IsInRole("Runner"))
+                                    {
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item fw-bold text-success"
+                                               asp-controller="Runner" asp-action="Index">
+                                                <i class="fas fa-plus-circle me-1"></i> Runner Dashboard
+                                            </a>
+                                        </li>
+                                    }
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form asp-controller="Account" asp-action="Logout" method="post">

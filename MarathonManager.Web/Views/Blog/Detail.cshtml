@@ -1,0 +1,71 @@
+﻿@using MarathonManager.API.DTOs
+@model BlogDetailDto
+@{
+    ViewData["Title"] = Model.Title;
+}
+<div class="container py-4">
+    <a asp-controller="Blog" asp-action="Index" class="btn btn-link">← Back</a>
+
+    <div class="card mb-3">
+        @if (!string.IsNullOrWhiteSpace(Model.FeaturedImageUrl))
+        {
+            <img class="card-img-top" src="@Model.FeaturedImageUrl" alt="">
+        }
+        <div class="card-body">
+            <h2>@Model.Title</h2>
+            <div class="text-secondary small mb-2">
+                by @Model.AuthorName • @Model.CreatedAt:yyyy-MM-dd
+            </div>
+            <article class="mb-3">@Html.Raw(Model.Content)</article>
+
+            <form asp-controller="Blog" asp-action="ToggleLike" method="post" class="d-inline">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button class="btn btn-sm @(Model.IsLikedByCurrentUser ? "btn-danger" : "btn-outline-danger")" type="submit">
+                    @(Model.IsLikedByCurrentUser ? "Unlike" : "Like") ( @Model.LikeCount )
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Comments (@Model.CommentCount)</div>
+        <div class="card-body">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <form asp-controller="Blog" asp-action="CreateComment" method="post" class="mb-3">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <div class="input-group">
+                        <input class="form-control" name="content" placeholder="Write a comment..." required />
+                        <button class="btn btn-primary" type="submit">Post</button>
+                    </div>
+                </form>
+            }
+
+            @foreach (var c in Model.Comments)
+            {
+                <div class="mb-3 border-bottom pb-2">
+                    <div class="small text-secondary">
+                        <strong>@c.UserName</strong> • @c.CreatedAt:yyyy-MM-dd HH:mm
+                    </div>
+                    <div>@c.Content</div>
+
+                    @* Hiện nút xóa nếu là chủ comment *@
+                    @if (User.Identity?.IsAuthenticated == true &&
+                   int.TryParse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value, out var uid) &&
+                   uid == c.UserId)
+                    {
+                        <form asp-controller="Blog" asp-action="DeleteComment" method="post" class="mt-1">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@Model.Id" />
+                            <input type="hidden" name="commentId" value="@c.Id" />
+                            <button class="btn btn-link text-danger p-0">Delete</button>
+                        </form>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

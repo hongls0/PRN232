@@ -1,6 +1,0 @@
-wwwroot\images\races\0a739d14-4b5e-4ebc-a34e-652625de3745.png
-wwwroot\images\races\0acb1339-0517-4193-b8a1-6a6fa927720b.png
-wwwroot\images\races\6be18962-1d54-43c6-b7c7-a222f2f6ed48.png
-wwwroot\images\races\84454b08-dc3d-44e9-b784-d50bff952ecf.png
-wwwroot\images\races\c1665cc7-ecd1-445a-bfce-14207a50194b.png
-wwwroot\images\races\df78eef8-8575-4d00-adea-8ddfbd305e24.png

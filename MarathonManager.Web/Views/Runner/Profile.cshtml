@@ -1,0 +1,410 @@
+﻿@model MarathonManager.API.DTOs.RunnerProfileDto
+
+@{
+    ViewData["Title"] = "My Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container" style="padding-top: 80px; padding-bottom: 80px;">
+
+    <!-- Back Button -->
+    <div class="mb-3">
+        <a asp-controller="Runner" asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Success/Error Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <h1 class="display-5 fw-bold">
+                <i class="fas fa-user-circle me-2"></i>My Profile
+            </h1>
+            <p class="lead text-muted">View and manage your profile information</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+            <a asp-controller="Runner" asp-action="EditProfile" class="btn btn-primary">
+                <i class="fas fa-edit me-2"></i>Edit Profile
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Column: Profile Info -->
+        <div class="col-lg-8 mb-4">
+
+            <!-- Personal Information Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-id-card me-2"></i>Personal Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Full Name</label>
+                            <h6>@Model.FullName</h6>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Email</label>
+                            <h6>@Model.Email</h6>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Phone Number</label>
+                            <h6>@(Model.PhoneNumber ?? "Not provided")</h6>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Gender</label>
+                            <h6>
+                                @if (!string.IsNullOrEmpty(Model.Gender))
+                                {
+                                    <span class="badge bg-@(Model.Gender == "Male" ? "primary" : "danger")">
+                                        <i class="fas fa-@(Model.Gender == "Male" ? "mars" : "venus") me-1"></i>
+                                        @Model.Gender
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not specified</span>
+                                }
+                            </h6>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Date of Birth</label>
+                            <h6>
+                                @if (Model.DateOfBirth.HasValue)
+                                {
+                                    @Model.DateOfBirth.Value.ToString("MMMM dd, yyyy")
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not provided</span>
+                                }
+                            </h6>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Age</label>
+                            <h6>
+                                @if (Model.Age.HasValue)
+                                {
+                                    <span>@Model.Age years old</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not calculated</span>
+                                }
+                            </h6>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="text-muted small">Member Since</label>
+                            <p class="mb-0">
+                                <i class="fas fa-calendar-alt text-success me-2"></i>
+                                @Model.CreatedAt.ToString("MMMM dd, yyyy")
+                                <br>
+                                <small class="text-muted">(@Model.Statistics.DaysSinceJoined days ago)</small>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small">Account Status</label>
+                            <p class="mb-0">
+                                <span class="badge bg-@(Model.IsActive ? "success" : "danger")">
+                                    <i class="fas fa-@(Model.IsActive ? "check-circle" : "times-circle") me-1"></i>
+                                    @(Model.IsActive ? "Active" : "Inactive")
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Overview -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>Running Statistics
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <div class="p-3 bg-light rounded">
+                                <i class="fas fa-clipboard-list text-primary fa-2x mb-2"></i>
+                                <h3 class="mb-0 text-primary">@Model.Statistics.TotalRegistrations</h3>
+                                <small class="text-muted">Total Registrations</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="p-3 bg-light rounded">
+                                <i class="fas fa-flag-checkered text-success fa-2x mb-2"></i>
+                                <h3 class="mb-0 text-success">@Model.Statistics.CompletedRaces</h3>
+                                <small class="text-muted">Completed Races</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="p-3 bg-light rounded">
+                                <i class="fas fa-road text-info fa-2x mb-2"></i>
+                                <h3 class="mb-0 text-info">@Model.Statistics.TotalDistanceRun.ToString("N1")</h3>
+                                <small class="text-muted">Total KM Run</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="p-3 bg-light rounded">
+                                <i class="fas fa-trophy text-warning fa-2x mb-2"></i>
+                                <h3 class="mb-0 text-warning">@Model.Statistics.Top3Finishes</h3>
+                                <small class="text-muted">Top 3 Finishes</small>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>Active Registrations</strong></p>
+                            <h4 class="text-primary">@Model.Statistics.ActiveRegistrations</h4>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>Top 10 Finishes</strong></p>
+                            <h4 class="text-success">@Model.Statistics.Top10Finishes</h4>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>Cancelled</strong></p>
+                            <h4 class="text-danger">@Model.Statistics.CancelledRegistrations</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal Records -->
+            @if (Model.PersonalRecords.Any())
+            {
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-warning">
+                        <h5 class="mb-0">
+                            <i class="fas fa-medal me-2"></i>Personal Records
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Distance</th>
+                                        <th>Best Time</th>
+                                        <th>Avg Pace</th>
+                                        <th>Race</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var pr in Model.PersonalRecords)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <strong>@pr.DistanceName</strong><br>
+                                                <small class="text-muted">@pr.DistanceInKm km</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-success fs-6">@pr.FormattedTime</span>
+                                            </td>
+                                            <td>@pr.AveragePace</td>
+                                            <td>@pr.RaceName</td>
+                                            <td>@pr.RaceDate.ToString("MMM dd, yyyy")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Best Times by Category -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-stopwatch me-2"></i>Best Times by Category
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="border rounded p-3">
+                                <h6 class="text-muted mb-2">🏃 5K Best</h6>
+                                @if (Model.Statistics.Best5K.HasValue)
+                                {
+                                    <h4 class="text-primary">@Model.Statistics.Best5K.Value.ToString(@"hh\:mm\:ss")</h4>
+                                }
+                                else
+                                {
+                                    <p class="text-muted mb-0">No 5K races completed</p>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="border rounded p-3">
+                                <h6 class="text-muted mb-2">🏃‍♂️ 10K Best</h6>
+                                @if (Model.Statistics.Best10K.HasValue)
+                                {
+                                    <h4 class="text-success">@Model.Statistics.Best10K.Value.ToString(@"hh\:mm\:ss")</h4>
+                                }
+                                else
+                                {
+                                    <p class="text-muted mb-0">No 10K races completed</p>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="border rounded p-3">
+                                <h6 class="text-muted mb-2">🏃 Half Marathon Best</h6>
+                                @if (Model.Statistics.BestHalfMarathon.HasValue)
+                                {
+                                    <h4 class="text-info">@Model.Statistics.BestHalfMarathon.Value.ToString(@"hh\:mm\:ss")</h4>
+                                }
+                                else
+                                {
+                                    <p class="text-muted mb-0">No half marathons completed</p>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="border rounded p-3">
+                                <h6 class="text-muted mb-2">🏃‍♀️ Marathon Best</h6>
+                                @if (Model.Statistics.BestMarathon.HasValue)
+                                {
+                                    <h4 class="text-danger">@Model.Statistics.BestMarathon.Value.ToString(@"hh\:mm\:ss")</h4>
+                                }
+                                else
+                                {
+                                    <p class="text-muted mb-0">No marathons completed</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Recent Activity & Quick Stats -->
+        <div class="col-lg-4">
+
+            <!-- Quick Actions Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body d-grid gap-2">
+                    <a asp-controller="Runner" asp-action="EditProfile" class="btn btn-outline-primary">
+                        <i class="fas fa-edit me-2"></i>Edit Profile
+                    </a>
+                    <a asp-controller="Runner" asp-action="Index" asp-route-tab="available-races" class="btn btn-outline-success">
+                        <i class="fas fa-search me-2"></i>Find Races
+                    </a>
+                    <a asp-controller="Runner" asp-action="Index" asp-route-tab="my-registrations" class="btn btn-outline-info">
+                        <i class="fas fa-clipboard-list me-2"></i>My Registrations
+                    </a>
+                    <a asp-controller="Runner" asp-action="Index" asp-route-tab="my-results" class="btn btn-outline-warning">
+                        <i class="fas fa-trophy me-2"></i>My Results
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            @if (Model.RecentActivities.Any())
+            {
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-history me-2"></i>Recent Activity
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            @foreach (var activity in Model.RecentActivities.Take(8))
+                            {
+                                <div class="d-flex mb-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="rounded-circle @activity.BadgeClass text-white d-flex align-items-center justify-content-center"
+                                             style="width: 35px; height: 35px;">
+                                            <i class="fas @activity.Icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <p class="mb-0 small"><strong>@activity.Description</strong></p>
+                                        <small class="text-muted">@activity.ActivityDate.ToString("MMM dd, yyyy")</small>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Achievement Badge -->
+            <div class="card shadow-sm border-warning">
+                <div class="card-body text-center">
+                    <i class="fas fa-trophy text-warning fa-3x mb-3"></i>
+                    <h5 class="card-title">Running Level</h5>
+                    @{
+                        var level = Model.Statistics.CompletedRaces >= 20 ? "Elite Runner" :
+                        Model.Statistics.CompletedRaces >= 10 ? "Advanced Runner" :
+                        Model.Statistics.CompletedRaces >= 5 ? "Intermediate Runner" :
+                        Model.Statistics.CompletedRaces >= 1 ? "Beginner Runner" :
+                        "New Runner";
+
+                        var badgeColor = Model.Statistics.CompletedRaces >= 20 ? "danger" :
+                        Model.Statistics.CompletedRaces >= 10 ? "warning" :
+                        Model.Statistics.CompletedRaces >= 5 ? "info" :
+                        Model.Statistics.CompletedRaces >= 1 ? "success" :
+                        "secondary";
+                    }
+                    <h4 class="mb-3">
+                        <span class="badge bg-@badgeColor">@level</span>
+                    </h4>
+                    <p class="text-muted small mb-0">
+                        @Model.Statistics.CompletedRaces race@(Model.Statistics.CompletedRaces != 1 ? "s" : "") completed
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .timeline {
+        position: relative;
+    }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 17px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #dee2e6;
+        }
+</style>

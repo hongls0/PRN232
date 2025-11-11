@@ -1,0 +1,40 @@
+﻿@using MarathonManager.API.DTOs
+@model List<BlogListItemDto>
+@{
+    ViewData["Title"] = "Blogs";
+}
+<div class="container py-4">
+    <h2 class="mb-3">Blogs</h2>
+
+    <form method="get" class="input-group mb-3">
+        <input name="search" class="form-control" placeholder="Search title or content..." value="@Context.Request.Query["search"]" />
+        <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+
+    <div class="row g-3">
+        @foreach (var b in Model)
+        {
+            <div class="col-md-6">
+                <div class="card h-100">
+                    @if (!string.IsNullOrWhiteSpace(b.FeaturedImageUrl))
+                    {
+                        <img class="card-img-top" src="@b.FeaturedImageUrl" alt="">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@b.Title</h5>
+                        <p class="card-text text-muted">@b.Excerpt</p>
+                        <div class="d-flex small text-secondary">
+                            <span class="me-3">👍 @b.LikeCount</span>
+                            <span class="me-3">💬 @b.CommentCount</span>
+                            <span>@b.CreatedAt:yyyy-MM-dd</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <a asp-controller="Blog" asp-action="Detail" asp-route-id="@b.Id" class="btn btn-outline-primary btn-sm">Read</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

@@ -11,5 +11,17 @@ namespace MarathonManager.Web.Services
         Task<ApiResponse<PaginatedResponse<MyRegistrationDto>>> GetMyRegistrationsAsync(int pageNumber = 1, int pageSize = 10);
         Task<ApiResponse<object>> CancelRegistrationAsync(int registrationId);
         Task<ApiResponse<PaginatedResponse<MyResultDto>>> GetMyResultsAsync(int pageNumber = 1, int pageSize = 10);
+        Task<ApiResponse<MyRegistrationDto>> FakePaymentAsync(int registrationId);
+        Task<ApiResponse<RunnerProfileDto>> GetRunnerProfileAsync();
+        Task<ApiResponse<RunnerProfileDto>> UpdateRunnerProfileAsync(UpdateRunnerProfileRequest request);
+        Task<ApiResponse<MyResultDto>> GenerateFakeResultAsync(int registrationId);
+        // Services/IRunnerApiService.cs
+        Task<ApiResponse<List<BlogListItemDto>>> GetBlogsAsync(string? search = null, int page = 1, int pageSize = 10);
+        Task<ApiResponse<BlogDetailDto>> GetBlogAsync(int id);
+        Task<ApiResponse<ToggleLikeResponse>> ToggleLikeAsync(int blogId);
+        Task<ApiResponse<CommentDto>> CreateCommentAsync(int blogId, string content);
+        Task<ApiResponse<object>> DeleteCommentAsync(int commentId);
+
     }
+
 }

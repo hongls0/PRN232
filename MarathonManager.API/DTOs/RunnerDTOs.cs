@@ -224,7 +224,7 @@ namespace MarathonManager.API.DTOs
         public List<RaceDistanceDetailDto> Distances { get; set; } = new();
 
         // Blog posts related to this race
-        public List<BlogPostSummaryDto> BlogPosts { get; set; } = new();
+        public List<BlogListItemDto> BlogPosts { get; set; } = new();
     }
 
     /// <summary>
@@ -323,5 +323,161 @@ namespace MarathonManager.API.DTOs
         public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
         public bool HasPreviousPage => PageNumber > 1;
         public bool HasNextPage => PageNumber < TotalPages;
+    }
+
+    public class RunnerProfileDto
+    {
+        // Personal Information
+        public int Id { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string? PhoneNumber { get; set; }
+        public DateOnly? DateOfBirth { get; set; }
+        public string? Gender { get; set; }
+        public int? Age { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime CreatedAt { get; set; }
+
+        // Profile Statistics
+        public RunnerProfileStatisticsDto Statistics { get; set; } = new();
+
+        // Recent Activity
+        public List<RecentActivityDto> RecentActivities { get; set; } = new();
+
+        // Personal Records
+        public List<PersonalRecordDto> PersonalRecords { get; set; } = new();
+    }
+
+    /// <summary>
+    /// Statistics for runner profile
+    /// </summary>
+    public class RunnerProfileStatisticsDto
+    {
+        // Registration Stats
+        public int TotalRegistrations { get; set; }
+        public int ActiveRegistrations { get; set; }
+        public int CompletedRaces { get; set; }
+        public int CancelledRegistrations { get; set; }
+
+        // Performance Stats
+        public int TotalRacesFinished { get; set; }
+        public decimal TotalDistanceRun { get; set; } // in KM
+        public int Top3Finishes { get; set; }
+        public int Top10Finishes { get; set; }
+
+        // Best Times (optional - if available)
+        public TimeOnly? Best5K { get; set; }
+        public TimeOnly? Best10K { get; set; }
+        public TimeOnly? BestHalfMarathon { get; set; }
+        public TimeOnly? BestMarathon { get; set; }
+
+        // Account Age
+        public int DaysSinceJoined { get; set; }
+        public int YearsActive { get; set; }
+    }
+
+    /// <summary>
+    /// Recent activity item
+    /// </summary>
+    public class RecentActivityDto
+    {
+        public string ActivityType { get; set; } = string.Empty; // "Registration", "Race", "Result"
+        public string Description { get; set; } = string.Empty;
+        public DateTime ActivityDate { get; set; }
+        public string? Icon { get; set; }
+        public string? BadgeClass { get; set; }
+    }
+
+    /// <summary>
+    /// Personal record for specific distance
+    /// </summary>
+    public class PersonalRecordDto
+    {
+        public string DistanceName { get; set; } = string.Empty;
+        public decimal DistanceInKm { get; set; }
+        public TimeOnly BestTime { get; set; }
+        public string FormattedTime { get; set; } = string.Empty;
+        public string RaceName { get; set; } = string.Empty;
+        public DateTime RaceDate { get; set; }
+        public string AveragePace { get; set; } = string.Empty;
+    }
+
+    /// <summary>
+    /// Update runner profile request
+    /// </summary>
+    public class UpdateRunnerProfileRequest
+    {
+        public string FullName { get; set; } = string.Empty;
+        public string? PhoneNumber { get; set; }
+        public DateOnly? DateOfBirth { get; set; }
+        public string? Gender { get; set; }
+    }
+
+    /// <summary>
+    /// Change password request
+    /// </summary>
+    public class ChangePasswordRequest
+    {
+        public string CurrentPassword { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
+        public string ConfirmPassword { get; set; } = string.Empty;
+    }
+
+    public class BlogListItemDto
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = default!;
+        public string Excerpt { get; set; } = default!;
+        public string? FeaturedImageUrl { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string AuthorName { get; set; } = default!;
+        public int LikeCount { get; set; }
+        public int CommentCount { get; set; }
+        public bool IsLikedByCurrentUser { get; set; }
+
+        // liên kết race (optional)
+        public int? RaceId { get; set; }
+        public string? RaceName { get; set; }
+    }
+
+    public class BlogDetailDto
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = default!;
+        public string Content { get; set; } = default!;
+        public string? FeaturedImageUrl { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string AuthorName { get; set; } = default!;
+        public int LikeCount { get; set; }
+        public int CommentCount { get; set; }
+        public bool IsLikedByCurrentUser { get; set; }
+        public List<CommentDto> Comments { get; set; } = new();
+
+        // liên kết race (optional)
+        public int? RaceId { get; set; }
+        public string? RaceName { get; set; }
+        public DateTime? RaceDate { get; set; }
+    }
+
+
+    public class CommentDto
+    {
+        public int Id { get; set; }
+        public int BlogPostId { get; set; }
+        public int UserId { get; set; }
+        public string UserName { get; set; } = default!;
+        public string Content { get; set; } = default!;
+        public DateTime CreatedAt { get; set; }
+    }
+
+    public class CreateCommentRequest
+    {
+        public string Content { get; set; } = default!;
+    }
+
+    public class ToggleLikeResponse
+    {
+        public bool Liked { get; set; }
+        public int LikeCount { get; set; }
     }
 }

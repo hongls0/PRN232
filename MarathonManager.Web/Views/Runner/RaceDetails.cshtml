@@ -1,4 +1,6 @@
-﻿@model MarathonManager.API.DTOs.RaceDetailsDto
+﻿@using MarathonManager.API.DTOs
+@model MarathonManager.API.DTOs.RaceDetailsDto
+
 
 @{
     ViewData["Title"] = Model.Name;
@@ -172,36 +174,53 @@
         </div>
     </div>
 
-    <!-- Related Blog Posts -->
-    @if (Model.BlogPosts.Any())
+    @{
+        // Lấy list blog, nếu null thì dùng list rỗng
+        var blogs = Model.BlogPosts ?? new List<BlogListItemDto>();
+
+        // Lọc các bài blog gắn với race hiện tại
+        var relatedBlogs = blogs
+        .Where(b => b.RaceId.HasValue && b.RaceId.Value == Model.Id)  // Model.Id = RaceId hiện tại
+        .ToList();
+    }
+
+    @if (relatedBlogs.Any())
     {
         <div class="row mb-4">
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="card-header bg-info text-white">
                         <h4 class="mb-0">
-                            <i class="fas fa-newspaper me-2"></i>Related Articles
+                            <i class="fas fa-newspaper me-2"></i>Articles about this race
                         </h4>
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            @foreach (var blog in Model.BlogPosts)
+                            @foreach (var blog in relatedBlogs)
                             {
                                 <div class="col-md-6 col-lg-4 mb-3">
                                     <div class="card h-100">
                                         @if (!string.IsNullOrEmpty(blog.FeaturedImageUrl))
                                         {
-                                            <img src="@blog.FeaturedImageUrl" class="card-img-top" alt="@blog.Title" style="height: 150px; object-fit: cover;">
+                                            <img src="@blog.FeaturedImageUrl"
+                                                 class="card-img-top"
+                                                 alt="@blog.Title"
+                                                 style="height:150px;object-fit:cover;">
                                         }
                                         <div class="card-body">
                                             <h6 class="card-title">@blog.Title</h6>
                                             <p class="card-text">
                                                 <small class="text-muted">
-                                                    By @blog.AuthorName<br>
+                                                    By @blog.AuthorName<br />
                                                     @blog.CreatedAt.ToString("MMM dd, yyyy")
                                                 </small>
                                             </p>
-                                            <a href="#" class="btn btn-sm btn-outline-primary">Read More</a>
+                                            <a asp-controller="Blog"
+                                               asp-action="Detail"
+                                               asp-route-id="@blog.Id"
+                                               class="btn btn-sm btn-outline-primary">
+                                                Read More
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -212,5 +231,3 @@
             </div>
         </div>
     }
-
-</div>

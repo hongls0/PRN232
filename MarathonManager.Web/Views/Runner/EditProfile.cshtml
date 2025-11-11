@@ -1,0 +1,180 @@
+﻿@model MarathonManager.API.DTOs.UpdateRunnerProfileRequest
+
+@{
+    ViewData["Title"] = "Edit Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container" style="padding-top: 80px; padding-bottom: 80px;">
+
+    <!-- Back Button -->
+    <div class="mb-3">
+        <a asp-controller="Runner" asp-action="Profile" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Profile
+        </a>
+    </div>
+
+    <!-- Success/Error Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">
+                <i class="fas fa-user-edit me-2"></i>Edit Profile
+            </h1>
+            <p class="lead text-muted">Update your personal information</p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <!-- Edit Profile Form -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-id-card me-2"></i>Personal Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-controller="Runner" asp-action="EditProfile" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label asp-for="FullName" class="form-label">
+                                <i class="fas fa-user text-primary me-2"></i>Full Name <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="FullName" class="form-control form-control-lg" placeholder="Enter your full name" required />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="form-label">
+                                <i class="fas fa-phone text-success me-2"></i>Phone Number
+                            </label>
+                            <input asp-for="PhoneNumber" class="form-control form-control-lg" placeholder="Enter your phone number" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            <small class="form-text text-muted">Optional - Used for race notifications</small>
+                        </div>
+
+                        <div class="row">
+                            <!-- Date of Birth -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="DateOfBirth" class="form-label">
+                                    <i class="fas fa-birthday-cake text-info me-2"></i>Date of Birth
+                                </label>
+                                <input asp-for="DateOfBirth" type="date" class="form-control form-control-lg" />
+                                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                                <small class="form-text text-muted">Used for age category rankings</small>
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Gender" class="form-label">
+                                    <i class="fas fa-venus-mars text-warning me-2"></i>Gender
+                                </label>
+                                <select asp-for="Gender" class="form-select form-select-lg">
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                    <option value="PreferNotToSay">Prefer not to say</option>
+                                </select>
+                                <span asp-validation-for="Gender" class="text-danger"></span>
+                                <small class="form-text text-muted">Used for gender category rankings</small>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Info Box -->
+                        <div class="alert alert-info">
+                            <h6 class="alert-heading">
+                                <i class="fas fa-info-circle me-2"></i>Why we need this information
+                            </h6>
+                            <ul class="mb-0">
+                                <li><strong>Full Name:</strong> Displayed on certificates and race results</li>
+                                <li><strong>Phone Number:</strong> Used for important race notifications</li>
+                                <li><strong>Date of Birth:</strong> Required for age category classifications</li>
+                                <li><strong>Gender:</strong> Used for gender category rankings in races</li>
+                            </ul>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <a asp-controller="Runner" asp-action="Profile" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Additional Settings Card -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cog me-2"></i>Account Settings
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">Email Address</h6>
+                                <small class="text-muted">Contact support to change your email address</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary" disabled>
+                                <i class="fas fa-lock me-1"></i>Locked
+                            </button>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">Change Password</h6>
+                                <small class="text-muted">Update your account password</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary" disabled>
+                                <i class="fas fa-key me-1"></i>Coming Soon
+                            </button>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">Delete Account</h6>
+                                <small class="text-muted">Permanently delete your account and data</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-danger" disabled>
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

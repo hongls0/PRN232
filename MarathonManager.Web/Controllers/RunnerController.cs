@@ -97,6 +97,38 @@ namespace MarathonManager.Web.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> FakePayment(int registrationId)
+        {
+            try
+            {
+                var response = await _runnerApiService.FakePaymentAsync(registrationId);
+
+                if (response.Success)
+                {
+                    TempData["SuccessMessage"] = response.Message ?? "Fake payment successful";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = response.Message ?? "Failed to fake payment";
+                }
+
+                // Tuỳ bạn muốn quay về đâu:
+                // - Nếu muốn về My Registrations:
+                return RedirectToAction(nameof(Index), new { tab = "my-registrations" });
+
+                // - Nếu muốn về chi tiết registration:
+              //  return RedirectToAction(nameof(RegistrationDetails), new { id = registrationId });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error performing fake payment for registration {RegistrationId}", registrationId);
+                TempData["ErrorMessage"] = "An error occurred during fake payment";
+                return RedirectToAction(nameof(RegistrationDetails), new { id = registrationId });
+            }
+        }
+
         /// <summary>
         /// GET: /Runner/RaceDetails/{id}
         /// View detailed race information
@@ -262,6 +294,96 @@ namespace MarathonManager.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+
+        /// <summary>
+        /// POST: /Runner/GenerateFakeResult
+        /// Chỉ dùng trong môi trường DEV để fake kết quả
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GenerateFakeResult(int registrationId)
+        {
+            try
+            {
+                var response = await _runnerApiService.GenerateFakeResultAsync(registrationId);
+
+                if (response.Success)
+                {
+                    TempData["SuccessMessage"] = response.Message ?? "Fake result generated";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = response.Message ?? "Failed to generate fake result";
+                }
+
+                // Quay lại dashboard, tab My Results
+                return RedirectToAction(nameof(Index), new { tab = "my-results" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error generating fake result for registration {RegistrationId}", registrationId);
+                TempData["ErrorMessage"] = "An error occurred while generating fake result";
+                return RedirectToAction(nameof(Index), new { tab = "my-results" });
+            }
+        }
+
+
+        [Authorize(Roles = "Runner")]
+        public async Task<IActionResult> Profile()
+        {
+            var response = await _runnerApiService.GetRunnerProfileAsync();
+
+            if (!response.Success || response.Data == null)
+            {
+                TempData["ErrorMessage"] = response.Message ?? "Failed to load profile";
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(response.Data); // Views/Runner/Profile.cshtml (model: RunnerProfileDto)
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Runner")]
+        public async Task<IActionResult> EditProfile()
+        {
+            var response = await _runnerApiService.GetRunnerProfileAsync();
+            if (!response.Success || response.Data == null)
+            {
+                TempData["ErrorMessage"] = response.Message ?? "Failed to load profile";
+                return RedirectToAction(nameof(Profile));
+            }
+
+            var p = response.Data;
+            var model = new UpdateRunnerProfileRequest
+            {
+                FullName = p.FullName,
+                PhoneNumber = p.PhoneNumber,
+                DateOfBirth = p.DateOfBirth,
+                Gender = p.Gender
+            };
+
+            return View(model); // Views/Runner/EditProfile.cshtml
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Runner")]
+        public async Task<IActionResult> EditProfile(UpdateRunnerProfileRequest model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var response = await _runnerApiService.UpdateRunnerProfileAsync(model);
+
+            if (response.Success)
+            {
+                TempData["SuccessMessage"] = response.Message ?? "Profile updated successfully";
+                return RedirectToAction(nameof(Profile));
+            }
+
+            TempData["ErrorMessage"] = response.Message ?? "Failed to update profile";
+            return View(model);
+        }
+
     }
 
     /// <summary>

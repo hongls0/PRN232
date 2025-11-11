@@ -1,544 +1,30 @@
-﻿using MarathonManager.API.DTOs.Race;
-using MarathonManager.API.Models; // Ensure MarathonManagerContext and Race models are here
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using MarathonManager.API.DTOs.RaceDistances; // Using for distance DTOs
-using Microsoft.AspNetCore.Hosting; // <-- REQUIRED: For IWebHostEnvironment
-using System.IO;                  // <-- REQUIRED: For Path, FileStream
-using Microsoft.AspNetCore.Http; // <-- REQUIRED: For IFormFile, StatusCodes
-using System.Text.RegularExpressions;
+using MarathonManager.API.Models;
 using MarathonManager.API.DTOs;
+using System.Security.Claims;
+using MarathonManager.API.DTOs.Race;
+
 namespace MarathonManager.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] // Lock down the whole controller
     public class RacesController : ControllerBase
     {
         private readonly MarathonManagerContext _context;
-        private readonly IWebHostEnvironment _environment; // To get the wwwroot path
 
-        // Constructor updated to inject IWebHostEnvironment
-        public RacesController(MarathonManagerContext context, IWebHostEnvironment environment)
+        public RacesController(MarathonManagerContext context)
         {
             _context = context;
-            _environment = environment; // Assign injected environment
         }
 
-        // ==========================================================
-        // PUBLIC ENDPOINTS
-        // ==========================================================
-
-        // GET: api/Races (List approved races)
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<RaceSummaryDto>>> GetRaces()
+        private int GetCurrentUserId()
         {
-            var races = await _context.Races
-                .Where(r => r.Status == "Approved")
-                .OrderByDescending(r => r.RaceDate)
-                .Select(r => new RaceSummaryDto
-                {
-                    Id = r.Id,
-                    Name = r.Name,
-                    Location = r.Location,
-                    RaceDate = r.RaceDate,
-                    ImageUrl = r.ImageUrl, // This will now be the relative path like /images/races/...
-                    Status = r.Status
-                })
-                .ToListAsync();
-            return Ok(races);
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.TryParse(userIdClaim, out var userId) ? userId : 0;
         }
 
-        // GET: api/Races/5 (Get details of one approved race)
-        [HttpGet("{id}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<RaceDetailDto>> GetRace(int id)
-        {
-            var race = await _context.Races
-               .Include(r => r.Organizer) // Include Organizer to get OrganizerName
-               .Include(r => r.RaceDistances) // Include Distances
-               .Where(r => r.Id == id && r.Status == "Approved")
-               .Select(r => new RaceDetailDto
-               {
-                   Id = r.Id,
-                   Name = r.Name,
-                   Description = r.Description,
-                   Location = r.Location,
-                   RaceDate = r.RaceDate,
-                   ImageUrl = r.ImageUrl, // Relative path
-                   Status = r.Status,
-                   OrganizerName = r.Organizer.FullName, // Get name from included Organizer
-                   Distances = r.RaceDistances.Select(d => new RaceDistanceDto // Map included distances
-                   {
-                       Id = d.Id,
-                       Name = d.Name,
-                       DistanceInKm = d.DistanceInKm,
-                       RegistrationFee = d.RegistrationFee,
-                       MaxParticipants = d.MaxParticipants,
-                       StartTime = d.StartTime
-                   }).ToList()
-               })
-               .FirstOrDefaultAsync();
-
-            if (race == null) return NotFound(new { message = "Không tìm thấy giải chạy hoặc giải chưa được duyệt." });
-            return Ok(race);
-        }
-
-        // ==========================================================
-        // ORGANIZER ENDPOINTS
-        // ==========================================================
-
-        // GET: api/Races/my-races
-        // GET: api/Races/my-races
-        [HttpGet("my-races")]
-        [Authorize(Roles = "Organizer")]
-        public async Task<ActionResult<IEnumerable<RaceSummaryDto>>> GetMyRaces()
-        {
-            try
-            {
-                var organizerId = GetCurrentUserId();
-
-                if (organizerId == null)
-                {
-                    return Unauthorized(new { message = "Không xác định được người dùng hiện tại." });
-                }
-
-                var races = await _context.Races
-                    .Where(r => r.OrganizerId == organizerId)
-                    .OrderByDescending(r => r.RaceDate)
-                    .Select(r => new RaceSummaryDto
-                    {
-                        Id = r.Id,
-                        Name = r.Name,
-                        Location = r.Location,
-                        RaceDate = r.RaceDate,
-                        ImageUrl = r.ImageUrl,
-                        Status = r.Status
-                    })
-                    .ToListAsync();
-
-                if (races == null || races.Count == 0)
-                {
-                    return NotFound(new { message = "Không tìm thấy giải chạy nào do bạn tổ chức." });
-                }
-
-                return Ok(races);
-            }
-            catch (Exception ex)
-            {
-                // Ghi log để dễ debug (nếu có logging)
-                Console.WriteLine($"Lỗi trong GetMyRaces: {ex.Message}");
-
-                // Trả thông tin lỗi thân thiện hơn
-                return StatusCode(500, new
-                {
-                    message = "Đã xảy ra lỗi trong quá trình lấy danh sách giải chạy.",
-                    detail = ex.Message // Có thể ẩn khi deploy production
-                });
-            }
-        }
-
-
-        // POST: api/Races
-        [HttpPost]
-        [Authorize(Roles = "Organizer")]
-        [Consumes("multipart/form-data")]
-        public async Task<ActionResult<RaceDetailDto>> PostRace([FromForm] RaceCreateDto raceDto, IFormFile? imageFile)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var organizerId = GetCurrentUserId();
-            string? imageUrlPath = null;
-
-            // ==============================================================
-            // PHẦN 1: LƯU ẢNH (Giữ nguyên code cũ)
-            // ==============================================================
-            if (imageFile != null && imageFile.Length > 0)
-            {
-                // (Kiểm tra extension, size, v.v...)
-                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
-                var extension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
-                if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
-                {
-                    ModelState.AddModelError("imageFile", "Chỉ chấp nhận file ảnh (.jpg, .jpeg, .png, .gif).");
-                    return BadRequest(ModelState);
-                }
-                if (imageFile.Length > 5 * 1024 * 1024) // 5 MB
-                {
-                    ModelState.AddModelError("imageFile", "Kích thước file ảnh không được vượt quá 5MB.");
-                    return BadRequest(ModelState);
-                }
-                // (Lưu file vào wwwroot/images/races...)
-                try
-                {
-                    string uploadsFolder = Path.Combine(_environment.WebRootPath, "images", "races");
-                    if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
-                    string uniqueFileName = Guid.NewGuid().ToString() + extension;
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await imageFile.CopyToAsync(fileStream);
-                    }
-                    imageUrlPath = $"/images/races/{uniqueFileName}";
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Error saving image: {ex.Message}");
-                    ModelState.AddModelError("imageFile", $"Lỗi server khi lưu file ảnh.");
-                    return StatusCode(StatusCodes.Status500InternalServerError, ModelState);
-                }
-            }
-
-            // ==============================================================
-            // PHẦN 2: LƯU THÔNG TIN GIẢI CHẠY (RACE) (Giữ nguyên)
-            // ==============================================================
-            var newRace = new Race
-            {
-                Name = raceDto.Name,
-                Description = raceDto.Description,
-                Location = raceDto.Location,
-                RaceDate = raceDto.RaceDate,
-                ImageUrl = imageUrlPath,
-                OrganizerId = organizerId,
-                Status = "Pending"
-            };
-            _context.Races.Add(newRace);
-            await _context.SaveChangesAsync(); // <-- LƯU GIẢI CHẠY ĐỂ LẤY ID
-
-            // ==============================================================
-            // PHẦN 3: (NÂNG CẤP) TẠO CỰ LY TỪ CHUỖI CSV
-            // ==============================================================
-            List<RaceDistanceDto> createdDistancesDto = new List<RaceDistanceDto>();
-            if (!string.IsNullOrWhiteSpace(raceDto.DistancesCsv))
-            {
-                try
-                {
-                    // Tách chuỗi bằng dấu phẩy
-                    var distances = raceDto.DistancesCsv.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    var newDistancesList = new List<RaceDistance>();
-
-                    // Dùng Regex để lọc ra chỉ số (kể cả số thập phân)
-                    // (VD: "21.1km" -> "21.1")
-                    var regex = new Regex(@"[0-9]+(\.[0-9]+)?");
-
-                    foreach (var distString in distances)
-                    {
-                        var match = regex.Match(distString);
-
-                        // Nếu tìm thấy số và parse thành công
-                        if (match.Success && decimal.TryParse(match.Value, out decimal km) && km > 0)
-                        {
-                            var newDistance = new RaceDistance
-                            {
-                                RaceId = newRace.Id,
-                                Name = $"{km}km", // Tên mặc định (VD: "5km", "21.1km")
-                                DistanceInKm = km,
-                                RegistrationFee = 0, // Phí mặc định
-                                MaxParticipants = 100, // Giới hạn mặc định
-                                StartTime = newRace.RaceDate.Date.AddHours(6) // Giờ mặc định
-                            };
-                            newDistancesList.Add(newDistance);
-                        }
-                    }
-
-                    if (newDistancesList.Any())
-                    {
-                        _context.RaceDistances.AddRange(newDistancesList);
-                        await _context.SaveChangesAsync(); // Lưu các cự ly
-
-                        // Map sang DTO để trả về
-                        createdDistancesDto = newDistancesList.Select(d => new RaceDistanceDto
-                        {
-                            Id = d.Id,
-                            Name = d.Name,
-                            DistanceInKm = d.DistanceInKm,
-                            RegistrationFee = d.RegistrationFee,
-                            MaxParticipants = d.MaxParticipants,
-                            StartTime = d.StartTime
-                        }).ToList();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Log lỗi nhưng không làm crash request
-                    System.Diagnostics.Debug.WriteLine($"Error parsing/saving CSV distances: {ex.Message}");
-                }
-            }
-
-            // ==============================================================
-            // PHẦN 4: CHUẨN BỊ DTO TRẢ VỀ (Giữ nguyên)
-            // ==============================================================
-            var organizer = await _context.Users.FindAsync(organizerId);
-            var resultDto = new RaceDetailDto
-            {
-                Id = newRace.Id,
-                Name = newRace.Name,
-                Description = newRace.Description,
-                Location = newRace.Location,
-                RaceDate = newRace.RaceDate,
-                ImageUrl = newRace.ImageUrl,
-                Status = newRace.Status,
-                OrganizerName = organizer?.FullName ?? "N/A",
-                Distances = createdDistancesDto // <-- Trả về danh sách cự ly (có thể rỗng)
-            };
-
-            return CreatedAtAction(nameof(GetRace), new { id = newRace.Id }, resultDto);
-        }
-
-        // PUT: api/Races/5 (Update MY race)
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Organizer")]
-        // NOTE: This currently only accepts JSON ([FromBody]).
-        // To allow image updates, it needs to be changed similar to PostRace:
-        // - Accept [FromForm] RaceUpdateDto and IFormFile? imageFile
-        // - Handle saving the new image file
-        // - Handle deleting the old image file (if it exists and a new one is uploaded)
-        // - Update the ImageUrl property in the database
-        public async Task<IActionResult> PutRace(int id, [FromBody] RaceUpdateDto raceDto)
-        {
-            if (id != raceDto.Id) return BadRequest(new { message = "ID không khớp." });
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var race = await _context.Races.FindAsync(id);
-            if (race == null) return NotFound();
-
-            var organizerId = GetCurrentUserId();
-            if (race.OrganizerId != organizerId) return Forbid(); // Check ownership
-            if (race.Status == "Completed") return BadRequest(new { message = "Không thể sửa giải đã hoàn thành." });
-
-            // Update properties from DTO
-            race.Name = raceDto.Name;
-            race.Description = raceDto.Description;
-            race.Location = raceDto.Location;
-            race.RaceDate = raceDto.RaceDate;
-            // ImageUrl update logic would go here if handling file uploads
-            // race.ImageUrl = raceDto.ImageUrl; // Only use this if not handling file upload and want to keep existing image
-
-            race.Status = "Pending"; // Set back to Pending for re-approval
-
-            _context.Entry(race).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RaceExists(id)) return NotFound();
-                else throw;
-            }
-            return NoContent(); // Return 204 No Content on successful update
-        }
-
-        // --- Distance Management Endpoints ---
-
-        // GET: api/Races/{raceId}/distances
-        [HttpGet("{raceId}/distances")]
-        [Authorize(Roles = "Organizer, Admin")]
-        public async Task<ActionResult<IEnumerable<RaceDistanceDto>>> GetDistancesForRace(int raceId)
-        {
-            var raceExists = await _context.Races.AnyAsync(r => r.Id == raceId);
-            if (!raceExists) return NotFound("Không tìm thấy giải chạy.");
-
-            // Check ownership if the user is an Organizer
-            if (User.IsInRole("Organizer"))
-            {
-                var organizerId = GetCurrentUserId();
-                var isOwner = await _context.Races.AnyAsync(r => r.Id == raceId && r.OrganizerId == organizerId);
-                if (!isOwner) return Forbid("Bạn không có quyền xem cự ly của giải chạy này.");
-            }
-
-            var distances = await _context.RaceDistances
-                .Where(d => d.RaceId == raceId)
-                .Select(d => new RaceDistanceDto
-                {
-                    Id = d.Id,
-                    Name = d.Name,
-                    DistanceInKm = d.DistanceInKm,
-                    RegistrationFee = d.RegistrationFee,
-                    MaxParticipants = d.MaxParticipants,
-                    StartTime = d.StartTime
-                })
-                .ToListAsync();
-            return Ok(distances);
-        }
-
-        // POST: api/Races/{raceId}/distances
-        [HttpPost("{raceId}/distances")]
-        [Authorize(Roles = "Organizer")]
-        // Use fully qualified name if ambiguous reference occurs
-        public async Task<ActionResult<RaceDistanceDto>> AddDistanceToRace(int raceId, MarathonManager.API.DTOs.RaceDistances.RaceDistanceCreateDto createDto)
-        {
-            var race = await _context.Races.FindAsync(raceId);
-            if (race == null) return NotFound("Không tìm thấy giải chạy.");
-
-            var organizerId = GetCurrentUserId();
-            if (race.OrganizerId != organizerId) return Forbid("Bạn không có quyền thêm cự ly cho giải chạy này.");
-            // Allow adding distances only if race is Pending or Approved
-            if (race.Status != "Pending" && race.Status != "Approved") return BadRequest("Không thể thêm cự ly khi giải chạy đã hoàn thành hoặc bị hủy.");
-
-            var newDistance = new RaceDistance
-            {
-                RaceId = raceId,
-                Name = createDto.Name,
-                DistanceInKm = createDto.DistanceInKm,
-                RegistrationFee = createDto.RegistrationFee,
-                MaxParticipants = createDto.MaxParticipants,
-                StartTime = createDto.StartTime
-            };
-            _context.RaceDistances.Add(newDistance);
-            await _context.SaveChangesAsync();
-
-            // Map the newly created entity back to a DTO to return
-            var resultDto = new RaceDistanceDto
-            {
-                Id = newDistance.Id,
-                Name = newDistance.Name,
-                DistanceInKm = newDistance.DistanceInKm,
-                RegistrationFee = newDistance.RegistrationFee,
-                MaxParticipants = newDistance.MaxParticipants,
-                StartTime = newDistance.StartTime
-            };
-            // Return 201 Created with the location of the resource (GetDistancesForRace)
-            return CreatedAtAction(nameof(GetDistancesForRace), new { raceId = raceId }, resultDto);
-        }
-
-        // PUT: api/Races/{raceId}/distances/{distanceId}
-        [HttpPut("{raceId}/distances/{distanceId}")]
-        [Authorize(Roles = "Organizer")]
-        public async Task<IActionResult> UpdateDistance(int raceId, int distanceId, RaceDistanceUpdateDto updateDto)
-        {
-            // Include Race to check ownership and status
-            var distance = await _context.RaceDistances
-                                         .Include(d => d.Race)
-                                         .FirstOrDefaultAsync(d => d.Id == distanceId && d.RaceId == raceId);
-            if (distance == null) return NotFound("Không tìm thấy cự ly hoặc cự ly không thuộc giải chạy này.");
-
-            var organizerId = GetCurrentUserId();
-            if (distance.Race.OrganizerId != organizerId) return Forbid("Bạn không có quyền sửa cự ly này.");
-            if (distance.Race.Status != "Pending" && distance.Race.Status != "Approved") return BadRequest("Không thể sửa cự ly khi giải chạy đã hoàn thành hoặc bị hủy.");
-
-            // Update properties
-            distance.Name = updateDto.Name;
-            distance.DistanceInKm = updateDto.DistanceInKm;
-            distance.RegistrationFee = updateDto.RegistrationFee;
-            distance.MaxParticipants = updateDto.MaxParticipants;
-            distance.StartTime = updateDto.StartTime;
-
-            try { await _context.SaveChangesAsync(); }
-            catch (DbUpdateConcurrencyException) { if (!_context.RaceDistances.Any(e => e.Id == distanceId)) return NotFound(); else throw; }
-            return NoContent(); // Success
-        }
-
-        // DELETE: api/Races/{raceId}/distances/{distanceId}
-        [HttpDelete("{raceId}/distances/{distanceId}")]
-        [Authorize(Roles = "Organizer")]
-        public async Task<IActionResult> DeleteDistance(int raceId, int distanceId)
-        {
-            var distance = await _context.RaceDistances
-                                         .Include(d => d.Race)
-                                         .FirstOrDefaultAsync(d => d.Id == distanceId && d.RaceId == raceId);
-            if (distance == null) return NotFound("Không tìm thấy cự ly hoặc cự ly không thuộc giải chạy này.");
-
-            var organizerId = GetCurrentUserId();
-            if (distance.Race.OrganizerId != organizerId) return Forbid("Bạn không có quyền xóa cự ly này.");
-            if (distance.Race.Status != "Pending" && distance.Race.Status != "Approved") return BadRequest("Không thể xóa cự ly khi giải chạy đã hoàn thành hoặc bị hủy.");
-
-            // Business Rule: Prevent deletion if runners are registered
-            bool hasRegistrations = await _context.Registrations.AnyAsync(reg => reg.RaceDistanceId == distanceId);
-            if (hasRegistrations) return BadRequest("Không thể xóa cự ly đã có vận động viên đăng ký.");
-
-            _context.RaceDistances.Remove(distance);
-            await _context.SaveChangesAsync();
-            return NoContent(); // Success
-        }
-
-
-        // ==========================================================
-        // ADMIN ENDPOINTS
-        // ==========================================================
-        [HttpGet("pending")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<RaceSummaryDto>>> GetPendingRaces()
-        {
-            var races = await _context.Races
-               .Where(r => r.Status == "Pending")
-               .Select(r => new RaceSummaryDto
-               {
-                   Id = r.Id,
-                   Name = r.Name,
-                   Location = r.Location,
-                   RaceDate = r.RaceDate,
-                   ImageUrl = r.ImageUrl, // Include ImageUrl here too
-                   Status = r.Status
-               })
-               .ToListAsync();
-            return Ok(races);
-        }
-
-        [HttpPatch("{id}/approve")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> ApproveRace(int id)
-        {
-            var race = await _context.Races.FindAsync(id);
-            if (race == null) return NotFound();
-            race.Status = "Approved";
-            _context.Entry(race).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return Ok(new { message = "Duyệt giải thành công." });
-        }
-
-        [HttpPatch("{id}/cancel")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CancelRace(int id)
-        {
-            var race = await _context.Races.FindAsync(id);
-            if (race == null) return NotFound();
-            race.Status = "Cancelled";
-            _context.Entry(race).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return Ok(new { message = "Hủy giải thành công." });
-        }
-
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteRace(int id)
-        {
-            var race = await _context.Races.FindAsync(id);
-            if (race == null) return NotFound();
-
-            // Optional: Delete associated image file before deleting the race record
-            if (!string.IsNullOrEmpty(race.ImageUrl))
-            {
-                try
-                {
-                    string imagePath = Path.Combine(_environment.WebRootPath ?? "wwwroot", race.ImageUrl.TrimStart('/')); // Get physical path
-                    if (System.IO.File.Exists(imagePath))
-                    {
-                        System.IO.File.Delete(imagePath);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error deleting image file {race.ImageUrl}: {ex.Message}"); // Log error, but continue deletion
-                }
-            }
-
-            _context.Races.Remove(race);
-            await _context.SaveChangesAsync();
-            return NoContent();
-        }
         // ============================================
         // RUNNER ENDPOINTS
         // ============================================
@@ -693,7 +179,7 @@ namespace MarathonManager.API.Controllers
         /// </summary>
         [HttpGet("{id}/details")]
         [Authorize(Roles = "Runner")]
-        public async Task<ActionResult<ApiResponse<RaceDetailsDto>>> GetRaceDetails(int id)
+        public async Task<ActionResult<ApiResponse<RaceDetailDto>>> GetRaceDetails(int id)
         {
             try
             {
@@ -706,11 +192,33 @@ namespace MarathonManager.API.Controllers
                     .FirstOrDefaultAsync(r => r.Id == id);
 
                 if (race == null)
-                    return NotFound(new ApiResponse<RaceDetailsDto>
+                    return NotFound(new ApiResponse<RaceDetailDto>
                     {
                         Success = false,
                         Message = "Race not found"
                     });
+
+                var blogs = await _context.BlogPosts
+    .Include(b => b.Author)
+    .Where(b => b.Status == "Published" && b.RaceId == race.Id)
+    .OrderByDescending(b => b.CreatedAt)
+    .Take(6)
+    .Select(b => new BlogListItemDto
+    {
+        Id = b.Id,
+        Title = b.Title,
+        Excerpt = b.Content.Length > 120 ? b.Content.Substring(0, 120) + "..." : b.Content,
+        FeaturedImageUrl = b.FeaturedImageUrl,
+        CreatedAt = b.CreatedAt,
+        AuthorName = b.Author.FullName,
+        LikeCount = b.Likes.Count(),
+        CommentCount = b.Comments.Count(),
+        IsLikedByCurrentUser = false, // hoặc tính theo user nếu cần
+        RaceId = b.RaceId,
+        RaceName = b.Race != null ? b.Race.Name : null
+    })
+    .ToListAsync();
+
 
                 var raceDetail = new RaceDetailsDto
                 {
@@ -737,15 +245,7 @@ namespace MarathonManager.API.Controllers
                         StartTime = rd.StartTime,
                         CurrentParticipants = rd.Registrations.Count(r => r.PaymentStatus != "Cancelled")
                     }).ToList(),
-                    BlogPosts = race.BlogPosts.Select(bp => new BlogPostSummaryDto
-                    {
-                        Id = bp.Id,
-                        Title = bp.Title,
-                        FeaturedImageUrl = bp.FeaturedImageUrl,
-                        Status = bp.Status,
-                        AuthorName = bp.Author.FullName,
-                        CreatedAt = bp.CreatedAt
-                    }).ToList()
+                    BlogPosts = blogs
                 };
 
                 return Ok(new ApiResponse<RaceDetailsDto>
@@ -805,65 +305,91 @@ namespace MarathonManager.API.Controllers
                         Message = "Cannot register for a race that has already occurred"
                     });
 
-                // Check if already registered
+                // Lấy registration gần nhất của runner cho cự ly này (bất kể status)
                 var existingRegistration = await _context.Registrations
-                    .FirstOrDefaultAsync(r => r.RunnerId == userId &&
-                                            r.RaceDistanceId == request.RaceDistanceId &&
-                                            r.PaymentStatus != "Cancelled");
+                    .Include(r => r.RaceDistance)
+                        .ThenInclude(rd => rd.Race)
+                    .Where(r => r.RunnerId == userId && r.RaceDistanceId == request.RaceDistanceId)
+                    .OrderByDescending(r => r.RegistrationDate)
+                    .FirstOrDefaultAsync();
 
-                if (existingRegistration != null)
+                // Nếu đã có đăng ký ACTIVE (Pending/Paid/Confirmed/...) thì chặn
+                if (existingRegistration != null && existingRegistration.PaymentStatus != "Cancelled")
+                {
                     return BadRequest(new ApiResponse<MyRegistrationDto>
                     {
                         Success = false,
                         Message = "You have already registered for this race distance"
                     });
+                }
 
-                // Check if race distance is full
-                var currentParticipants = raceDistance.Registrations
-                    .Count(r => r.PaymentStatus != "Cancelled");
+                // Kiểm tra đủ chỗ (chỉ đếm non-cancelled)
+                var currentParticipants = await _context.Registrations
+                    .CountAsync(r => r.RaceDistanceId == request.RaceDistanceId
+                                     && r.PaymentStatus != "Cancelled");
 
                 if (currentParticipants >= raceDistance.MaxParticipants)
+                {
                     return BadRequest(new ApiResponse<MyRegistrationDto>
                     {
                         Success = false,
                         Message = "This race distance is full"
                     });
+                }
 
-                // Create registration
-                var registration = new Registration
+                // Nếu có registration Cancelled => tái sử dụng (re-activate)
+                // Nếu không có => tạo mới
+                Registration registration;
+
+                if (existingRegistration != null && existingRegistration.PaymentStatus == "Cancelled")
                 {
-                    RunnerId = userId,
-                    RaceDistanceId = request.RaceDistanceId,
-                    RegistrationDate = DateTime.Now,
-                    PaymentStatus = "Pending"
-                };
+                    // Re-activate cái đã cancel
+                    registration = existingRegistration;
+                    registration.PaymentStatus = "Pending";
+                    registration.RegistrationDate = DateTime.Now;
+                    registration.BibNumber = null; // nếu muốn reset bib khi đăng ký lại
+                }
+                else
+                {
+                    // Tạo registration mới
+                    registration = new Registration
+                    {
+                        RunnerId = userId,
+                        RaceDistanceId = request.RaceDistanceId,
+                        RegistrationDate = DateTime.Now,
+                        PaymentStatus = "Pending"
+                    };
 
-                _context.Registrations.Add(registration);
+                    _context.Registrations.Add(registration);
+                }
+
                 await _context.SaveChangesAsync();
 
-                // Return created registration
-                var createdRegistration = await _context.Registrations
+                // (Nếu dùng existingRegistration.Include ở trên thì registration đã có đầy đủ navigation)
+                // Nếu không chắc, có thể load lại:
+                registration = await _context.Registrations
                     .Include(r => r.RaceDistance)
-                    .ThenInclude(rd => rd.Race)
-                    .FirstOrDefaultAsync(r => r.Id == registration.Id);
+                        .ThenInclude(rd => rd.Race)
+                    .FirstAsync(r => r.Id == registration.Id);
 
+                // Build DTO
                 var registrationDto = new MyRegistrationDto
                 {
-                    Id = createdRegistration!.Id,
-                    RegistrationDate = createdRegistration.RegistrationDate,
-                    PaymentStatus = createdRegistration.PaymentStatus,
-                    BibNumber = createdRegistration.BibNumber,
-                    RaceId = createdRegistration.RaceDistance.RaceId,
-                    RaceName = createdRegistration.RaceDistance.Race.Name,
-                    Location = createdRegistration.RaceDistance.Race.Location,
-                    RaceDate = createdRegistration.RaceDistance.Race.RaceDate,
-                    RaceImageUrl = createdRegistration.RaceDistance.Race.ImageUrl,
-                    RaceDistanceId = createdRegistration.RaceDistanceId,
-                    DistanceName = createdRegistration.RaceDistance.Name,
-                    DistanceInKm = createdRegistration.RaceDistance.DistanceInKm,
-                    RegistrationFee = createdRegistration.RaceDistance.RegistrationFee,
-                    StartTime = createdRegistration.RaceDistance.StartTime,
-                    CanCancel = createdRegistration.RaceDistance.Race.RaceDate > DateTime.Now,
+                    Id = registration.Id,
+                    RegistrationDate = registration.RegistrationDate,
+                    PaymentStatus = registration.PaymentStatus,
+                    BibNumber = registration.BibNumber,
+                    RaceId = registration.RaceDistance.RaceId,
+                    RaceName = registration.RaceDistance.Race.Name,
+                    Location = registration.RaceDistance.Race.Location,
+                    RaceDate = registration.RaceDistance.Race.RaceDate,
+                    RaceImageUrl = registration.RaceDistance.Race.ImageUrl,
+                    RaceDistanceId = registration.RaceDistanceId,
+                    DistanceName = registration.RaceDistance.Name,
+                    DistanceInKm = registration.RaceDistance.DistanceInKm,
+                    RegistrationFee = registration.RaceDistance.RegistrationFee,
+                    StartTime = registration.RaceDistance.StartTime,
+                    CanCancel = registration.RaceDistance.Race.RaceDate > DateTime.Now,
                     HasResult = false,
                     DisplayStatus = "Pending Payment"
                 };
@@ -881,7 +407,7 @@ namespace MarathonManager.API.Controllers
                 {
                     Success = false,
                     Message = "An error occurred while registering for the race",
-                    Errors = new List<string> { ex.Message }
+                    Errors = new List<string> { ex.Message, ex.InnerException?.Message ?? "" }
                 });
             }
         }
@@ -1095,24 +621,457 @@ namespace MarathonManager.API.Controllers
                 });
             }
         }
-        // ==========================================================
-        // HELPER METHODS
-        // ==========================================================
-        private bool RaceExists(int id)
+
+        /// <summary>
+        /// POST: api/Races/runner/registrations/{registrationId}/fake-payment
+        /// Đánh dấu registration là "Paid" + cấp BibNumber (dùng để test)
+        /// </summary>
+        [HttpPost("runner/registrations/{registrationId}/fake-payment")]
+        [Authorize(Roles = "Runner")]
+        public async Task<ActionResult<ApiResponse<MyRegistrationDto>>> FakePayment(int registrationId)
         {
-            return _context.Races.Any(e => e.Id == id);
+            var userId = GetCurrentUserId();
+
+            try
+            {
+                var registration = await _context.Registrations
+                    .Include(r => r.RaceDistance)
+                        .ThenInclude(rd => rd.Race)
+                    .FirstOrDefaultAsync(r => r.Id == registrationId && r.RunnerId == userId);
+
+                if (registration == null)
+                {
+                    return NotFound(new ApiResponse<MyRegistrationDto>
+                    {
+                        Success = false,
+                        Message = "Registration not found for current runner"
+                    });
+                }
+
+                // Nếu đã Paid rồi thì không làm lại nữa
+                if (registration.PaymentStatus == "Paid")
+                {
+                    return BadRequest(new ApiResponse<MyRegistrationDto>
+                    {
+                        Success = false,
+                        Message = "Registration is already paid"
+                    });
+                }
+
+                // (Tuỳ bạn) nếu hiện đang Cancelled thì cho/không cho fake payment
+                if (registration.PaymentStatus == "Cancelled")
+                {
+                    return BadRequest(new ApiResponse<MyRegistrationDto>
+                    {
+                        Success = false,
+                        Message = "Cannot pay for a cancelled registration"
+                    });
+                }
+
+                // Đánh dấu đã thanh toán
+                registration.PaymentStatus = "Paid";
+
+                // Cấp BibNumber nếu chưa có
+                if (string.IsNullOrEmpty(registration.BibNumber))
+                {
+                    var random = new Random();
+                    registration.BibNumber = random.Next(10000, 99999).ToString();
+                }
+
+                await _context.SaveChangesAsync();
+
+                // Map sang MyRegistrationDto (giống đoạn bạn dùng trong RegisterForRace)
+                var dto = new MyRegistrationDto
+                {
+                    Id = registration.Id,
+                    RegistrationDate = registration.RegistrationDate,
+                    PaymentStatus = registration.PaymentStatus,
+                    BibNumber = registration.BibNumber,
+                    RaceId = registration.RaceDistance.RaceId,
+                    RaceName = registration.RaceDistance.Race.Name,
+                    Location = registration.RaceDistance.Race.Location,
+                    RaceDate = registration.RaceDistance.Race.RaceDate,
+                    RaceImageUrl = registration.RaceDistance.Race.ImageUrl,
+                    RaceDistanceId = registration.RaceDistanceId,
+                    DistanceName = registration.RaceDistance.Name,
+                    DistanceInKm = registration.RaceDistance.DistanceInKm,
+                    RegistrationFee = registration.RaceDistance.RegistrationFee,
+                    StartTime = registration.RaceDistance.StartTime,
+                    CanCancel = registration.RaceDistance.Race.RaceDate > DateTime.Now,
+                    HasResult = registration.Result != null,
+                    DisplayStatus = registration.PaymentStatus == "Paid"
+                        ? "Paid"
+                        : registration.PaymentStatus
+                };
+
+                return Ok(new ApiResponse<MyRegistrationDto>
+                {
+                    Success = true,
+                    Message = "Fake payment successful",
+                    Data = dto
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<MyRegistrationDto>
+                {
+                    Success = false,
+                    Message = "An error occurred while processing fake payment",
+                    Errors = new List<string> { ex.Message, ex.InnerException?.Message ?? "" }
+                });
+            }
         }
 
-        // Get User ID from JWT Token Claim
-        private int GetCurrentUserId()
+        /// <summary>
+        /// GET: api/Races/runner/profile
+        /// Get runner profile with statistics
+        /// </summary>
+        [HttpGet("runner/profile")]
+        [Authorize(Roles = "Runner")]
+        public async Task<ActionResult<ApiResponse<RunnerProfileDto>>> GetRunnerProfile()
         {
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out var userId))
+            var userId = GetCurrentUserId();
+
+            try
             {
-                // This should not happen if [Authorize] is working correctly
-                throw new SecurityTokenException("Invalid token or missing user ID claim.");
+                var user = await _context.Users.FindAsync(userId);
+                if (user == null)
+                    return NotFound(new ApiResponse<RunnerProfileDto>
+                    {
+                        Success = false,
+                        Message = "User not found"
+                    });
+
+                // Calculate age
+                int? age = null;
+                if (user.DateOfBirth.HasValue)
+                {
+                    var today = DateOnly.FromDateTime(DateTime.Today);
+                    age = today.Year - user.DateOfBirth.Value.Year;
+                    if (user.DateOfBirth.Value > today.AddYears(-age.Value))
+                        age--;
+                }
+
+                // Get all registrations
+                var registrations = await _context.Registrations
+                    .Include(r => r.RaceDistance)
+                    .ThenInclude(rd => rd.Race)
+                    .Where(r => r.RunnerId == userId)
+                    .ToListAsync();
+
+                // Get all results
+                var results = await _context.Results
+                    .Include(r => r.Registration)
+                    .ThenInclude(reg => reg.RaceDistance)
+                    .ThenInclude(rd => rd.Race)
+                    .Where(r => r.Registration.RunnerId == userId)
+                    .ToListAsync();
+
+                // Calculate statistics
+                var statistics = new RunnerProfileStatisticsDto
+                {
+                    TotalRegistrations = registrations.Count,
+                    ActiveRegistrations = registrations.Count(r => r.PaymentStatus == "Paid" && r.RaceDistance.Race.RaceDate > DateTime.Now),
+                    CompletedRaces = results.Count(r => r.Status == "Finished"),
+                    CancelledRegistrations = registrations.Count(r => r.PaymentStatus == "Cancelled"),
+                    TotalRacesFinished = results.Count(r => r.Status == "Finished"),
+                    TotalDistanceRun = results
+                        .Where(r => r.Status == "Finished")
+                        .Sum(r => r.Registration.RaceDistance.DistanceInKm),
+                    Top3Finishes = results.Count(r => r.OverallRank.HasValue && r.OverallRank <= 3),
+                    Top10Finishes = results.Count(r => r.OverallRank.HasValue && r.OverallRank <= 10),
+                    DaysSinceJoined = (DateTime.Now - user.CreatedAt).Days,
+                    YearsActive = (DateTime.Now - user.CreatedAt).Days / 365
+                };
+
+                // Calculate best times by distance category
+                var finishedResults = results.Where(r => r.Status == "Finished" && r.CompletionTime.HasValue).ToList();
+
+                statistics.Best5K = finishedResults
+                    .Where(r => r.Registration.RaceDistance.DistanceInKm >= 4.5m && r.Registration.RaceDistance.DistanceInKm <= 5.5m)
+                    .OrderBy(r => r.CompletionTime)
+                    .FirstOrDefault()?.CompletionTime;
+
+                statistics.Best10K = finishedResults
+                    .Where(r => r.Registration.RaceDistance.DistanceInKm >= 9.5m && r.Registration.RaceDistance.DistanceInKm <= 10.5m)
+                    .OrderBy(r => r.CompletionTime)
+                    .FirstOrDefault()?.CompletionTime;
+
+                statistics.BestHalfMarathon = finishedResults
+                    .Where(r => r.Registration.RaceDistance.DistanceInKm >= 20m && r.Registration.RaceDistance.DistanceInKm <= 22m)
+                    .OrderBy(r => r.CompletionTime)
+                    .FirstOrDefault()?.CompletionTime;
+
+                statistics.BestMarathon = finishedResults
+                    .Where(r => r.Registration.RaceDistance.DistanceInKm >= 41m && r.Registration.RaceDistance.DistanceInKm <= 43m)
+                    .OrderBy(r => r.CompletionTime)
+                    .FirstOrDefault()?.CompletionTime;
+
+                // Get recent activities (last 10)
+                var recentActivities = new List<RecentActivityDto>();
+
+                // Recent registrations
+                foreach (var reg in registrations.OrderByDescending(r => r.RegistrationDate).Take(5))
+                {
+                    recentActivities.Add(new RecentActivityDto
+                    {
+                        ActivityType = "Registration",
+                        Description = $"Registered for {reg.RaceDistance.Race.Name} ({reg.RaceDistance.Name})",
+                        ActivityDate = reg.RegistrationDate,
+                        Icon = "fa-user-plus",
+                        BadgeClass = "bg-primary"
+                    });
+                }
+
+                // Recent results
+                foreach (var result in results.OrderByDescending(r => r.Registration.RaceDistance.Race.RaceDate).Take(5))
+                {
+                    recentActivities.Add(new RecentActivityDto
+                    {
+                        ActivityType = "Result",
+                        Description = $"Finished {result.Registration.RaceDistance.Race.Name} - Rank #{result.OverallRank}",
+                        ActivityDate = result.Registration.RaceDistance.Race.RaceDate,
+                        Icon = "fa-flag-checkered",
+                        BadgeClass = result.OverallRank <= 3 ? "bg-warning" : "bg-success"
+                    });
+                }
+
+                recentActivities = recentActivities.OrderByDescending(a => a.ActivityDate).Take(10).ToList();
+
+                // Get personal records (best time for each distance)
+                var personalRecords = finishedResults
+                    .GroupBy(r => new
+                    {
+                        r.Registration.RaceDistance.DistanceInKm,
+                        r.Registration.RaceDistance.Name
+                    })
+                    .Select(g =>
+                    {
+                        var bestResult = g.OrderBy(r => r.CompletionTime).First();
+                        return new PersonalRecordDto
+                        {
+                            DistanceName = g.Key.Name,
+                            DistanceInKm = g.Key.DistanceInKm,
+                            BestTime = bestResult.CompletionTime!.Value,
+                            FormattedTime = bestResult.CompletionTime!.Value.ToString(@"hh\:mm\:ss"),
+                            RaceName = bestResult.Registration.RaceDistance.Race.Name,
+                            RaceDate = bestResult.Registration.RaceDistance.Race.RaceDate,
+                            AveragePace = $"{(bestResult.CompletionTime.Value.ToTimeSpan().TotalMinutes / (double)g.Key.DistanceInKm):F2} min/km"
+                        };
+                    })
+                    .OrderBy(pr => pr.DistanceInKm)
+                    .ToList();
+
+                var profile = new RunnerProfileDto
+                {
+                    Id = user.Id,
+                    FullName = user.FullName,
+                    Email = user.Email ?? string.Empty,
+                    PhoneNumber = user.PhoneNumber,
+                    DateOfBirth = user.DateOfBirth,
+                    Gender = user.Gender,
+                    Age = age,
+                    IsActive = user.IsActive,
+                    CreatedAt = user.CreatedAt,
+                    Statistics = statistics,
+                    RecentActivities = recentActivities,
+                    PersonalRecords = personalRecords
+                };
+
+                return Ok(new ApiResponse<RunnerProfileDto>
+                {
+                    Success = true,
+                    Data = profile
+                });
             }
-            return userId;
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<RunnerProfileDto>
+                {
+                    Success = false,
+                    Message = "An error occurred while fetching profile",
+                    Errors = new List<string> { ex.Message }
+                });
+            }
+        }
+        /// <summary>
+        /// POST: api/Races/runner/registrations/{registrationId}/fake-result
+        /// Generate a fake result for the given registration (FOR TESTING ONLY)
+        /// </summary>
+        [HttpPost("runner/registrations/{registrationId}/fake-result")]
+        [Authorize(Roles = "Runner")]
+        public async Task<ActionResult<ApiResponse<MyResultDto>>> GenerateFakeResult(int registrationId)
+        {
+            var userId = GetCurrentUserId();
+
+            try
+            {
+                // 1. Lấy registration thuộc về runner hiện tại
+                var registration = await _context.Registrations
+                    .Include(r => r.RaceDistance)
+                        .ThenInclude(rd => rd.Race)
+                    .FirstOrDefaultAsync(r => r.Id == registrationId && r.RunnerId == userId);
+
+                if (registration == null)
+                {
+                    return NotFound(new ApiResponse<MyResultDto>
+                    {
+                        Success = false,
+                        Message = "Registration not found for current runner"
+                    });
+                }
+
+                // 2. Cho chắc: chỉ fake khi race đã diễn ra (hoặc bạn có thể bỏ check này nếu muốn test tự do)
+                //if (registration.RaceDistance.Race.RaceDate > DateTime.Now)
+                //{
+                    //return BadRequest(new ApiResponse<MyResultDto>
+                   // {
+                      //  Success = false,
+                      //  Message = "Race has not occurred yet, cannot generate result"
+                   // });
+              //  }
+
+                // 3. Lấy (hoặc tạo mới) Result cho registration này
+                var result = await _context.Results
+                    .Include(res => res.Registration)
+                        .ThenInclude(reg => reg.RaceDistance)
+                        .ThenInclude(rd => rd.Race)
+                    .FirstOrDefaultAsync(res => res.RegistrationId == registrationId);
+
+                if (result == null)
+                {
+                    result = new Result
+                    {
+                        RegistrationId = registration.Id
+                    };
+                    _context.Results.Add(result);
+                }
+
+                // 4. Sinh dữ liệu giả
+                var random = new Random();
+                var distanceKm = (double)registration.RaceDistance.DistanceInKm;
+
+                // Pace trung bình 4.5–8.0 phút/km
+                var paceMinPerKm = 4.5 + random.NextDouble() * 3.5;
+                var totalMinutes = paceMinPerKm * distanceKm;
+
+                // +/- thêm tối đa 5 phút cho tự nhiên
+                totalMinutes += (random.NextDouble() * 10.0) - 5.0;
+
+                // Không cho nhanh hơn 3 phút/km
+                var minMinutes = distanceKm * 3.0;
+                if (totalMinutes < minMinutes)
+                    totalMinutes = minMinutes;
+
+                var timeSpan = TimeSpan.FromMinutes(totalMinutes);
+                var completionTime = new TimeOnly(timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
+
+                // Rank ngẫu nhiên (1–500)
+                var overallRank = random.Next(1, 501);
+                var genderRank = random.Next(1, 501);
+                var ageRank = random.Next(1, 501);
+
+                // 5. Gán dữ liệu vào Result – status phải là 1 trong: DidNotStart | Finished | DNF
+                result.CompletionTime = completionTime;
+                result.OverallRank = overallRank;
+                result.GenderRank = genderRank;
+                result.AgeCategoryRank = ageRank;
+                result.Status = "Finished";
+
+                await _context.SaveChangesAsync();
+
+                // 6. Build MyResultDto (match với MyResultDto trong RunnerDTOs.cs)
+                var dto = new MyResultDto
+                {
+                    Id = result.Id,
+                    RegistrationId = result.RegistrationId,
+                    CompletionTime = result.CompletionTime,
+                    OverallRank = result.OverallRank,
+                    GenderRank = result.GenderRank,
+                    AgeCategoryRank = result.AgeCategoryRank,
+                    Status = result.Status,
+
+                    RaceId = registration.RaceDistance.RaceId,
+                    RaceName = registration.RaceDistance.Race.Name,
+                    Location = registration.RaceDistance.Race.Location,
+                    RaceDate = registration.RaceDistance.Race.RaceDate,
+
+                    DistanceName = registration.RaceDistance.Name,
+                    DistanceInKm = registration.RaceDistance.DistanceInKm,
+
+                    // 2 field view của bạn đang dùng
+                    FormattedTime = result.CompletionTime?.ToString(@"hh\:mm\:ss"),
+                    AveragePace = result.CompletionTime.HasValue
+                        ? $"{result.CompletionTime.Value.ToTimeSpan().TotalMinutes / (double)registration.RaceDistance.DistanceInKm:F1} min/km"
+                        : null
+                };
+
+                return Ok(new ApiResponse<MyResultDto>
+                {
+                    Success = true,
+                    Message = "Fake result generated successfully",
+                    Data = dto
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<MyResultDto>
+                {
+                    Success = false,
+                    Message = "An error occurred while generating fake result",
+                    Errors = new List<string> { ex.Message, ex.InnerException?.Message ?? "" }
+                });
+            }
+        }
+
+
+        /// <summary>
+        /// PUT: api/Races/runner/profile
+        /// Update runner profile
+        /// </summary>
+        [HttpPut("runner/profile")]
+        [Authorize(Roles = "Runner")]
+        public async Task<ActionResult<ApiResponse<RunnerProfileDto>>> UpdateRunnerProfile(
+            [FromBody] UpdateRunnerProfileRequest request)
+        {
+            var userId = GetCurrentUserId();
+
+            try
+            {
+                var user = await _context.Users.FindAsync(userId);
+                if (user == null)
+                    return NotFound(new ApiResponse<RunnerProfileDto>
+                    {
+                        Success = false,
+                        Message = "User not found"
+                    });
+
+                // Update fields
+                user.FullName = request.FullName;
+                user.PhoneNumber = request.PhoneNumber;
+                user.DateOfBirth = request.DateOfBirth;
+                user.Gender = request.Gender;
+
+                await _context.SaveChangesAsync();
+
+                // Return updated profile
+                var profileResponse = await GetRunnerProfile();
+                return Ok(new ApiResponse<RunnerProfileDto>
+                {
+                    Success = true,
+                    Message = "Profile updated successfully",
+                    Data = profileResponse.Value?.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<RunnerProfileDto>
+                {
+                    Success = false,
+                    Message = "An error occurred while updating profile",
+                    Errors = new List<string> { ex.Message }
+                });
+            }
         }
     }
 }
