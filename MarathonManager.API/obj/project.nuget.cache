@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "W4m6WZmHVjA=",
+  "dgSpecHash": "Yu9/UKQARf4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\pv\\Videos\\PRN232\\MarathonManager.API\\MarathonManager.API.csproj",
+  "projectFilePath": "C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\MarathonManager.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\pv\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\pv\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

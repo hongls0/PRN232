@@ -11,3 +11,11 @@ C:\Users\pv\Videos\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.b
 C:\Users\pv\Videos\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\pv\Videos\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\pv\Videos\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\pv\Music\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\pv\Music\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\pv\Music\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\pv\Music\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\pv\Music\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\pv\Music\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\pv\Music\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\pv\Music\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json

@@ -108,7 +108,7 @@ namespace MarathonManager.Web.Controllers
             content.Add(new StringContent(dto.Description ?? ""), nameof(RaceCreateDto.Description));
             content.Add(new StringContent(dto.Location ?? ""), nameof(RaceCreateDto.Location));
             content.Add(new StringContent(dto.RaceDate.ToString("o")), nameof(RaceCreateDto.RaceDate)); // ISO 8601
-
+            content.Add(new StringContent(dto.DistancesCsv ?? ""), nameof(dto.DistancesCsv));
             // Thêm file ảnh (Sửa lỗi Stream)
             if (imageFile != null && imageFile.Length > 0)
             {
@@ -262,32 +262,46 @@ namespace MarathonManager.Web.Controllers
         public async Task<IActionResult> EditDistance(int distanceId, int raceId)
         {
             if (distanceId <= 0 || raceId <= 0) return BadRequest("ID không hợp lệ.");
+
             var client = CreateAuthenticatedHttpClient();
-             if (client == null) return RedirectToAction("Login", "Account");
+            if (client == null) return RedirectToAction("Login", "Account");
 
             RaceDistanceDto distanceDto = null;
-            try {
-                // !! API GET /api/distances/{distanceId} cần được tạo !!
-                var response = await client.GetAsync($"/api/distances/{distanceId}");
+            try
+            {
+
+                // ===================================
+                // SỬA LỖI Ở ĐÂY:
+                // Đổi "/api/distances/" thành "/api/Races/distance/"
+                // ===================================
+                var response = await client.GetAsync($"/api/Races/distance/{distanceId}");
+
                 if (response.IsSuccessStatusCode)
                 {
-                     var json = await response.Content.ReadAsStringAsync();
-                     distanceDto = JsonConvert.DeserializeObject<RaceDistanceDto>(json);
-                     if (distanceDto == null) throw new Exception("Không thể đọc dữ liệu cự ly.");
+                    var json = await response.Content.ReadAsStringAsync();
+                    distanceDto = JsonConvert.DeserializeObject<RaceDistanceDto>(json);
+                    if (distanceDto == null) throw new Exception("Không thể đọc dữ liệu cự ly.");
                 }
-                 else if (response.StatusCode == System.Net.HttpStatusCode.NotFound || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                 {
-                      TempData["ErrorMessage"] = "Không tìm thấy cự ly hoặc bạn không có quyền sửa.";
-                      return RedirectToAction("ManageDistances", new { raceId = raceId });
-                 }
+                else if (response.StatusCode == System.Net.HttpStatusCode.NotFound ||
+                         response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    // Lấy thông báo lỗi từ API
+                    var errorBody = await response.Content.ReadAsStringAsync();
+                    var errorObj = JsonConvert.DeserializeObject<dynamic>(errorBody);
+                    TempData["ErrorMessage"] = (string)(errorObj?.message) ?? "Không tìm thấy cự ly hoặc bạn không có quyền sửa.";
+
+                    return RedirectToAction("ManageDistances", new { raceId = raceId });
+                }
                 else
                 {
                     var errorBody = await response.Content.ReadAsStringAsync();
                     throw new Exception($"Lỗi API ({(int)response.StatusCode}): {errorBody}");
                 }
-            } catch (Exception ex) {
-                 TempData["ErrorMessage"] = "Lỗi khi tải cự ly để sửa: " + ex.Message;
-                 return RedirectToAction("ManageDistances", new { raceId = raceId });
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Lỗi khi tải cự ly để sửa: " + ex.Message;
+                return RedirectToAction("ManageDistances", new { raceId = raceId });
             }
 
             var model = new RaceDistanceUpdateDto
@@ -300,10 +314,10 @@ namespace MarathonManager.Web.Controllers
                 MaxParticipants = distanceDto.MaxParticipants,
                 StartTime = distanceDto.StartTime
             };
+
             ViewBag.RaceId = raceId;
             return View(model);
         }
-
         // POST: /Organizer/EditDistance
         [HttpPost]
         [ValidateAntiForgeryToken]

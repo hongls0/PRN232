@@ -2,14 +2,17 @@
 using MarathonManager.Web.DTOs.Admin; // Cần cho BlogAdminDto, RoleDto, UpdateUserRolesDto
 using MarathonManager.Web.ViewModels; // Cần cho AdminDashboardViewModel, AdminUserDetailViewModel
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using X.PagedList;
+using X.PagedList; // <-- DÒNG NÀY SỬA LỖI 'ToPagedList'
 using X.PagedList.Extensions;
 
 namespace MarathonManager.Web.Controllers
@@ -20,12 +23,18 @@ namespace MarathonManager.Web.Controllers
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _environment; // Cần cho upload file
 
-        public AdminController(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+        public AdminController(
+            IHttpClientFactory httpClientFactory,
+            IHttpContextAccessor httpContextAccessor,
+            IConfiguration configuration,
+            IWebHostEnvironment environment)
         {
             _httpClientFactory = httpClientFactory;
             _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
+            _environment = environment;
         }
 
         // ===================================
@@ -57,6 +66,7 @@ namespace MarathonManager.Web.Controllers
                     var json = await raceResponse.Content.ReadAsStringAsync();
                     allRacesList = JsonConvert.DeserializeObject<List<RaceSummaryDto>>(json) ?? new List<RaceSummaryDto>();
                 }
+                // Dùng .ToPagedList()
                 viewModel.AllRaces = allRacesList.ToPagedList(racesPageNumber, pageSize);
 
                 // 2. Lấy Users
@@ -67,6 +77,7 @@ namespace MarathonManager.Web.Controllers
                     var json = await userResponse.Content.ReadAsStringAsync();
                     allUsersList = JsonConvert.DeserializeObject<List<UserDto>>(json) ?? new List<UserDto>();
                 }
+                // Dùng .ToPagedList()
                 viewModel.AllUsers = allUsersList.ToPagedList(usersPageNumber, pageSize);
 
                 // 3. Lấy Blog Posts
@@ -77,6 +88,7 @@ namespace MarathonManager.Web.Controllers
                     var json = await blogResponse.Content.ReadAsStringAsync();
                     allBlogsList = JsonConvert.DeserializeObject<List<BlogAdminDto>>(json) ?? new List<BlogAdminDto>();
                 }
+                // Dùng .ToPagedList()
                 viewModel.AllBlogPosts = allBlogsList.ToPagedList(blogsPageNumber, pageSize);
             }
             catch (Exception ex)
@@ -91,13 +103,10 @@ namespace MarathonManager.Web.Controllers
         // ===================================
         // QUẢN LÝ GIẢI CHẠY (RACES)
         // ===================================
-
-        // GET: /Admin/RaceDetails/5
         public async Task<IActionResult> RaceDetails(int id)
         {
             var client = CreateAuthenticatedHttpClient();
             if (client == null) return RedirectToAction("Login", "Account");
-
             RaceDetailDto raceDetail = null;
             try
             {
@@ -107,24 +116,10 @@ namespace MarathonManager.Web.Controllers
                     var json = await response.Content.ReadAsStringAsync();
                     raceDetail = JsonConvert.DeserializeObject<RaceDetailDto>(json);
                 }
-                else
-                {
-                    var error = await response.Content.ReadAsStringAsync();
-                    TempData["ErrorMessage"] = $"Không tải được chi tiết giải chạy: {error}";
-                    return RedirectToAction("Index", new { tab = "races" });
-                }
+                else { /*... Xử lý lỗi ...*/ return RedirectToAction("Index", new { tab = "races" }); }
             }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = "Lỗi kết nối: " + ex.Message;
-                return RedirectToAction("Index", new { tab = "races" });
-            }
-
-            if (raceDetail == null)
-            {
-                TempData["ErrorMessage"] = "Không tìm thấy giải chạy.";
-                return RedirectToAction("Index", new { tab = "races" });
-            }
+            catch { /*... Xử lý lỗi ...*/ return RedirectToAction("Index", new { tab = "races" }); }
+            if (raceDetail == null) { /*... Xử lý lỗi ...*/ return RedirectToAction("Index", new { tab = "races" }); }
 
             ViewBag.ApiBaseUrl = _configuration["ApiBaseUrl"];
             return View(raceDetail);
@@ -135,16 +130,9 @@ namespace MarathonManager.Web.Controllers
         {
             var client = CreateAuthenticatedHttpClient();
             if (client == null) return RedirectToAction("Login", "Account");
-
             var response = await client.PatchAsync($"/api/Races/{raceId}/approve", null);
-            if (response.IsSuccessStatusCode)
-            {
-                TempData["SuccessMessage"] = "Duyệt giải chạy thành công!";
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "Duyệt giải chạy thất bại.";
-            }
+            if (response.IsSuccessStatusCode) TempData["SuccessMessage"] = "Duyệt giải chạy thành công!";
+            else TempData["ErrorMessage"] = "Duyệt giải chạy thất bại.";
             return RedirectToAction("Index", new { tab = "races" });
         }
 
@@ -153,30 +141,21 @@ namespace MarathonManager.Web.Controllers
         {
             var client = CreateAuthenticatedHttpClient();
             if (client == null) return RedirectToAction("Login", "Account");
-
             var response = await client.PatchAsync($"/api/Races/{raceId}/cancel", null);
-            if (response.IsSuccessStatusCode)
-            {
-                TempData["SuccessMessage"] = "Đã hủy giải chạy.";
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "Hủy giải chạy thất bại.";
-            }
+            if (response.IsSuccessStatusCode) TempData["SuccessMessage"] = "Đã hủy giải chạy.";
+            else TempData["ErrorMessage"] = "Hủy giải chạy thất bại.";
             return RedirectToAction("Index", new { tab = "races" });
         }
 
         // ===================================
         // QUẢN LÝ NGƯỜI DÙNG (USERS)
         // ===================================
-
         [HttpPost]
         public async Task<IActionResult> ToggleUserLock(int userId)
         {
             var client = CreateAuthenticatedHttpClient();
             if (client == null) return RedirectToAction("Login", "Account");
             var response = await client.PatchAsync($"/api/admin/users/{userId}/toggle-lock", null);
-
             if (response.IsSuccessStatusCode)
             {
                 try
@@ -187,22 +166,15 @@ namespace MarathonManager.Web.Controllers
                 }
                 catch { TempData["SuccessMessage"] = "Thay đổi trạng thái tài khoản thành công."; }
             }
-            else
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                TempData["ErrorMessage"] = "Lỗi: " + error;
-            }
+            else { TempData["ErrorMessage"] = "Lỗi khi thay đổi trạng thái."; }
             return RedirectToAction("Index", new { tab = "users" });
         }
 
-        // GET: /Admin/UserDetails?userId=5
         public async Task<IActionResult> UserDetails(int userId)
         {
             var client = CreateAuthenticatedHttpClient();
             if (client == null) return RedirectToAction("Login", "Account");
-
             var viewModel = new AdminUserDetailViewModel();
-
             try
             {
                 var userResponse = await client.GetAsync($"/api/admin/users/{userId}");
@@ -211,11 +183,7 @@ namespace MarathonManager.Web.Controllers
                     var json = await userResponse.Content.ReadAsStringAsync();
                     viewModel.User = JsonConvert.DeserializeObject<UserDto>(json);
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Không tải được thông tin User.";
-                    return RedirectToAction("Index", new { tab = "users" });
-                }
+                else { /*... Xử lý lỗi ...*/ return RedirectToAction("Index", new { tab = "users" }); }
 
                 var rolesResponse = await client.GetAsync("/api/admin/roles");
                 if (rolesResponse.IsSuccessStatusCode)
@@ -224,69 +192,41 @@ namespace MarathonManager.Web.Controllers
                     viewModel.AllRoles = JsonConvert.DeserializeObject<List<RoleDto>>(json) ?? new List<RoleDto>();
                 }
             }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = "Lỗi kết nối API: " + ex.Message;
-                return RedirectToAction("Index", new { tab = "users" });
-            }
-
-            if (viewModel.User == null)
-            {
-                TempData["ErrorMessage"] = "Không tìm thấy User.";
-                return RedirectToAction("Index", new { tab = "users" });
-            }
-
+            catch { /*... Xử lý lỗi ...*/ return RedirectToAction("Index", new { tab = "users" }); }
+            if (viewModel.User == null) { /*... Xử lý lỗi ...*/ return RedirectToAction("Index", new { tab = "users" }); }
             return View(viewModel);
         }
 
-        // POST: /Admin/UpdateUserRoles
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateUserRoles(int userId, string selectedRole) // Chỉ nhận 1 role
+        public async Task<IActionResult> UpdateUserRoles(int userId, string selectedRole)
         {
             if (userId <= 0) return BadRequest("User ID không hợp lệ.");
             var client = CreateAuthenticatedHttpClient();
             if (client == null) return RedirectToAction("Login", "Account");
 
             var rolesList = new List<string>();
-            if (!string.IsNullOrEmpty(selectedRole))
-            {
-                rolesList.Add(selectedRole); // Thêm 1 role duy nhất
-            }
-
+            if (!string.IsNullOrEmpty(selectedRole)) rolesList.Add(selectedRole);
             var dto = new UpdateUserRolesDto { RoleNames = rolesList };
             var jsonContent = new StringContent(JsonConvert.SerializeObject(dto), Encoding.UTF8, "application/json");
 
             try
             {
                 var response = await client.PutAsync($"/api/admin/users/{userId}/roles", jsonContent);
-                if (response.IsSuccessStatusCode)
-                {
-                    TempData["SuccessMessage"] = "Cập nhật vai trò thành công!";
-                }
+                if (response.IsSuccessStatusCode) TempData["SuccessMessage"] = "Cập nhật vai trò thành công!";
                 else
                 {
-                    string errorMsg = "Cập nhật thất bại.";
-                    try
-                    {
-                        var errorJson = await response.Content.ReadAsStringAsync();
-                        var errorObj = JsonConvert.DeserializeObject<dynamic>(errorJson);
-                        errorMsg += $" Lý do: {errorObj?.message ?? errorJson}";
-                    }
-                    catch { /* Bỏ qua */ }
-                    TempData["ErrorMessage"] = errorMsg;
+                    var errorJson = await response.Content.ReadAsStringAsync();
+                    var errorObj = JsonConvert.DeserializeObject<dynamic>(errorJson);
+                    TempData["ErrorMessage"] = $"Lỗi khi cập nhật Role: {errorObj?.message ?? errorJson}";
                 }
             }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = "Lỗi kết nối API: " + ex.Message;
-            }
-
+            catch (Exception ex) { TempData["ErrorMessage"] = "Lỗi kết nối API: " + ex.Message; }
             return RedirectToAction("UserDetails", new { userId = userId });
         }
 
         // ===================================
-        // QUẢN LÝ BLOG (BLOGS) - (Code bạn đã dán nhầm)
+        // QUẢN LÝ BLOG (BLOGS)
         // ===================================
 
         // GET: /Admin/CreateBlog
@@ -305,14 +245,13 @@ namespace MarathonManager.Web.Controllers
             {
                 return View(dto);
             }
-
             var client = CreateAuthenticatedHttpClient();
             if (client == null) return RedirectToAction("Login", "Account");
 
             using var content = new MultipartFormDataContent();
-            content.Add(new StringContent(dto.Title), nameof(dto.Title));
-            content.Add(new StringContent(dto.Content), nameof(dto.Content));
-            content.Add(new StringContent(dto.Status), nameof(dto.Status));
+            content.Add(new StringContent(dto.Title ?? ""), nameof(dto.Title));
+            content.Add(new StringContent(dto.Content ?? ""), nameof(dto.Content));
+            content.Add(new StringContent(dto.Status ?? "Draft"), nameof(dto.Status));
 
             if (featuredImage != null && featuredImage.Length > 0)
             {
@@ -339,7 +278,6 @@ namespace MarathonManager.Web.Controllers
             {
                 ModelState.AddModelError(string.Empty, $"Lỗi kết nối: {ex.Message}");
             }
-
             return View(dto);
         }
 
@@ -348,38 +286,25 @@ namespace MarathonManager.Web.Controllers
         {
             var client = CreateAuthenticatedHttpClient();
             if (client == null) return RedirectToAction("Login", "Account");
-
             try
             {
                 var response = await client.GetAsync($"/api/admin/blogs/{id}");
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
-                    var blogPost = JsonConvert.DeserializeObject<dynamic>(json);
+                    var blogPost = JsonConvert.DeserializeObject<BlogUpdateDto>(json);
+                    if (blogPost == null) throw new Exception("Không thể đọc dữ liệu bài viết.");
 
-                    var model = new BlogUpdateDto
-                    {
-                        Id = blogPost.id,
-                        Title = blogPost.title,
-                        Content = blogPost.content,
-                        Status = blogPost.status,
-                        CurrentImageUrl = blogPost.featuredImageUrl
-                    };
+                    var dynamicPost = JsonConvert.DeserializeObject<dynamic>(json);
+                    blogPost.CurrentImageUrl = dynamicPost.featuredImageUrl;
 
                     ViewBag.ApiBaseUrl = _configuration["ApiBaseUrl"];
-                    return View(model);
+                    return View(blogPost);
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Không tìm thấy bài viết.";
-                    return RedirectToAction("Index", new { tab = "blogs" });
-                }
+                else { /*...*/ TempData["ErrorMessage"] = "Không tìm thấy bài viết."; }
             }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"Lỗi kết nối: {ex.Message}";
-                return RedirectToAction("Index", new { tab = "blogs" });
-            }
+            catch (Exception ex) { TempData["ErrorMessage"] = $"Lỗi kết nối: {ex.Message}"; }
+            return RedirectToAction("Index", new { tab = "blogs" });
         }
 
         // POST: /Admin/EditBlog/5
@@ -392,15 +317,14 @@ namespace MarathonManager.Web.Controllers
                 ViewBag.ApiBaseUrl = _configuration["ApiBaseUrl"];
                 return View(dto);
             }
-
             var client = CreateAuthenticatedHttpClient();
             if (client == null) return RedirectToAction("Login", "Account");
 
             using var content = new MultipartFormDataContent();
             content.Add(new StringContent(dto.Id.ToString()), nameof(dto.Id));
-            content.Add(new StringContent(dto.Title), nameof(dto.Title));
-            content.Add(new StringContent(dto.Content), nameof(dto.Content));
-            content.Add(new StringContent(dto.Status), nameof(dto.Status));
+            content.Add(new StringContent(dto.Title ?? ""), nameof(dto.Title));
+            content.Add(new StringContent(dto.Content ?? ""), nameof(dto.Content));
+            content.Add(new StringContent(dto.Status ?? "Draft"), nameof(dto.Status));
 
             if (featuredImage != null && featuredImage.Length > 0)
             {
@@ -427,7 +351,6 @@ namespace MarathonManager.Web.Controllers
             {
                 ModelState.AddModelError(string.Empty, $"Lỗi kết nối: {ex.Message}");
             }
-
             ViewBag.ApiBaseUrl = _configuration["ApiBaseUrl"];
             return View(dto);
         }
@@ -437,7 +360,6 @@ namespace MarathonManager.Web.Controllers
         {
             var client = CreateAuthenticatedHttpClient();
             if (client == null) return RedirectToAction("Login", "Account");
-
             var response = await client.PatchAsync($"/api/admin/blogs/{blogId}/toggle-publish", null);
             if (response.IsSuccessStatusCode)
             {
@@ -449,10 +371,7 @@ namespace MarathonManager.Web.Controllers
                 }
                 catch { TempData["SuccessMessage"] = "Thay đổi trạng thái bài viết thành công."; }
             }
-            else
-            {
-                TempData["ErrorMessage"] = "Thay đổi trạng thái thất bại.";
-            }
+            else { TempData["ErrorMessage"] = "Thay đổi trạng thái thất bại."; }
             return RedirectToAction("Index", new { tab = "blogs" });
         }
 
@@ -461,21 +380,14 @@ namespace MarathonManager.Web.Controllers
         {
             var client = CreateAuthenticatedHttpClient();
             if (client == null) return RedirectToAction("Login", "Account");
-
             var response = await client.DeleteAsync($"/api/admin/blogs/{blogId}");
-            if (response.IsSuccessStatusCode)
-            {
-                TempData["SuccessMessage"] = "Xóa bài viết thành công.";
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "Xóa bài viết thất bại.";
-            }
+            if (response.IsSuccessStatusCode) TempData["SuccessMessage"] = "Xóa bài viết thành công.";
+            else TempData["ErrorMessage"] = "Xóa bài viết thất bại.";
             return RedirectToAction("Index", new { tab = "blogs" });
         }
 
         // ===================================
-        // HÀM PHỤ TRỢ (Private) - (HÀM BỊ THIẾU)
+        // HÀM PHỤ TRỢ (Private)
         // ===================================
         private HttpClient CreateAuthenticatedHttpClient()
         {

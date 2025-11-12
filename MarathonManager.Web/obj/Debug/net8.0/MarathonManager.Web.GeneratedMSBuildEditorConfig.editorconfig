@@ -17,113 +17,133 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = MarathonManager.Web
 build_property.RootNamespace = MarathonManager.Web
-build_property.ProjectDir = C:\Users\pv\Videos\PRN232\MarathonManager.Web\
+build_property.ProjectDir = C:\Users\pv\Music\PRN232\MarathonManager.Web\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\pv\Videos\PRN232\MarathonManager.Web
+build_property.MSBuildProjectDirectory = C:\Users\pv\Music\PRN232\MarathonManager.Web
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Account/Login.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Account/Register.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Account/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Admin/CreateBlog.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Admin/CreateBlog.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ3JlYXRlQmxvZy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Admin/EditBlog.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Admin/EditBlog.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRWRpdEJsb2cuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Admin/Index.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Admin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Admin/RaceDetails.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Admin/RaceDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUmFjZURldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Admin/UserDetails.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Admin/UserDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXNlckRldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Home/Index.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Blog/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmxvZ1xEZXRhaWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Blog/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmxvZ1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Home/Privacy.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Organizer/AddDistance.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Organizer/AddDistance.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JnYW5pemVyXEFkZERpc3RhbmNlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Organizer/Create.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Organizer/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JnYW5pemVyXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Organizer/EditDistance.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Organizer/EditDistance.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JnYW5pemVyXEVkaXREaXN0YW5jZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Organizer/Index.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Organizer/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JnYW5pemVyXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Organizer/ManageDistances.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Organizer/ManageDistances.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JnYW5pemVyXE1hbmFnZURpc3RhbmNlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Organizer/_DistanceFormFields.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Organizer/_DistanceFormFields.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JnYW5pemVyXF9EaXN0YW5jZUZvcm1GaWVsZHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Races/Detail.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Races/Detail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmFjZXNcRGV0YWlsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Runner/Index.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Runner/EditProfile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUnVubmVyXEVkaXRQcm9maWxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Runner/FakePayment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUnVubmVyXEZha2VQYXltZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Runner/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUnVubmVyXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Runner/RaceDetails.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Runner/Profile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUnVubmVyXFByb2ZpbGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Runner/RaceDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUnVubmVyXFJhY2VEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Runner/RegistrationDetails.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Runner/RegistrationDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUnVubmVyXFJlZ2lzdHJhdGlvbkRldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Runner/ResultDetails.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Runner/ResultDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUnVubmVyXFJlc3VsdERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Shared/Error.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/_ViewImports.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/_ViewStart.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/pv/Videos/PRN232/MarathonManager.Web/Views/Shared/_Layout.cshtml]
+[C:/Users/pv/Music/PRN232/MarathonManager.Web/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-s0x1vq482u

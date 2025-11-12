@@ -8095,11 +8095,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pv\\Videos\\PRN232\\MarathonManager.API\\MarathonManager.API.csproj",
+      "projectUniqueName": "C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\MarathonManager.API.csproj",
       "projectName": "MarathonManager.API",
-      "projectPath": "C:\\Users\\pv\\Videos\\PRN232\\MarathonManager.API\\MarathonManager.API.csproj",
+      "projectPath": "C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\MarathonManager.API.csproj",
       "packagesPath": "C:\\Users\\pv\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pv\\Videos\\PRN232\\MarathonManager.API\\obj\\",
+      "outputPath": "C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -356,6 +356,151 @@
     ]
   },
   {
+    "ContainingType": "MarathonManager.API.Controllers.BlogsController",
+    "Method": "GetBlogs",
+    "RelativePath": "api/Blogs",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "search",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MarathonManager.API.DTOs.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[MarathonManager.API.DTOs.BlogListItemDto, MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MarathonManager.API.Controllers.BlogsController",
+    "Method": "GetBlog",
+    "RelativePath": "api/Blogs/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MarathonManager.API.DTOs.ApiResponse\u00601[[MarathonManager.API.DTOs.BlogDetailDto, MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MarathonManager.API.Controllers.BlogsController",
+    "Method": "CreateComment",
+    "RelativePath": "api/Blogs/{id}/comments",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "req",
+        "Type": "MarathonManager.API.DTOs.CreateCommentRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MarathonManager.API.DTOs.ApiResponse\u00601[[MarathonManager.API.DTOs.CommentDto, MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MarathonManager.API.Controllers.BlogsController",
+    "Method": "ToggleLike",
+    "RelativePath": "api/Blogs/{id}/like",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MarathonManager.API.DTOs.ApiResponse\u00601[[MarathonManager.API.DTOs.ToggleLikeResponse, MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MarathonManager.API.Controllers.BlogsController",
+    "Method": "DeleteComment",
+    "RelativePath": "api/Blogs/comments/{commentId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "commentId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MarathonManager.API.DTOs.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "MarathonManager.API.Controllers.RacesController",
     "Method": "GetRaces",
     "RelativePath": "api/Races",
@@ -533,32 +678,6 @@
   },
   {
     "ContainingType": "MarathonManager.API.Controllers.RacesController",
-    "Method": "GetRaceDetails",
-    "RelativePath": "api/Races/{id}/details",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MarathonManager.API.DTOs.ApiResponse\u00601[[MarathonManager.API.DTOs.RaceDetailsDto, MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MarathonManager.API.Controllers.RacesController",
     "Method": "GetDistancesForRace",
     "RelativePath": "api/Races/{raceId}/distances",
     "HttpMethod": "GET",
@@ -663,6 +782,32 @@
   },
   {
     "ContainingType": "MarathonManager.API.Controllers.RacesController",
+    "Method": "GetDistanceDetails",
+    "RelativePath": "api/Races/distance/{distanceId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "distanceId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "MarathonManager.API.DTOs.Race.RaceDistanceDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MarathonManager.API.Controllers.RacesController",
     "Method": "GetMyRaces",
     "RelativePath": "api/Races/my-races",
     "HttpMethod": "GET",
@@ -692,171 +837,6 @@
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.IEnumerable\u00601[[MarathonManager.API.DTOs.Race.RaceSummaryDto, MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MarathonManager.API.Controllers.RacesController",
-    "Method": "GetAvailableRaces",
-    "RelativePath": "api/Races/runner/available",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "pageNumber",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "pageSize",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MarathonManager.API.DTOs.ApiResponse\u00601[[MarathonManager.API.DTOs.PaginatedResponse\u00601[[MarathonManager.API.DTOs.AvailableRaceDto, MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MarathonManager.API.Controllers.RacesController",
-    "Method": "GetRunnerDashboard",
-    "RelativePath": "api/Races/runner/dashboard",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "MarathonManager.API.DTOs.ApiResponse\u00601[[MarathonManager.API.DTOs.RunnerDashboardDto, MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MarathonManager.API.Controllers.RacesController",
-    "Method": "RegisterForRace",
-    "RelativePath": "api/Races/runner/register",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "MarathonManager.API.DTOs.RegisterForRaceRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MarathonManager.API.DTOs.ApiResponse\u00601[[MarathonManager.API.DTOs.MyRegistrationDto, MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MarathonManager.API.Controllers.RacesController",
-    "Method": "GetMyRegistrations",
-    "RelativePath": "api/Races/runner/registrations",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "pageNumber",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "pageSize",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MarathonManager.API.DTOs.ApiResponse\u00601[[MarathonManager.API.DTOs.PaginatedResponse\u00601[[MarathonManager.API.DTOs.MyRegistrationDto, MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MarathonManager.API.Controllers.RacesController",
-    "Method": "CancelRegistration",
-    "RelativePath": "api/Races/runner/registrations/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MarathonManager.API.DTOs.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "MarathonManager.API.Controllers.RacesController",
-    "Method": "GetMyResults",
-    "RelativePath": "api/Races/runner/results",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "pageNumber",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "pageSize",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "MarathonManager.API.DTOs.ApiResponse\u00601[[MarathonManager.API.DTOs.PaginatedResponse\u00601[[MarathonManager.API.DTOs.MyResultDto, MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], MarathonManager.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
