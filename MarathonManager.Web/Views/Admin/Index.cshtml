@@ -1,6 +1,6 @@
 ﻿@model MarathonManager.Web.ViewModels.AdminDashboardViewModel
 @using X.PagedList
-@* Chúng ta không cần using 'Web.Common' hay 'Extensions' nữa *@
+@using X.PagedList.Mvc.Core
 
 @{
     ViewData["Title"] = "Admin Dashboard";
@@ -35,6 +35,7 @@
     {
         <div class="alert alert-danger">@ViewBag.Error</div>
     }
+
     <ul class="nav nav-tabs nav-fill mb-3" id="adminTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link @racesTabActive" id="races-tab" data-bs-toggle="tab" data-bs-target="#tab-races" type="button" role="tab" aria-controls="tab-races" aria-selected="@(racesTabActive == "active")">
@@ -58,8 +59,24 @@
 
     <div class="tab-content" id="adminTabContent">
 
+        <!-- RACES TAB -->
         <div class="tab-pane fade show @racesTabActive" id="tab-races" role="tabpanel" aria-labelledby="races-tab">
             <h4 class="mt-4">Tất cả Giải chạy (Đã duyệt, Chờ duyệt, Đã hủy)</h4>
+
+            <!-- SEARCH BAR RACES -->
+            <form asp-action="Index" method="get" class="mb-4">
+                <input type="hidden" name="tab" value="races" />
+                <div class="row g-2">
+                    <div class="col-md-10">
+                        <input type="text" name="searchRaces" value="@ViewBag.SearchRaces" class="form-control" placeholder="Tìm kiếm theo tên giải chạy, người tổ chức, địa điểm..." />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-1"></i> Tìm kiếm
+                        </button>
+                    </div>
+                </div>
+            </form>
 
             @if (Model.AllRaces == null || !Model.AllRaces.Any())
             {
@@ -133,21 +150,42 @@
                     </tbody>
                 </table>
 
-                <nav>
-                    <pager class="pagination"
-                           list="@Model.AllRaces"
-                           asp-controller="Admin"
-                           asp-action="Index"
-                           asp-route-tab="races"
-                           param-page-number="pageRaces"
-                           li-Element-Classes="page-item"
-                           a-Element-Classes="page-link" />
-                </nav>
-            }
+                <!-- PAGINATION RACES - FIXED -->
+                <nav aria-label="Races pagination" class="mt-4">
+                    @Html.PagedListPager(
+                    Model.AllRaces,
+                                page => Url.Action("Index", new { tab = "races", pageRaces = page, searchRaces = ViewBag.SearchRaces }),
+                                new X.PagedList.Mvc.Core.PagedListRenderOptions
+                                {
+                                    LiElementClasses = new string[] { "page-item" },
+                                    PageClasses = new string[] { "page-link" },
+                                    UlElementClasses = new string[] { "pagination", "justify-content-center" },
+                                    MaximumPageNumbersToDisplay = 5
+                                }
+                                )
+            </nav>
+                        }
         </div>
 
+        <!-- USERS TAB -->
         <div class="tab-pane fade show @usersTabActive" id="tab-users" role="tabpanel" aria-labelledby="users-tab">
             <h4 class="mt-4">Tất cả Người dùng</h4>
+
+            <!-- SEARCH BAR USERS -->
+            <form asp-action="Index" method="get" class="mb-4">
+                <input type="hidden" name="tab" value="users" />
+                <div class="row g-2">
+                    <div class="col-md-10">
+                        <input type="text" name="searchUsers" value="@ViewBag.SearchUsers" class="form-control" placeholder="Tìm kiếm theo tên, email..." />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-1"></i> Tìm kiếm
+                        </button>
+                    </div>
+                </div>
+            </form>
+
             @if (Model.AllUsers == null || !Model.AllUsers.Any())
             {
                 <div class="alert alert-info mt-4">Không tìm thấy người dùng nào.</div>
@@ -177,7 +215,6 @@
                                     }
                                     else
                                     {
-
                                         <span class="text-muted">N/A</span>
                                     }
                                 </td>
@@ -188,7 +225,6 @@
                                     }
                                     else
                                     {
-
                                         <span class="badge bg-danger">Locked</span>
                                     }
                                 </td>
@@ -201,7 +237,6 @@
                                         }
                                         else
                                         {
-
                                             <button type="submit" class="btn btn-info btn-sm" title="Mở khóa tài khoản"><i class="fas fa-lock-open me-1"></i> Mở</button>
                                         }
                                     </form>
@@ -214,14 +249,42 @@
                         }
                     </tbody>
                 </table>
-                <nav>
-                    <pager class="pagination" list="@Model.AllUsers" asp-controller="Admin" asp-action="Index" asp-route-tab="users" param-page-number="pageUsers" li-Element-Classes="page-item" a-Element-Classes="page-link" />
-                </nav>
-            }
+
+                <!-- PAGINATION USERS - FIXED -->
+                <nav aria-label="Users pagination" class="mt-4">
+                    @Html.PagedListPager(
+                    Model.AllUsers,
+                                page => Url.Action("Index", new { tab = "users", pageUsers = page, searchUsers = ViewBag.SearchUsers }),
+                                new X.PagedList.Mvc.Core.PagedListRenderOptions
+                                {
+                                    LiElementClasses = new string[] { "page-item" },
+                                    PageClasses = new string[] { "page-link" },
+                                    UlElementClasses = new string[] { "pagination", "justify-content-center" },
+                                    MaximumPageNumbersToDisplay = 5
+                                }
+                                )
+            </nav>
+                        }
         </div>
 
+        <!-- BLOGS TAB -->
         <div class="tab-pane fade show @blogsTabActive" id="tab-blogs" role="tabpanel" aria-labelledby="blogs-tab">
             <h4 class="mt-4">Tất cả Bài viết Blog</h4>
+
+            <!-- SEARCH BAR BLOGS -->
+            <form asp-action="Index" method="get" class="mb-3">
+                <input type="hidden" name="tab" value="blogs" />
+                <div class="row g-2">
+                    <div class="col-md-10">
+                        <input type="text" name="searchBlogs" value="@ViewBag.SearchBlogs" class="form-control" placeholder="Tìm kiếm theo tiêu đề, tác giả..." />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-1"></i> Tìm kiếm
+                        </button>
+                    </div>
+                </div>
+            </form>
 
             <div class="text-end mb-3">
                 <a asp-action="CreateBlog" asp-controller="Admin" class="btn btn-success">
@@ -255,7 +318,6 @@
                                     }
                                     else
                                     {
-
                                         <span class="badge bg-secondary">Draft</span>
                                     }
                                 </td>
@@ -268,7 +330,6 @@
                                         }
                                         else
                                         {
-
                                             <button type="submit" class="btn btn-success btn-sm" title="Đăng bài"><i class="fas fa-check"></i></button>
                                         }
                                     </form>
@@ -286,10 +347,36 @@
                         }
                     </tbody>
                 </table>
-                <nav>
-                    <pager class="pagination" list="@Model.AllBlogPosts" asp-controller="Admin" asp-action="Index" asp-route-tab="blogs" param-page-number="pageBlogs" li-Element-Classes="page-item" a-Element-Classes="page-link" />
-                </nav>
-            }
+
+                <!-- PAGINATION BLOGS - FIXED -->
+                <nav aria-label="Blogs pagination" class="mt-4">
+                    @Html.PagedListPager(
+                    Model.AllBlogPosts,
+                                page => Url.Action("Index", new { tab = "blogs", pageBlogs = page, searchBlogs = ViewBag.SearchBlogs }),
+                                new X.PagedList.Mvc.Core.PagedListRenderOptions
+                                {
+                                    LiElementClasses = new string[] { "page-item" },
+                                    PageClasses = new string[] { "page-link" },
+                                    UlElementClasses = new string[] { "pagination", "justify-content-center" },
+                                    MaximumPageNumbersToDisplay = 5
+                                }
+                                )
+            </nav>
+                        }
         </div>
     </div>
 </div>
+
+<script>
+    // Kích hoạt tab đúng dựa vào ViewBag.CurrentTab
+    document.addEventListener('DOMContentLoaded', function() {
+        var currentTab = '@ViewBag.CurrentTab';
+        if (currentTab) {
+            var tabButton = document.getElementById(currentTab + '-tab');
+            if (tabButton) {
+                var tab = new bootstrap.Tab(tabButton);
+                tab.show();
+            }
+        }
+    });
+</script>

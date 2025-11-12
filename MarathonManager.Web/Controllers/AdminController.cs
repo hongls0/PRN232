@@ -38,13 +38,16 @@ namespace MarathonManager.Web.Controllers
         }
 
         // ===================================
-        // INDEX (DASHBOARD)
+        // INDEX (DASHBOARD) - CÓ SEARCH
         // ===================================
         public async Task<IActionResult> Index(
             string tab = "races",
             int? pageRaces = 1,
             int? pageUsers = 1,
-            int? pageBlogs = 1)
+            int? pageBlogs = 1,
+            string searchRaces = "",
+            string searchUsers = "",
+            string searchBlogs = "")
         {
             var client = CreateAuthenticatedHttpClient();
             if (client == null) return RedirectToAction("Login", "Account");
@@ -56,6 +59,11 @@ namespace MarathonManager.Web.Controllers
             int usersPageNumber = (pageUsers ?? 1);
             int blogsPageNumber = (pageBlogs ?? 1);
 
+            // Lưu giá trị search vào ViewBag để hiển thị lại trong form
+            ViewBag.SearchRaces = searchRaces;
+            ViewBag.SearchUsers = searchUsers;
+            ViewBag.SearchBlogs = searchBlogs;
+
             try
             {
                 // 1. Lấy TẤT CẢ Races
@@ -66,7 +74,17 @@ namespace MarathonManager.Web.Controllers
                     var json = await raceResponse.Content.ReadAsStringAsync();
                     allRacesList = JsonConvert.DeserializeObject<List<RaceSummaryDto>>(json) ?? new List<RaceSummaryDto>();
                 }
-                // Dùng .ToPagedList()
+
+                // Lọc theo search (client-side)
+                if (!string.IsNullOrWhiteSpace(searchRaces))
+                {
+                    var searchLower = searchRaces.ToLower();
+                    allRacesList = allRacesList.Where(r =>
+                        (r.Name != null && r.Name.ToLower().Contains(searchLower)) ||
+                        (r.OrganizerName != null && r.OrganizerName.ToLower().Contains(searchLower)) ||
+                        (r.Location != null && r.Location.ToLower().Contains(searchLower))
+                    ).ToList();
+                }
                 viewModel.AllRaces = allRacesList.ToPagedList(racesPageNumber, pageSize);
 
                 // 2. Lấy Users
@@ -77,7 +95,16 @@ namespace MarathonManager.Web.Controllers
                     var json = await userResponse.Content.ReadAsStringAsync();
                     allUsersList = JsonConvert.DeserializeObject<List<UserDto>>(json) ?? new List<UserDto>();
                 }
-                // Dùng .ToPagedList()
+
+                // Lọc theo search (client-side)
+                if (!string.IsNullOrWhiteSpace(searchUsers))
+                {
+                    var searchLower = searchUsers.ToLower();
+                    allUsersList = allUsersList.Where(u =>
+                        (u.FullName != null && u.FullName.ToLower().Contains(searchLower)) ||
+                        (u.Email != null && u.Email.ToLower().Contains(searchLower))
+                    ).ToList();
+                }
                 viewModel.AllUsers = allUsersList.ToPagedList(usersPageNumber, pageSize);
 
                 // 3. Lấy Blog Posts
@@ -88,7 +115,16 @@ namespace MarathonManager.Web.Controllers
                     var json = await blogResponse.Content.ReadAsStringAsync();
                     allBlogsList = JsonConvert.DeserializeObject<List<BlogAdminDto>>(json) ?? new List<BlogAdminDto>();
                 }
-                // Dùng .ToPagedList()
+
+                // Lọc theo search (client-side)
+                if (!string.IsNullOrWhiteSpace(searchBlogs))
+                {
+                    var searchLower = searchBlogs.ToLower();
+                    allBlogsList = allBlogsList.Where(b =>
+                        (b.Title != null && b.Title.ToLower().Contains(searchLower)) ||
+                        (b.AuthorName != null && b.AuthorName.ToLower().Contains(searchLower))
+                    ).ToList();
+                }
                 viewModel.AllBlogPosts = allBlogsList.ToPagedList(blogsPageNumber, pageSize);
             }
             catch (Exception ex)

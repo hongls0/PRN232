@@ -7912,6 +7912,7 @@
       "MarathonManager.API >= 1.0.0",
       "Newtonsoft.Json >= 13.0.4",
       "System.IdentityModel.Tokens.Jwt >= 8.14.0",
+      "X.PagedList >= 10.5.9",
       "X.PagedList.Mvc.Core >= 10.5.9"
     ]
   },
@@ -7976,6 +7977,10 @@
           "System.IdentityModel.Tokens.Jwt": {
             "target": "Package",
             "version": "[8.14.0, )"
+          },
+          "X.PagedList": {
+            "target": "Package",
+            "version": "[10.5.9, )"
           },
           "X.PagedList.Mvc.Core": {
             "target": "Package",

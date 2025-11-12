@@ -11,6 +11,7 @@
           "MarathonManager.API": "1.0.0",
           "Newtonsoft.Json": "13.0.4",
           "System.IdentityModel.Tokens.Jwt": "8.14.0",
+          "X.PagedList": "10.5.9",
           "X.PagedList.Mvc.Core": "10.5.9"
         },
         "runtime": {
