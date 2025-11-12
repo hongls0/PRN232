@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity; // Cần cho UserManager, RoleManager
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System; // Cần cho DateTimeOffset, DateOnly
 using System.Collections.Generic; // Cần cho List
 using System.Linq;              // Cần cho LINQ (ToList, Select...)
@@ -25,15 +26,17 @@ namespace MarathonManager.API.Controllers
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly MarathonManagerContext _context;
-
+        private readonly IWebHostEnvironment _environment;
         public AdminApiController(
             UserManager<User> userManager,
             RoleManager<IdentityRole<int>> roleManager,
-            MarathonManagerContext context)
+            MarathonManagerContext context,
+            IWebHostEnvironment environment)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _context = context;
+            _environment = environment;
         }
 
         // ===================================
@@ -316,6 +319,143 @@ namespace MarathonManager.API.Controllers
             }
             // An toàn hơn là throw exception nếu không lấy được ID
             throw new InvalidOperationException("Không thể xác định ID người dùng từ token.");
+        }
+        [HttpGet("blogs/{id}")]
+        public async Task<ActionResult<BlogPost>> GetBlogPost(int id)
+        {
+            var blogPost = await _context.BlogPosts.FindAsync(id);
+
+            if (blogPost == null)
+            {
+                return NotFound();
+            }
+
+            // Admin có quyền xem mọi bài viết (kể cả Draft)
+            return Ok(blogPost);
+        }
+
+        // ===================================
+        // BLOG: TẠO BÀI VIẾT MỚI
+        // POST: api/admin/blogs
+        // ===================================
+        [HttpPost("blogs")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> CreateBlogPost([FromForm] BlogCreateDto blogDto, IFormFile? featuredImage)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            string? imageUrlPath = null;
+
+            // 1. Xử lý ảnh (giống hệt RacesController)
+            if (featuredImage != null && featuredImage.Length > 0)
+            {
+                // (Bạn có thể thêm validation size, extension ở đây)
+                try
+                {
+                    string uploadsFolder = Path.Combine(_environment.WebRootPath ?? "wwwroot", "images", "blogs");
+                    if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+
+                    string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(featuredImage.FileName);
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await featuredImage.CopyToAsync(fileStream);
+                    }
+                    imageUrlPath = $"/images/blogs/{uniqueFileName}";
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = $"Lỗi khi lưu ảnh: {ex.Message}" });
+                }
+            }
+
+            // 2. Tạo Blog Post
+            var newPost = new BlogPost
+            {
+                Title = blogDto.Title,
+                Content = blogDto.Content,
+                Status = blogDto.Status,
+                FeaturedImageUrl = imageUrlPath,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                AuthorId = GetCurrentUserId() // Gán Author là Admin đang đăng nhập
+            };
+
+            _context.BlogPosts.Add(newPost);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetBlogPost), new { id = newPost.Id }, newPost);
+        }
+
+        // ===================================
+        // BLOG: CẬP NHẬT BÀI VIẾT
+        // POST: api/admin/blogs/update (dùng POST thay vì PUT để [FromForm] dễ dàng)
+        // ===================================
+        [HttpPost("blogs/update")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UpdateBlogPost([FromForm] BlogUpdateDto blogDto, IFormFile? featuredImage)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var postToUpdate = await _context.BlogPosts.FindAsync(blogDto.Id);
+            if (postToUpdate == null)
+            {
+                return NotFound(new { message = "Không tìm thấy bài viết." });
+            }
+
+            // 1. Xử lý ảnh (nếu có ảnh mới)
+            if (featuredImage != null && featuredImage.Length > 0)
+            {
+                // Xóa ảnh cũ (nếu có)
+                if (!string.IsNullOrEmpty(postToUpdate.FeaturedImageUrl))
+                {
+                    try
+                    {
+                        string oldImagePath = Path.Combine(_environment.WebRootPath ?? "wwwroot", postToUpdate.FeaturedImageUrl.TrimStart('/'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+                    catch (Exception ex) { Console.WriteLine($"Lỗi xóa ảnh cũ: {ex.Message}"); }
+                }
+
+                // Lưu ảnh mới
+                try
+                {
+                    string uploadsFolder = Path.Combine(_environment.WebRootPath ?? "wwwroot", "images", "blogs");
+                    if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+                    string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(featuredImage.FileName);
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await featuredImage.CopyToAsync(fileStream);
+                    }
+                    postToUpdate.FeaturedImageUrl = $"/images/blogs/{uniqueFileName}"; // Cập nhật đường dẫn mới
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = $"Lỗi khi lưu ảnh mới: {ex.Message}" });
+                }
+            }
+
+            // 2. Cập nhật thông tin
+            postToUpdate.Title = blogDto.Title;
+            postToUpdate.Content = blogDto.Content;
+            postToUpdate.Status = blogDto.Status;
+            postToUpdate.UpdatedAt = DateTime.UtcNow;
+
+            _context.Entry(postToUpdate).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Cập nhật thành công." });
         }
     }
 }

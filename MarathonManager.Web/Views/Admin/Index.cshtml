@@ -224,7 +224,7 @@
             <h4 class="mt-4">Tất cả Bài viết Blog</h4>
 
             <div class="text-end mb-3">
-                <a href="#" class="btn btn-success disabled">
+                <a asp-action="CreateBlog" asp-controller="Admin" class="btn btn-success">
                     <i class="fas fa-plus me-1"></i> Tạo bài viết mới
                 </a>
             </div>
@@ -273,7 +273,7 @@
                                         }
                                     </form>
 
-                                    <a href="#" class="btn btn-info btn-sm disabled" title="Sửa bài viết (Chưa làm)">
+                                    <a asp-action="EditBlog" asp-controller="Admin" asp-route-id="@blog.Id" class="btn btn-info btn-sm" title="Sửa bài viết">
                                         <i class="fas fa-edit"></i>
                                     </a>
 
