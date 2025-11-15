@@ -1,1 +1,949 @@
-{"Version":1,"Hash":"VpEST9a2k1UMfK6LJEGhT14cuHou+/H2+G9cXOR3zTo=","Source":"MarathonManager.API","BasePath":"_content/MarathonManager.API","Mode":"Default","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[{"Name":"MarathonManager.API\\wwwroot","Source":"MarathonManager.API","ContentRoot":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\","BasePath":"_content/MarathonManager.API","Pattern":"**"}],"Assets":[{"Identity":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\blogs\\51819ca7-59b4-49c7-9569-e45f60effb62.png","SourceId":"MarathonManager.API","SourceType":"Discovered","ContentRoot":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\","BasePath":"_content/MarathonManager.API","RelativePath":"images/blogs/51819ca7-59b4-49c7-9569-e45f60effb62#[.{fingerprint}]?.png","AssetKind":"All","AssetMode":"All","AssetRole":"Primary","AssetMergeBehavior":"","AssetMergeSource":"","RelatedAsset":"","AssetTraitName":"","AssetTraitValue":"","Fingerprint":"2dsnnegrjr","Integrity":"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=","CopyToOutputDirectory":"Never","CopyToPublishDirectory":"PreserveNewest","OriginalItemSpec":"wwwroot\\images\\blogs\\51819ca7-59b4-49c7-9569-e45f60effb62.png","FileLength":44979,"LastWriteTime":"2025-11-12T06:27:02+00:00"},{"Identity":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\0a739d14-4b5e-4ebc-a34e-652625de3745.png","SourceId":"MarathonManager.API","SourceType":"Discovered","ContentRoot":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\","BasePath":"_content/MarathonManager.API","RelativePath":"images/races/0a739d14-4b5e-4ebc-a34e-652625de3745#[.{fingerprint}]?.png","AssetKind":"All","AssetMode":"All","AssetRole":"Primary","AssetMergeBehavior":"","AssetMergeSource":"","RelatedAsset":"","AssetTraitName":"","AssetTraitValue":"","Fingerprint":"2dsnnegrjr","Integrity":"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=","CopyToOutputDirectory":"Never","CopyToPublishDirectory":"PreserveNewest","OriginalItemSpec":"wwwroot\\images\\races\\0a739d14-4b5e-4ebc-a34e-652625de3745.png","FileLength":44979,"LastWriteTime":"2025-11-12T06:27:02+00:00"},{"Identity":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\0acb1339-0517-4193-b8a1-6a6fa927720b.png","SourceId":"MarathonManager.API","SourceType":"Discovered","ContentRoot":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\","BasePath":"_content/MarathonManager.API","RelativePath":"images/races/0acb1339-0517-4193-b8a1-6a6fa927720b#[.{fingerprint}]?.png","AssetKind":"All","AssetMode":"All","AssetRole":"Primary","AssetMergeBehavior":"","AssetMergeSource":"","RelatedAsset":"","AssetTraitName":"","AssetTraitValue":"","Fingerprint":"70l5ye92wk","Integrity":"l2OEZkSPcOxrL7ac212SetKCVh6bpnb/cmi8bVbMn+M=","CopyToOutputDirectory":"Never","CopyToPublishDirectory":"PreserveNewest","OriginalItemSpec":"wwwroot\\images\\races\\0acb1339-0517-4193-b8a1-6a6fa927720b.png","FileLength":156941,"LastWriteTime":"2025-11-12T06:27:02+00:00"},{"Identity":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\6be18962-1d54-43c6-b7c7-a222f2f6ed48.png","SourceId":"MarathonManager.API","SourceType":"Discovered","ContentRoot":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\","BasePath":"_content/MarathonManager.API","RelativePath":"images/races/6be18962-1d54-43c6-b7c7-a222f2f6ed48#[.{fingerprint}]?.png","AssetKind":"All","AssetMode":"All","AssetRole":"Primary","AssetMergeBehavior":"","AssetMergeSource":"","RelatedAsset":"","AssetTraitName":"","AssetTraitValue":"","Fingerprint":"2dsnnegrjr","Integrity":"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=","CopyToOutputDirectory":"Never","CopyToPublishDirectory":"PreserveNewest","OriginalItemSpec":"wwwroot\\images\\races\\6be18962-1d54-43c6-b7c7-a222f2f6ed48.png","FileLength":44979,"LastWriteTime":"2025-11-12T06:27:02+00:00"},{"Identity":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\6ec84885-8bf9-42a9-91d1-5542317db003.png","SourceId":"MarathonManager.API","SourceType":"Discovered","ContentRoot":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\","BasePath":"_content/MarathonManager.API","RelativePath":"images/races/6ec84885-8bf9-42a9-91d1-5542317db003#[.{fingerprint}]?.png","AssetKind":"All","AssetMode":"All","AssetRole":"Primary","AssetMergeBehavior":"","AssetMergeSource":"","RelatedAsset":"","AssetTraitName":"","AssetTraitValue":"","Fingerprint":"2dsnnegrjr","Integrity":"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=","CopyToOutputDirectory":"Never","CopyToPublishDirectory":"PreserveNewest","OriginalItemSpec":"wwwroot\\images\\races\\6ec84885-8bf9-42a9-91d1-5542317db003.png","FileLength":44979,"LastWriteTime":"2025-11-12T06:56:21+00:00"},{"Identity":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\84454b08-dc3d-44e9-b784-d50bff952ecf.png","SourceId":"MarathonManager.API","SourceType":"Discovered","ContentRoot":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\","BasePath":"_content/MarathonManager.API","RelativePath":"images/races/84454b08-dc3d-44e9-b784-d50bff952ecf#[.{fingerprint}]?.png","AssetKind":"All","AssetMode":"All","AssetRole":"Primary","AssetMergeBehavior":"","AssetMergeSource":"","RelatedAsset":"","AssetTraitName":"","AssetTraitValue":"","Fingerprint":"2dsnnegrjr","Integrity":"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=","CopyToOutputDirectory":"Never","CopyToPublishDirectory":"PreserveNewest","OriginalItemSpec":"wwwroot\\images\\races\\84454b08-dc3d-44e9-b784-d50bff952ecf.png","FileLength":44979,"LastWriteTime":"2025-11-12T06:27:02+00:00"},{"Identity":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\c1665cc7-ecd1-445a-bfce-14207a50194b.png","SourceId":"MarathonManager.API","SourceType":"Discovered","ContentRoot":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\","BasePath":"_content/MarathonManager.API","RelativePath":"images/races/c1665cc7-ecd1-445a-bfce-14207a50194b#[.{fingerprint}]?.png","AssetKind":"All","AssetMode":"All","AssetRole":"Primary","AssetMergeBehavior":"","AssetMergeSource":"","RelatedAsset":"","AssetTraitName":"","AssetTraitValue":"","Fingerprint":"2dsnnegrjr","Integrity":"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=","CopyToOutputDirectory":"Never","CopyToPublishDirectory":"PreserveNewest","OriginalItemSpec":"wwwroot\\images\\races\\c1665cc7-ecd1-445a-bfce-14207a50194b.png","FileLength":44979,"LastWriteTime":"2025-11-12T06:27:02+00:00"},{"Identity":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\ce7e7a9d-a566-49ba-9826-31752911b8f2.png","SourceId":"MarathonManager.API","SourceType":"Discovered","ContentRoot":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\","BasePath":"_content/MarathonManager.API","RelativePath":"images/races/ce7e7a9d-a566-49ba-9826-31752911b8f2#[.{fingerprint}]?.png","AssetKind":"All","AssetMode":"All","AssetRole":"Primary","AssetMergeBehavior":"","AssetMergeSource":"","RelatedAsset":"","AssetTraitName":"","AssetTraitValue":"","Fingerprint":"2dsnnegrjr","Integrity":"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=","CopyToOutputDirectory":"Never","CopyToPublishDirectory":"PreserveNewest","OriginalItemSpec":"wwwroot\\images\\races\\ce7e7a9d-a566-49ba-9826-31752911b8f2.png","FileLength":44979,"LastWriteTime":"2025-11-12T06:56:50+00:00"},{"Identity":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\df78eef8-8575-4d00-adea-8ddfbd305e24.png","SourceId":"MarathonManager.API","SourceType":"Discovered","ContentRoot":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\","BasePath":"_content/MarathonManager.API","RelativePath":"images/races/df78eef8-8575-4d00-adea-8ddfbd305e24#[.{fingerprint}]?.png","AssetKind":"All","AssetMode":"All","AssetRole":"Primary","AssetMergeBehavior":"","AssetMergeSource":"","RelatedAsset":"","AssetTraitName":"","AssetTraitValue":"","Fingerprint":"pwuy2u0ps3","Integrity":"+YqXb6Do8rRuC2UUGleNI5/FMAnoDhZSdIQeuoMd/7M=","CopyToOutputDirectory":"Never","CopyToPublishDirectory":"PreserveNewest","OriginalItemSpec":"wwwroot\\images\\races\\df78eef8-8575-4d00-adea-8ddfbd305e24.png","FileLength":14141,"LastWriteTime":"2025-11-12T06:27:02+00:00"}],"Endpoints":[{"Route":"images/blogs/51819ca7-59b4-49c7-9569-e45f60effb62.2dsnnegrjr.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\blogs\\51819ca7-59b4-49c7-9569-e45f60effb62.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:27:02 GMT"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"}],"EndpointProperties":[{"Name":"fingerprint","Value":"2dsnnegrjr"},{"Name":"label","Value":"images/blogs/51819ca7-59b4-49c7-9569-e45f60effb62.png"},{"Name":"integrity","Value":"sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]},{"Route":"images/blogs/51819ca7-59b4-49c7-9569-e45f60effb62.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\blogs\\51819ca7-59b4-49c7-9569-e45f60effb62.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:27:02 GMT"},{"Name":"Cache-Control","Value":"no-cache"}],"EndpointProperties":[{"Name":"integrity","Value":"sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]},{"Route":"images/races/0a739d14-4b5e-4ebc-a34e-652625de3745.2dsnnegrjr.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\0a739d14-4b5e-4ebc-a34e-652625de3745.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:27:02 GMT"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"}],"EndpointProperties":[{"Name":"fingerprint","Value":"2dsnnegrjr"},{"Name":"label","Value":"images/races/0a739d14-4b5e-4ebc-a34e-652625de3745.png"},{"Name":"integrity","Value":"sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]},{"Route":"images/races/0a739d14-4b5e-4ebc-a34e-652625de3745.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\0a739d14-4b5e-4ebc-a34e-652625de3745.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:27:02 GMT"},{"Name":"Cache-Control","Value":"no-cache"}],"EndpointProperties":[{"Name":"integrity","Value":"sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]},{"Route":"images/races/0acb1339-0517-4193-b8a1-6a6fa927720b.70l5ye92wk.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\0acb1339-0517-4193-b8a1-6a6fa927720b.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"156941"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"l2OEZkSPcOxrL7ac212SetKCVh6bpnb/cmi8bVbMn+M=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:27:02 GMT"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"}],"EndpointProperties":[{"Name":"fingerprint","Value":"70l5ye92wk"},{"Name":"label","Value":"images/races/0acb1339-0517-4193-b8a1-6a6fa927720b.png"},{"Name":"integrity","Value":"sha256-l2OEZkSPcOxrL7ac212SetKCVh6bpnb/cmi8bVbMn+M="}]},{"Route":"images/races/0acb1339-0517-4193-b8a1-6a6fa927720b.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\0acb1339-0517-4193-b8a1-6a6fa927720b.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"156941"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"l2OEZkSPcOxrL7ac212SetKCVh6bpnb/cmi8bVbMn+M=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:27:02 GMT"},{"Name":"Cache-Control","Value":"no-cache"}],"EndpointProperties":[{"Name":"integrity","Value":"sha256-l2OEZkSPcOxrL7ac212SetKCVh6bpnb/cmi8bVbMn+M="}]},{"Route":"images/races/6be18962-1d54-43c6-b7c7-a222f2f6ed48.2dsnnegrjr.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\6be18962-1d54-43c6-b7c7-a222f2f6ed48.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:27:02 GMT"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"}],"EndpointProperties":[{"Name":"fingerprint","Value":"2dsnnegrjr"},{"Name":"label","Value":"images/races/6be18962-1d54-43c6-b7c7-a222f2f6ed48.png"},{"Name":"integrity","Value":"sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]},{"Route":"images/races/6be18962-1d54-43c6-b7c7-a222f2f6ed48.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\6be18962-1d54-43c6-b7c7-a222f2f6ed48.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:27:02 GMT"},{"Name":"Cache-Control","Value":"no-cache"}],"EndpointProperties":[{"Name":"integrity","Value":"sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]},{"Route":"images/races/6ec84885-8bf9-42a9-91d1-5542317db003.2dsnnegrjr.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\6ec84885-8bf9-42a9-91d1-5542317db003.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:56:21 GMT"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"}],"EndpointProperties":[{"Name":"fingerprint","Value":"2dsnnegrjr"},{"Name":"label","Value":"images/races/6ec84885-8bf9-42a9-91d1-5542317db003.png"},{"Name":"integrity","Value":"sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]},{"Route":"images/races/6ec84885-8bf9-42a9-91d1-5542317db003.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\6ec84885-8bf9-42a9-91d1-5542317db003.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:56:21 GMT"},{"Name":"Cache-Control","Value":"no-cache"}],"EndpointProperties":[{"Name":"integrity","Value":"sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]},{"Route":"images/races/84454b08-dc3d-44e9-b784-d50bff952ecf.2dsnnegrjr.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\84454b08-dc3d-44e9-b784-d50bff952ecf.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:27:02 GMT"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"}],"EndpointProperties":[{"Name":"fingerprint","Value":"2dsnnegrjr"},{"Name":"label","Value":"images/races/84454b08-dc3d-44e9-b784-d50bff952ecf.png"},{"Name":"integrity","Value":"sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]},{"Route":"images/races/84454b08-dc3d-44e9-b784-d50bff952ecf.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\84454b08-dc3d-44e9-b784-d50bff952ecf.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:27:02 GMT"},{"Name":"Cache-Control","Value":"no-cache"}],"EndpointProperties":[{"Name":"integrity","Value":"sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]},{"Route":"images/races/c1665cc7-ecd1-445a-bfce-14207a50194b.2dsnnegrjr.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\c1665cc7-ecd1-445a-bfce-14207a50194b.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:27:02 GMT"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"}],"EndpointProperties":[{"Name":"fingerprint","Value":"2dsnnegrjr"},{"Name":"label","Value":"images/races/c1665cc7-ecd1-445a-bfce-14207a50194b.png"},{"Name":"integrity","Value":"sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]},{"Route":"images/races/c1665cc7-ecd1-445a-bfce-14207a50194b.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\c1665cc7-ecd1-445a-bfce-14207a50194b.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:27:02 GMT"},{"Name":"Cache-Control","Value":"no-cache"}],"EndpointProperties":[{"Name":"integrity","Value":"sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]},{"Route":"images/races/ce7e7a9d-a566-49ba-9826-31752911b8f2.2dsnnegrjr.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\ce7e7a9d-a566-49ba-9826-31752911b8f2.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:56:50 GMT"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"}],"EndpointProperties":[{"Name":"fingerprint","Value":"2dsnnegrjr"},{"Name":"label","Value":"images/races/ce7e7a9d-a566-49ba-9826-31752911b8f2.png"},{"Name":"integrity","Value":"sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]},{"Route":"images/races/ce7e7a9d-a566-49ba-9826-31752911b8f2.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\ce7e7a9d-a566-49ba-9826-31752911b8f2.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:56:50 GMT"},{"Name":"Cache-Control","Value":"no-cache"}],"EndpointProperties":[{"Name":"integrity","Value":"sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]},{"Route":"images/races/df78eef8-8575-4d00-adea-8ddfbd305e24.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\df78eef8-8575-4d00-adea-8ddfbd305e24.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"14141"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"+YqXb6Do8rRuC2UUGleNI5/FMAnoDhZSdIQeuoMd/7M=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:27:02 GMT"},{"Name":"Cache-Control","Value":"no-cache"}],"EndpointProperties":[{"Name":"integrity","Value":"sha256-+YqXb6Do8rRuC2UUGleNI5/FMAnoDhZSdIQeuoMd/7M="}]},{"Route":"images/races/df78eef8-8575-4d00-adea-8ddfbd305e24.pwuy2u0ps3.png","AssetFile":"C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\df78eef8-8575-4d00-adea-8ddfbd305e24.png","Selectors":[],"ResponseHeaders":[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Content-Length","Value":"14141"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\"+YqXb6Do8rRuC2UUGleNI5/FMAnoDhZSdIQeuoMd/7M=\""},{"Name":"Last-Modified","Value":"Wed, 12 Nov 2025 06:27:02 GMT"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"}],"EndpointProperties":[{"Name":"fingerprint","Value":"pwuy2u0ps3"},{"Name":"label","Value":"images/races/df78eef8-8575-4d00-adea-8ddfbd305e24.png"},{"Name":"integrity","Value":"sha256-+YqXb6Do8rRuC2UUGleNI5/FMAnoDhZSdIQeuoMd/7M="}]}]}
+{
+  "Version": 1,
+  "Hash": "cJs5NLGO8lnwk2rocjwanVXU/tOQRJawmUxGf1aAOLQ=",
+  "Source": "MarathonManager.API",
+  "BasePath": "_content/MarathonManager.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "MarathonManager.API\\wwwroot",
+      "Source": "MarathonManager.API",
+      "ContentRoot": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\",
+      "BasePath": "_content/MarathonManager.API",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\blogs\\51819ca7-59b4-49c7-9569-e45f60effb62.png",
+      "SourceId": "MarathonManager.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\",
+      "BasePath": "_content/MarathonManager.API",
+      "RelativePath": "images/blogs/51819ca7-59b4-49c7-9569-e45f60effb62#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "2dsnnegrjr",
+      "Integrity": "quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\blogs\\51819ca7-59b4-49c7-9569-e45f60effb62.png"
+    },
+    {
+      "Identity": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\0a739d14-4b5e-4ebc-a34e-652625de3745.png",
+      "SourceId": "MarathonManager.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\",
+      "BasePath": "_content/MarathonManager.API",
+      "RelativePath": "images/races/0a739d14-4b5e-4ebc-a34e-652625de3745#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "2dsnnegrjr",
+      "Integrity": "quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\races\\0a739d14-4b5e-4ebc-a34e-652625de3745.png"
+    },
+    {
+      "Identity": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\0acb1339-0517-4193-b8a1-6a6fa927720b.png",
+      "SourceId": "MarathonManager.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\",
+      "BasePath": "_content/MarathonManager.API",
+      "RelativePath": "images/races/0acb1339-0517-4193-b8a1-6a6fa927720b#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "70l5ye92wk",
+      "Integrity": "l2OEZkSPcOxrL7ac212SetKCVh6bpnb/cmi8bVbMn+M=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\races\\0acb1339-0517-4193-b8a1-6a6fa927720b.png"
+    },
+    {
+      "Identity": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\6be18962-1d54-43c6-b7c7-a222f2f6ed48.png",
+      "SourceId": "MarathonManager.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\",
+      "BasePath": "_content/MarathonManager.API",
+      "RelativePath": "images/races/6be18962-1d54-43c6-b7c7-a222f2f6ed48#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "2dsnnegrjr",
+      "Integrity": "quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\races\\6be18962-1d54-43c6-b7c7-a222f2f6ed48.png"
+    },
+    {
+      "Identity": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\6ec84885-8bf9-42a9-91d1-5542317db003.png",
+      "SourceId": "MarathonManager.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\",
+      "BasePath": "_content/MarathonManager.API",
+      "RelativePath": "images/races/6ec84885-8bf9-42a9-91d1-5542317db003#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "2dsnnegrjr",
+      "Integrity": "quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\races\\6ec84885-8bf9-42a9-91d1-5542317db003.png"
+    },
+    {
+      "Identity": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\84454b08-dc3d-44e9-b784-d50bff952ecf.png",
+      "SourceId": "MarathonManager.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\",
+      "BasePath": "_content/MarathonManager.API",
+      "RelativePath": "images/races/84454b08-dc3d-44e9-b784-d50bff952ecf#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "2dsnnegrjr",
+      "Integrity": "quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\races\\84454b08-dc3d-44e9-b784-d50bff952ecf.png"
+    },
+    {
+      "Identity": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\c1665cc7-ecd1-445a-bfce-14207a50194b.png",
+      "SourceId": "MarathonManager.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\",
+      "BasePath": "_content/MarathonManager.API",
+      "RelativePath": "images/races/c1665cc7-ecd1-445a-bfce-14207a50194b#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "2dsnnegrjr",
+      "Integrity": "quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\races\\c1665cc7-ecd1-445a-bfce-14207a50194b.png"
+    },
+    {
+      "Identity": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\ce7e7a9d-a566-49ba-9826-31752911b8f2.png",
+      "SourceId": "MarathonManager.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\",
+      "BasePath": "_content/MarathonManager.API",
+      "RelativePath": "images/races/ce7e7a9d-a566-49ba-9826-31752911b8f2#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "2dsnnegrjr",
+      "Integrity": "quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\races\\ce7e7a9d-a566-49ba-9826-31752911b8f2.png"
+    },
+    {
+      "Identity": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\df78eef8-8575-4d00-adea-8ddfbd305e24.png",
+      "SourceId": "MarathonManager.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\",
+      "BasePath": "_content/MarathonManager.API",
+      "RelativePath": "images/races/df78eef8-8575-4d00-adea-8ddfbd305e24#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "pwuy2u0ps3",
+      "Integrity": "+YqXb6Do8rRuC2UUGleNI5/FMAnoDhZSdIQeuoMd/7M=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\races\\df78eef8-8575-4d00-adea-8ddfbd305e24.png"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "images/blogs/51819ca7-59b4-49c7-9569-e45f60effb62.2dsnnegrjr.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\blogs\\51819ca7-59b4-49c7-9569-e45f60effb62.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44979"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "2dsnnegrjr"
+        },
+        {
+          "Name": "label",
+          "Value": "images/blogs/51819ca7-59b4-49c7-9569-e45f60effb62.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="
+        }
+      ]
+    },
+    {
+      "Route": "images/blogs/51819ca7-59b4-49c7-9569-e45f60effb62.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\blogs\\51819ca7-59b4-49c7-9569-e45f60effb62.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44979"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/0a739d14-4b5e-4ebc-a34e-652625de3745.2dsnnegrjr.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\0a739d14-4b5e-4ebc-a34e-652625de3745.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44979"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "2dsnnegrjr"
+        },
+        {
+          "Name": "label",
+          "Value": "images/races/0a739d14-4b5e-4ebc-a34e-652625de3745.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/0a739d14-4b5e-4ebc-a34e-652625de3745.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\0a739d14-4b5e-4ebc-a34e-652625de3745.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44979"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/0acb1339-0517-4193-b8a1-6a6fa927720b.70l5ye92wk.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\0acb1339-0517-4193-b8a1-6a6fa927720b.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "156941"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"l2OEZkSPcOxrL7ac212SetKCVh6bpnb/cmi8bVbMn+M=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "70l5ye92wk"
+        },
+        {
+          "Name": "label",
+          "Value": "images/races/0acb1339-0517-4193-b8a1-6a6fa927720b.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-l2OEZkSPcOxrL7ac212SetKCVh6bpnb/cmi8bVbMn+M="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/0acb1339-0517-4193-b8a1-6a6fa927720b.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\0acb1339-0517-4193-b8a1-6a6fa927720b.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "156941"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"l2OEZkSPcOxrL7ac212SetKCVh6bpnb/cmi8bVbMn+M=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-l2OEZkSPcOxrL7ac212SetKCVh6bpnb/cmi8bVbMn+M="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/6be18962-1d54-43c6-b7c7-a222f2f6ed48.2dsnnegrjr.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\6be18962-1d54-43c6-b7c7-a222f2f6ed48.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44979"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "2dsnnegrjr"
+        },
+        {
+          "Name": "label",
+          "Value": "images/races/6be18962-1d54-43c6-b7c7-a222f2f6ed48.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/6be18962-1d54-43c6-b7c7-a222f2f6ed48.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\6be18962-1d54-43c6-b7c7-a222f2f6ed48.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44979"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/6ec84885-8bf9-42a9-91d1-5542317db003.2dsnnegrjr.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\6ec84885-8bf9-42a9-91d1-5542317db003.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44979"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "2dsnnegrjr"
+        },
+        {
+          "Name": "label",
+          "Value": "images/races/6ec84885-8bf9-42a9-91d1-5542317db003.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/6ec84885-8bf9-42a9-91d1-5542317db003.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\6ec84885-8bf9-42a9-91d1-5542317db003.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44979"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/84454b08-dc3d-44e9-b784-d50bff952ecf.2dsnnegrjr.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\84454b08-dc3d-44e9-b784-d50bff952ecf.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44979"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "2dsnnegrjr"
+        },
+        {
+          "Name": "label",
+          "Value": "images/races/84454b08-dc3d-44e9-b784-d50bff952ecf.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/84454b08-dc3d-44e9-b784-d50bff952ecf.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\84454b08-dc3d-44e9-b784-d50bff952ecf.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44979"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/c1665cc7-ecd1-445a-bfce-14207a50194b.2dsnnegrjr.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\c1665cc7-ecd1-445a-bfce-14207a50194b.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44979"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "2dsnnegrjr"
+        },
+        {
+          "Name": "label",
+          "Value": "images/races/c1665cc7-ecd1-445a-bfce-14207a50194b.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/c1665cc7-ecd1-445a-bfce-14207a50194b.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\c1665cc7-ecd1-445a-bfce-14207a50194b.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44979"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/ce7e7a9d-a566-49ba-9826-31752911b8f2.2dsnnegrjr.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\ce7e7a9d-a566-49ba-9826-31752911b8f2.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44979"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "2dsnnegrjr"
+        },
+        {
+          "Name": "label",
+          "Value": "images/races/ce7e7a9d-a566-49ba-9826-31752911b8f2.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/ce7e7a9d-a566-49ba-9826-31752911b8f2.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\ce7e7a9d-a566-49ba-9826-31752911b8f2.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "44979"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-quErmDj51KeB++FNGBPwoEP9JRf6UHCXHS5iVbRvqxE="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/df78eef8-8575-4d00-adea-8ddfbd305e24.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\df78eef8-8575-4d00-adea-8ddfbd305e24.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "14141"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"+YqXb6Do8rRuC2UUGleNI5/FMAnoDhZSdIQeuoMd/7M=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-+YqXb6Do8rRuC2UUGleNI5/FMAnoDhZSdIQeuoMd/7M="
+        }
+      ]
+    },
+    {
+      "Route": "images/races/df78eef8-8575-4d00-adea-8ddfbd305e24.pwuy2u0ps3.png",
+      "AssetFile": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\wwwroot\\images\\races\\df78eef8-8575-4d00-adea-8ddfbd305e24.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "14141"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"+YqXb6Do8rRuC2UUGleNI5/FMAnoDhZSdIQeuoMd/7M=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 15 Nov 2025 01:02:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "pwuy2u0ps3"
+        },
+        {
+          "Name": "label",
+          "Value": "images/races/df78eef8-8575-4d00-adea-8ddfbd305e24.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-+YqXb6Do8rRuC2UUGleNI5/FMAnoDhZSdIQeuoMd/7M="
+        }
+      ]
+    }
+  ]
+}

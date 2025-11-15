@@ -7917,23 +7917,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\pv\\.nuget\\packages\\": {},
+    "C:\\Users\\JackGarland\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pv\\Music\\PRN232\\MarathonManager.Web\\MarathonManager.Web.csproj",
+      "projectUniqueName": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.Web\\MarathonManager.Web.csproj",
       "projectName": "MarathonManager.Web",
-      "projectPath": "C:\\Users\\pv\\Music\\PRN232\\MarathonManager.Web\\MarathonManager.Web.csproj",
-      "packagesPath": "C:\\Users\\pv\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pv\\Music\\PRN232\\MarathonManager.Web\\obj\\",
+      "projectPath": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.Web\\MarathonManager.Web.csproj",
+      "packagesPath": "C:\\Users\\JackGarland\\.nuget\\packages\\",
+      "outputPath": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\pv\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\JackGarland\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -7948,8 +7948,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\MarathonManager.API.csproj": {
-              "projectPath": "C:\\Users\\pv\\Music\\PRN232\\MarathonManager.API\\MarathonManager.API.csproj"
+            "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\MarathonManager.API.csproj": {
+              "projectPath": "E:\\New folder (3)\\Nhóm 12\\New folder\\PRN232\\MarathonManager.API\\MarathonManager.API.csproj"
             }
           }
         }
@@ -7964,7 +7964,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net8.0": {
@@ -8006,7 +8006,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

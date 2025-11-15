@@ -1,0 +1,112 @@
+﻿<Project>
+  <ItemGroup>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/blogs/51819ca7-59b4-49c7-9569-e45f60effb62.2dsnnegrjr.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\blogs\51819ca7-59b4-49c7-9569-e45f60effb62.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"2dsnnegrjr"},{"Name":"integrity","Value":"sha256-quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE="},{"Name":"label","Value":"_content/MarathonManager.API/images/blogs/51819ca7-59b4-49c7-9569-e45f60effb62.png"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/blogs/51819ca7-59b4-49c7-9569-e45f60effb62.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\blogs\51819ca7-59b4-49c7-9569-e45f60effb62.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/0a739d14-4b5e-4ebc-a34e-652625de3745.2dsnnegrjr.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\0a739d14-4b5e-4ebc-a34e-652625de3745.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"2dsnnegrjr"},{"Name":"integrity","Value":"sha256-quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE="},{"Name":"label","Value":"_content/MarathonManager.API/images/races/0a739d14-4b5e-4ebc-a34e-652625de3745.png"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/0a739d14-4b5e-4ebc-a34e-652625de3745.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\0a739d14-4b5e-4ebc-a34e-652625de3745.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/0acb1339-0517-4193-b8a1-6a6fa927720b.70l5ye92wk.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\0acb1339-0517-4193-b8a1-6a6fa927720b.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"70l5ye92wk"},{"Name":"integrity","Value":"sha256-l2OEZkSPcOxrL7ac212SetKCVh6bpnb/cmi8bVbMn\u002BM="},{"Name":"label","Value":"_content/MarathonManager.API/images/races/0acb1339-0517-4193-b8a1-6a6fa927720b.png"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"156941"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022l2OEZkSPcOxrL7ac212SetKCVh6bpnb/cmi8bVbMn\u002BM=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/0acb1339-0517-4193-b8a1-6a6fa927720b.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\0acb1339-0517-4193-b8a1-6a6fa927720b.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-l2OEZkSPcOxrL7ac212SetKCVh6bpnb/cmi8bVbMn\u002BM="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"156941"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022l2OEZkSPcOxrL7ac212SetKCVh6bpnb/cmi8bVbMn\u002BM=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/6be18962-1d54-43c6-b7c7-a222f2f6ed48.2dsnnegrjr.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\6be18962-1d54-43c6-b7c7-a222f2f6ed48.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"2dsnnegrjr"},{"Name":"integrity","Value":"sha256-quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE="},{"Name":"label","Value":"_content/MarathonManager.API/images/races/6be18962-1d54-43c6-b7c7-a222f2f6ed48.png"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/6be18962-1d54-43c6-b7c7-a222f2f6ed48.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\6be18962-1d54-43c6-b7c7-a222f2f6ed48.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/6ec84885-8bf9-42a9-91d1-5542317db003.2dsnnegrjr.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\6ec84885-8bf9-42a9-91d1-5542317db003.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"2dsnnegrjr"},{"Name":"integrity","Value":"sha256-quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE="},{"Name":"label","Value":"_content/MarathonManager.API/images/races/6ec84885-8bf9-42a9-91d1-5542317db003.png"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/6ec84885-8bf9-42a9-91d1-5542317db003.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\6ec84885-8bf9-42a9-91d1-5542317db003.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/84454b08-dc3d-44e9-b784-d50bff952ecf.2dsnnegrjr.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\84454b08-dc3d-44e9-b784-d50bff952ecf.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"2dsnnegrjr"},{"Name":"integrity","Value":"sha256-quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE="},{"Name":"label","Value":"_content/MarathonManager.API/images/races/84454b08-dc3d-44e9-b784-d50bff952ecf.png"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/84454b08-dc3d-44e9-b784-d50bff952ecf.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\84454b08-dc3d-44e9-b784-d50bff952ecf.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/c1665cc7-ecd1-445a-bfce-14207a50194b.2dsnnegrjr.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\c1665cc7-ecd1-445a-bfce-14207a50194b.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"2dsnnegrjr"},{"Name":"integrity","Value":"sha256-quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE="},{"Name":"label","Value":"_content/MarathonManager.API/images/races/c1665cc7-ecd1-445a-bfce-14207a50194b.png"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/c1665cc7-ecd1-445a-bfce-14207a50194b.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\c1665cc7-ecd1-445a-bfce-14207a50194b.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/ce7e7a9d-a566-49ba-9826-31752911b8f2.2dsnnegrjr.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\ce7e7a9d-a566-49ba-9826-31752911b8f2.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"2dsnnegrjr"},{"Name":"integrity","Value":"sha256-quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE="},{"Name":"label","Value":"_content/MarathonManager.API/images/races/ce7e7a9d-a566-49ba-9826-31752911b8f2.png"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/ce7e7a9d-a566-49ba-9826-31752911b8f2.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\ce7e7a9d-a566-49ba-9826-31752911b8f2.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"44979"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022quErmDj51KeB\u002B\u002BFNGBPwoEP9JRf6UHCXHS5iVbRvqxE=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/df78eef8-8575-4d00-adea-8ddfbd305e24.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\df78eef8-8575-4d00-adea-8ddfbd305e24.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-\u002BYqXb6Do8rRuC2UUGleNI5/FMAnoDhZSdIQeuoMd/7M="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"14141"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022\u002BYqXb6Do8rRuC2UUGleNI5/FMAnoDhZSdIQeuoMd/7M=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/MarathonManager.API/images/races/df78eef8-8575-4d00-adea-8ddfbd305e24.pwuy2u0ps3.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\races\df78eef8-8575-4d00-adea-8ddfbd305e24.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"pwuy2u0ps3"},{"Name":"integrity","Value":"sha256-\u002BYqXb6Do8rRuC2UUGleNI5/FMAnoDhZSdIQeuoMd/7M="},{"Name":"label","Value":"_content/MarathonManager.API/images/races/df78eef8-8575-4d00-adea-8ddfbd305e24.png"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"14141"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022\u002BYqXb6Do8rRuC2UUGleNI5/FMAnoDhZSdIQeuoMd/7M=\u0022"},{"Name":"Last-Modified","Value":"Sat, 15 Nov 2025 01:02:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+  </ItemGroup>
+</Project>

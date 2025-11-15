@@ -49,7 +49,7 @@ namespace MarathonManager.Web.Services
             try
             {
                 SetAuthorizationHeader();
-                var response = await _httpClient.GetAsync("/api/Races/runner/dashboard");
+                var response = await _httpClient.GetAsync("/api/Runner/runner/dashboard");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -90,7 +90,7 @@ namespace MarathonManager.Web.Services
             {
                 SetAuthorizationHeader();
                 var response = await _httpClient.GetAsync(
-                    $"/api/Races/runner/available?pageNumber={pageNumber}&pageSize={pageSize}");
+                    $"/api/Runner/runner/available?pageNumber={pageNumber}&pageSize={pageSize}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -128,7 +128,7 @@ namespace MarathonManager.Web.Services
             try
             {
                 SetAuthorizationHeader();
-                var response = await _httpClient.GetAsync($"/api/Races/{raceId}/details");
+                var response = await _httpClient.GetAsync($"/api/Runner/{raceId}/details");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -166,7 +166,7 @@ namespace MarathonManager.Web.Services
             try
             {
                 SetAuthorizationHeader();
-                var response = await _httpClient.PostAsJsonAsync("/api/Races/runner/register", request);
+                var response = await _httpClient.PostAsJsonAsync("/api/Runner/runner/register", request);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -216,7 +216,7 @@ namespace MarathonManager.Web.Services
             {
                 SetAuthorizationHeader();
                 var response = await _httpClient.PostAsync(
-                    $"/api/Races/runner/registrations/{registrationId}/fake-result",
+                    $"/api/Runner/runner/registrations/{registrationId}/fake-result",
                     null // body rỗng
                 );
 
@@ -268,7 +268,7 @@ namespace MarathonManager.Web.Services
             {
                 SetAuthorizationHeader();
                 var response = await _httpClient.GetAsync(
-                    $"/api/Races/runner/registrations?pageNumber={pageNumber}&pageSize={pageSize}");
+                    $"/api/Runner/runner/registrations?pageNumber={pageNumber}&pageSize={pageSize}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -306,7 +306,7 @@ namespace MarathonManager.Web.Services
             try
             {
                 SetAuthorizationHeader();
-                var response = await _httpClient.DeleteAsync($"/api/Races/runner/registrations/{registrationId}");
+                var response = await _httpClient.DeleteAsync($"/api/Runner/runner/registrations/{registrationId}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -356,7 +356,7 @@ namespace MarathonManager.Web.Services
             {
                 SetAuthorizationHeader();
                 var response = await _httpClient.GetAsync(
-                    $"/api/Races/runner/results?pageNumber={pageNumber}&pageSize={pageSize}");
+                    $"/api/Runner/runner/results?pageNumber={pageNumber}&pageSize={pageSize}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -395,7 +395,7 @@ namespace MarathonManager.Web.Services
                 SetAuthorizationHeader();
 
                 var response = await _httpClient.PostAsync(
-                    $"/api/Races/runner/registrations/{registrationId}/fake-payment",
+                    $"/api/Runner/runner/registrations/{registrationId}/fake-payment",
                     null // không cần body
                 );
 
@@ -443,7 +443,7 @@ namespace MarathonManager.Web.Services
             try
             {
                 SetAuthorizationHeader();
-                var response = await _httpClient.GetAsync("/api/Races/runner/profile");
+                var response = await _httpClient.GetAsync("/api/Runner/runner/profile");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -481,7 +481,7 @@ namespace MarathonManager.Web.Services
             try
             {
                 SetAuthorizationHeader();
-                var response = await _httpClient.PutAsJsonAsync("/api/Races/runner/profile", request);
+                var response = await _httpClient.PutAsJsonAsync("/api/Runner/runner/profile", request);
 
                 if (response.IsSuccessStatusCode)
                 {

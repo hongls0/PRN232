@@ -3,3 +3,9 @@ C:\Users\pv\Music\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.bu
 C:\Users\pv\Music\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\pv\Music\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\pv\Music\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\New folder (3)\Nhóm 12\New folder\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\New folder (3)\Nhóm 12\New folder\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\New folder (3)\Nhóm 12\New folder\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\New folder (3)\Nhóm 12\New folder\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\New folder (3)\Nhóm 12\New folder\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\New folder (3)\Nhóm 12\New folder\PRN232\MarathonManager.API\obj\Debug\net8.0\staticwebassets.build.json
