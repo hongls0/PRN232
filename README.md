@@ -10,14 +10,6 @@ Marathon Manager allows race organizers to create and manage running events, whi
 
 ---
 
-## Project Structure
-
-```
-
-<img width="931" height="618" alt="MarathonManager_structure drawio" src="https://github.com/user-attachments/assets/770e0eb3-636c-41bf-a897-8a4e3d4c1954" />
-
----
-
 ## Features
 
 ### Authentication & Authorization
