@@ -13,17 +13,8 @@ Marathon Manager allows race organizers to create and manage running events, whi
 ## Project Structure
 
 ```
-MarathonManager/
-├── MarathonManager.API/        # RESTful API backend
-│   ├── Controllers/            # API endpoints
-│   ├── Models/                 # EF Core entity models
-│   ├── DTOs/                   # Data transfer objects
-│   └── Migrations/             # EF Core database migrations
-└── MarathonManager.Web/        # ASP.NET Core MVC frontend
-    ├── Controllers/            # MVC controllers
-    ├── Views/                  # Razor views
-    └── DTOs/                   # Frontend-side DTOs
-```
+
+<img width="931" height="618" alt="MarathonManager_structure drawio" src="https://github.com/user-attachments/assets/770e0eb3-636c-41bf-a897-8a4e3d4c1954" />
 
 ---
 
